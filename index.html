@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="description" content="Elif-Ba: interaktif e-kitap, yetişkinler için adım adım dersler ve çocuklar için kısa öğrenme görevleri. Türkçe ve Almanca." />
+    <meta name="theme-color" content="#16a34a" />
+    <link rel="icon" type="image/png" href="/elifba/assets/appLogoIcon-Cz4RL47k.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700;800&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+    <title>Elif-Ba | e-Kitap, Yetişkin ve Çocuk Eğitimi</title>
+    <script type="module" crossorigin src="/elifba/assets/index-BGmvTq8l.js"></script>
+    <link rel="stylesheet" crossorigin href="/elifba/assets/index-DMIuY49w.css">
+  </head>
+  <body class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white">
+    <div id="root"></div>
+    <section id="local-file-help" hidden style="max-width:560px;margin:12vh auto;padding:32px;font:16px/1.7 system-ui,sans-serif;color:#294c3d;background:#f8fbf4;border-radius:20px">
+      <h1 style="font-size:26px;margin:0 0 16px">Elif-Ba’yı aç</h1>
+      <p>Bu uygulama yerel bir web sunucusuyla çalışır. Proje klasöründeki <strong>SiteyiAc.cmd</strong> dosyasına çift tıkla. Site tarayıcında otomatik açılacak.</p>
+      <p>Komut satırını kullanmak istersen proje klasöründe <code>npm run dev</code> çalıştır ve terminalde gösterilen adresi aç.</p>
+    </section>
+    <script>
+      if (location.protocol === 'file:') {
+        document.getElementById('local-file-help').hidden = false;
+        document.getElementById('root').hidden = true;
+      }
+    </script>
+  </body>
+</html>
