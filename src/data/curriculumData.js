@@ -1,0 +1,192 @@
+// 29 Arapça Harf ve DİTİB Elif-Ba Eşleştirmesi
+export const ARABIC_LETTERS = [
+  { id: 1, char: 'ا', nameTr: 'Elif', nameDe: 'Alif', audio: 'assets/audio/arabic/arp01.mp3', color: 'from-amber-400 to-orange-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+  { id: 2, char: 'ب', nameTr: 'Bâ', nameDe: 'Ba', audio: 'assets/audio/arabic/arp02.mp3', color: 'from-emerald-400 to-teal-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+  { id: 3, char: 'ت', nameTr: 'Tâ', nameDe: 'Ta', audio: 'assets/audio/arabic/arp03.mp3', color: 'from-blue-400 to-indigo-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+  { id: 4, char: 'ث', nameTr: 'Sâ', nameDe: 'Tha', audio: 'assets/audio/arabic/arp04.mp3', color: 'from-purple-400 to-pink-500', soundHintTr: 'Peltek ince', soundHintDe: 'Lispelnd' },
+  { id: 5, char: 'ج', nameTr: 'Cîm', nameDe: 'Dschim', audio: 'assets/audio/arabic/arp05.mp3', color: 'from-rose-400 to-red-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+  { id: 6, char: 'ح', nameTr: 'Hâ', nameDe: 'Ha (boğaz)', audio: 'assets/audio/arabic/arp06.mp3', color: 'from-amber-500 to-yellow-600', soundHintTr: 'Boğaz harfi', soundHintDe: 'Kehllaut' },
+  { id: 7, char: 'خ', nameTr: 'Hı', nameDe: 'Cha (hırıltılı)', audio: 'assets/audio/arabic/arp07.mp3', color: 'from-lime-500 to-green-600', soundHintTr: 'Kalın hırıltılı', soundHintDe: 'Dick, kratzend' },
+  { id: 8, char: 'د', nameTr: 'Dâl', nameDe: 'Dal', audio: 'assets/audio/arabic/arp08.mp3', color: 'from-cyan-400 to-blue-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+  { id: 9, char: 'ذ', nameTr: 'Zâl', nameDe: 'Dhal (peltek)', audio: 'assets/audio/arabic/arp09.mp3', color: 'from-teal-400 to-emerald-500', soundHintTr: 'Peltek ince', soundHintDe: 'Lispelnd' },
+  { id: 10, char: 'ر', nameTr: 'Râ', nameDe: 'Ra', audio: 'assets/audio/arabic/arp10.mp3', color: 'from-indigo-400 to-purple-500', soundHintTr: 'Harekeye göre', soundHintDe: 'Je nach Vokal' },
+  { id: 11, char: 'ز', nameTr: 'Zê', nameDe: 'Zay', audio: 'assets/audio/arabic/arp11.mp3', color: 'from-fuchsia-400 to-pink-500', soundHintTr: 'Keskin ince', soundHintDe: 'Scharf' },
+  { id: 12, char: 'س', nameTr: 'Sîn', nameDe: 'Sin', audio: 'assets/audio/arabic/arp12.mp3', color: 'from-pink-400 to-rose-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+  { id: 13, char: 'ش', nameTr: 'Şîn', nameDe: 'Schin', audio: 'assets/audio/arabic/arp13.mp3', color: 'from-violet-400 to-indigo-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+  { id: 14, char: 'ص', nameTr: 'Sâd', nameDe: 'Sad (kalın)', audio: 'assets/audio/arabic/arp14.mp3', color: 'from-amber-600 to-orange-700', soundHintTr: 'Kalın harf', soundHintDe: 'Dick' },
+  { id: 15, char: 'ض', nameTr: 'Dâd', nameDe: 'Dad (kalın)', audio: 'assets/audio/arabic/arp15.mp3', color: 'from-orange-500 to-red-600', soundHintTr: 'Kalın harf', soundHintDe: 'Dick' },
+  { id: 16, char: 'ط', nameTr: 'Tı', nameDe: 'Ta (kalın)', audio: 'assets/audio/arabic/arp16.mp3', color: 'from-emerald-600 to-green-700', soundHintTr: 'Kalın harf', soundHintDe: 'Dick' },
+  { id: 17, char: 'ظ', nameTr: 'Zı', nameDe: 'Za (kalın peltek)', audio: 'assets/audio/arabic/arp17.mp3', color: 'from-teal-600 to-cyan-700', soundHintTr: 'Kalın peltek', soundHintDe: 'Dick, lispelnd' },
+  { id: 18, char: 'ع', nameTr: 'Ayn', nameDe: 'Ain (boğaz)', audio: 'assets/audio/arabic/arp18.mp3', color: 'from-blue-600 to-indigo-700', soundHintTr: 'Boğaz ortası', soundHintDe: 'Kehllaut' },
+  { id: 19, char: 'غ', nameTr: 'Gayn', nameDe: 'Ghain (kalın)', audio: 'assets/audio/arabic/arp19.mp3', color: 'from-purple-600 to-violet-700', soundHintTr: 'Kalın yumuşak', soundHintDe: 'Dick' },
+  { id: 20, char: 'ف', nameTr: 'Fê', nameDe: 'Fa', audio: 'assets/audio/arabic/arp20.mp3', color: 'from-pink-500 to-rose-600', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+  { id: 21, char: 'ق', nameTr: 'Kâf', nameDe: 'Qaf (kalın)', audio: 'assets/audio/arabic/arp21.mp3', color: 'from-amber-500 to-orange-600', soundHintTr: 'Kalın harf', soundHintDe: 'Dick' },
+  { id: 22, char: 'ك', nameTr: 'Kef', nameDe: 'Kaf (ince)', audio: 'assets/audio/arabic/arp22.mp3', color: 'from-sky-400 to-blue-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+  { id: 23, char: 'ل', nameTr: 'Lâm', nameDe: 'Lam', audio: 'assets/audio/arabic/arp23.mp3', color: 'from-teal-400 to-emerald-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+  { id: 24, char: 'م', nameTr: 'Mîm', nameDe: 'Mim', audio: 'assets/audio/arabic/arp24.mp3', color: 'from-green-400 to-emerald-600', soundHintTr: 'Dudak harfi', soundHintDe: 'Lippenlaut' },
+  { id: 25, char: 'ن', nameTr: 'Nûn', nameDe: 'Nun', audio: 'assets/audio/arabic/arp25.mp3', color: 'from-yellow-400 to-amber-500', soundHintTr: 'Geniz harfi', soundHintDe: 'Nasallaut' },
+  { id: 26, char: 'و', nameTr: 'Vâv', nameDe: 'Waw', audio: 'assets/audio/arabic/arp26.mp3', color: 'from-blue-400 to-indigo-600', soundHintTr: 'Dudak harfi', soundHintDe: 'Lippenlaut' },
+  { id: 27, char: 'ه', nameTr: 'Hê', nameDe: 'Ha (göğüs)', audio: 'assets/audio/arabic/arp27.mp3', color: 'from-indigo-400 to-purple-600', soundHintTr: 'Boğaz dibi', soundHintDe: 'Brustlaut' },
+  { id: 28, char: 'لا', nameTr: 'Lâmelif', nameDe: 'Lam-Alif', audio: 'assets/audio/arabic/arp28.mp3', color: 'from-fuchsia-400 to-pink-600', soundHintTr: 'Lâm ve Elif birleşimi', soundHintDe: 'Kombination' },
+  { id: 29, char: 'ى', nameTr: 'Yâ', nameDe: 'Ya', audio: 'assets/audio/arabic/arp29.mp3', color: 'from-rose-400 to-red-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
+];
+
+export const VOWELS_DATA = [
+  {
+    id: 'fetha',
+    nameTr: 'Üstün (Fetha)',
+    nameDe: 'Fetha (Üstün)',
+    symbol: 'َ',
+    descTr: 'Harfin üzerine konur. İnce harfleri "E", kalın harfleri "A" sesiyle okutur.',
+    descDe: 'Wird über den Buchstaben gesetzt. Dünne Buchstaben mit "E", dicke mit "A".',
+    pageNumber: 18,
+    examples: [
+      { char: 'اَ', sound: 'assets/audio/arabic/arp01_2.mp3', textTr: 'E', textDe: 'E' },
+      { char: 'بَ', sound: 'assets/audio/arabic/arp02_1.mp3', textTr: 'Be', textDe: 'Be' },
+      { char: 'تَ', sound: 'assets/audio/arabic/arp03_1.mp3', textTr: 'Te', textDe: 'Te' },
+      { char: 'ثَ', sound: 'assets/audio/arabic/arp04_1.mp3', textTr: 'Se', textDe: 'The' },
+      { char: 'جَ', sound: 'assets/audio/arabic/arp05_1.mp3', textTr: 'Ce', textDe: 'Dsche' },
+      { char: 'خَ', sound: 'assets/audio/arabic/arp07_1.mp3', textTr: 'Ha (kalın)', textDe: 'Cha' },
+    ]
+  },
+  {
+    id: 'kesra',
+    nameTr: 'Esre (Kesra)',
+    nameDe: 'Kesra (Esre)',
+    symbol: 'ِ',
+    descTr: 'Harfin altına konur. İnce harfleri "İ", kalın harfleri "I-İ" arası bir sesle okutur.',
+    descDe: 'Wird unter den Buchstaben gesetzt. Dünne Buchstaben mit "I", dicke zwischen "I-I".',
+    pageNumber: 20,
+    examples: [
+      { char: 'اِ', sound: 'assets/audio/arabic/arp01_4.mp3', textTr: 'İ', textDe: 'I' },
+      { char: 'بِ', sound: 'assets/audio/arabic/arp02_3.mp3', textTr: 'Bi', textDe: 'Bi' },
+      { char: 'تِ', sound: 'assets/audio/arabic/arp03_3.mp3', textTr: 'Ti', textDe: 'Ti' },
+      { char: 'ثِ', sound: 'assets/audio/arabic/arp04_3.mp3', textTr: 'Si', textDe: 'Thi' },
+      { char: 'جِ', sound: 'assets/audio/arabic/arp05_3.mp3', textTr: 'Ci', textDe: 'Dschi' },
+      { char: 'طِ', sound: 'assets/audio/arabic/arp16_3.mp3', textTr: 'Tı', textDe: 'Tı' },
+    ]
+  },
+  {
+    id: 'damme',
+    nameTr: 'Ötre (Damme)',
+    nameDe: 'Damme (Ötre)',
+    symbol: 'ُ',
+    descTr: 'Harfin üzerine konur. İnce harfleri "Ü", kalın harfleri "U" sesiyle okutur.',
+    descDe: 'Wird über den Buchstaben gesetzt. Dünne Buchstaben mit "Ü", dicke mit "U".',
+    pageNumber: 22,
+    examples: [
+      { char: 'اُ', sound: 'assets/audio/arabic/arp01_6.mp3', textTr: 'Ü', textDe: 'U' },
+      { char: 'بُ', sound: 'assets/audio/arabic/arp02_5.mp3', textTr: 'Bü', textDe: 'Bu' },
+      { char: 'تُ', sound: 'assets/audio/arabic/arp03_5.mp3', textTr: 'Tü', textDe: 'Tu' },
+      { char: 'ثُ', sound: 'assets/audio/arabic/arp04_5.mp3', textTr: 'Sü', textDe: 'Thu' },
+      { char: 'جُ', sound: 'assets/audio/arabic/arp05_5.mp3', textTr: 'Cü', textDe: 'Dschu' },
+      { char: 'صُ', sound: 'assets/audio/arabic/arp14_5.mp3', textTr: 'Su', textDe: 'Su' },
+    ]
+  }
+];
+
+export const VIDEOS_DATA = [
+  { id: 'fatiha', titleTr: 'Fâtiha Sûresi', titleDe: 'Sure Fâtiha', file: 'assets/videos/fatiha2.mp4', pageNumber: 60, audioTr: 'assets/audio/turkish/fatihatr.mp3', audioDe: 'assets/audio/german/fatihade.mp3', icon: '📖' },
+  { id: 'ayetelkursi', titleTr: 'Âyetü\'l-Kürsî', titleDe: 'Âyetul-Kursî', file: 'assets/videos/ayetelkursi.mp4', pageNumber: 66, audioTr: 'assets/audio/turkish/ayetelkursitr.mp3', audioDe: 'assets/audio/german/ayetelkurside.mp3', icon: '✨' },
+  { id: 'fil', titleTr: 'Fîl Sûresi', titleDe: 'Sure Fîl', file: 'assets/videos/fil.mp4', pageNumber: 61, audioTr: 'assets/audio/turkish/filtr.mp3', audioDe: 'assets/audio/german/filde.mp3', icon: '🐘' },
+  { id: 'kureys', titleTr: 'Kureyş Sûresi', titleDe: 'Sure Quraysch', file: 'assets/videos/kureys.mp4', pageNumber: 61, audioTr: 'assets/audio/turkish/kureystr.mp3', audioDe: 'assets/audio/german/kureysde.mp3', icon: '🏜️' },
+  { id: 'maun', titleTr: 'Mâûn Sûresi', titleDe: 'Sure Mâ\'ûn', file: 'assets/videos/maun_1.mp4', pageNumber: 62, audioTr: 'assets/audio/turkish/mauntr.mp3', audioDe: 'assets/audio/german/maunde.mp3', icon: '🤝' },
+  { id: 'kevser', titleTr: 'Kevser Sûresi', titleDe: 'Sure Kewser', file: 'assets/videos/kevserson2.mp4', pageNumber: 62, audioTr: 'assets/audio/turkish/kevsertr.mp3', audioDe: 'assets/audio/german/kevserde.mp3', icon: '🌊' },
+  { id: 'kafirun', titleTr: 'Kâfirûn Sûresi', titleDe: 'Sure Kâfirûn', file: 'assets/videos/Kafirun_1.mp4', pageNumber: 63, audioTr: 'assets/audio/turkish/karifuntr.mp3', audioDe: 'assets/audio/german/karifunde.mp3', icon: '🛡️' },
+  { id: 'nasr', titleTr: 'Nasr Sûresi', titleDe: 'Sure Nasr', file: 'assets/videos/nasr_1.mp4', pageNumber: 63, audioTr: 'assets/audio/turkish/nasrtr.mp3', audioDe: 'assets/audio/german/nasrde.mp3', icon: '🕊️' },
+  { id: 'tebbet', titleTr: 'Tebbet Sûresi', titleDe: 'Sure Tebbet', file: 'assets/videos/tebbet.mp4', pageNumber: 64, audioTr: 'assets/audio/turkish/tebbettr.mp3', audioDe: 'assets/audio/german/tebbetde.mp3', icon: '🔥' },
+  { id: 'ihlas', titleTr: 'İhlâs Sûresi', titleDe: 'Sure Ichlâs', file: 'assets/videos/ihlas.mp4', pageNumber: 64, audioTr: 'assets/audio/turkish/ihlastr.mp3', audioDe: 'assets/audio/german/ihlasde.mp3', icon: '💎' },
+  { id: 'felak', titleTr: 'Felak Sûresi', titleDe: 'Sure Felaq', file: 'assets/videos/felak.mp4', pageNumber: 65, audioTr: 'assets/audio/turkish/felaktr.mp3', audioDe: 'assets/audio/german/felakde.mp3', icon: '🌅' },
+  { id: 'nas', titleTr: 'Nâs Sûresi', titleDe: 'Sure Nâs', file: 'assets/videos/nas.mp4', pageNumber: 65, audioTr: 'assets/audio/turkish/nastr.mp3', audioDe: 'assets/audio/german/nasde.mp3', icon: '🌟' },
+  { id: 'subhaneke', titleTr: 'Sübhâneke Duâsı', titleDe: 'Subhâneke Gebet', file: 'assets/videos/subhaneke.mp4', pageNumber: 50, audioTr: 'assets/audio/turkish/subhaneketr.mp3', audioDe: 'assets/audio/german/subhanekede.mp3', icon: '🤲' },
+  { id: 'tahiyyat', titleTr: 'Et-Tahiyyâtu Duâsı', titleDe: 'Et-Tahiyyâtu Gebet', file: 'assets/videos/tahiyyat.mp4', pageNumber: 50, audioTr: 'assets/audio/turkish/ettahiyyatutr.mp3', audioDe: 'assets/audio/german/ettahiyyatude.mp3', icon: '🕊️' },
+  { id: 'salli', titleTr: 'Allâhumme Salli', titleDe: 'Allâhumme Salli', file: 'assets/videos/sallison2.mp4', pageNumber: 51, audioTr: 'assets/audio/turkish/sallitr.mp3', audioDe: 'assets/audio/german/sallide.mp3', icon: '🌹' },
+  { id: 'barik', titleTr: 'Allâhumme Bârik', titleDe: 'Allâhumme Bârik', file: 'assets/videos/barikson2.mp4', pageNumber: 51, audioTr: 'assets/audio/turkish/bariktr.mp3', audioDe: 'assets/audio/german/barikde.mp3', icon: '🌿' },
+  { id: 'rabbenaatina', titleTr: 'Rabbenâ Âtinâ', titleDe: 'Rabbenâ Âtinâ', file: 'assets/videos/rabbenaatina.mp4', pageNumber: 52, audioTr: 'assets/audio/turkish/rabbenaatinatr.mp3', audioDe: 'assets/audio/german/rabbenaatinade.mp3', icon: '🤲' },
+  { id: 'rabbenafirlii', titleTr: 'Rabbenâğfirlî', titleDe: 'Rabbenaghfirlî', file: 'assets/videos/rabbenafirlii.mp4', pageNumber: 52, audioTr: 'assets/audio/turkish/rabbenegfirlitr.mp3', audioDe: 'assets/audio/german/rabbenegfirlide.mp3', icon: '🌧️' },
+  { id: 'kunut1', titleTr: 'Kunût Duâsı 1', titleDe: 'Qunût-Gebet 1', file: 'assets/videos/Kunut_1_1.mp4', pageNumber: 53, audioTr: 'assets/audio/turkish/kunut1tr.mp3', audioDe: 'assets/audio/german/kunut1de.mp3', icon: '🌙' },
+  { id: 'kunut2', titleTr: 'Kunût Duâsı 2', titleDe: 'Qunût-Gebet 2', file: 'assets/videos/kunut2.mp4', pageNumber: 53, audioTr: 'assets/audio/turkish/kunut2tr.mp3', audioDe: 'assets/audio/german/kunut2de.mp3', icon: '⭐' }
+];
+
+export const SECTIONS_DATA = [
+  {
+    id: 1,
+    titleTr: '1. Bölüm: Elifba ve Kur\'an Harfleri',
+    titleDe: '1. Teil: Das Koran-Alphabet',
+    startPage: 13,
+    endPage: 44,
+    badge: '14-44',
+    icon: '📗',
+    topics: [
+      { nameTr: 'Kur\'an Harfleri (Alfabe)', nameDe: 'Die Buchstaben des Korans', page: 14 },
+      { nameTr: 'Harekeler: Üstün (Fetha)', nameDe: 'Die Vokalzeichen: Fetha', page: 18 },
+      { nameTr: 'Harekeler: Esre (Kesra)', nameDe: 'Die Vokalzeichen: Kesra', page: 20 },
+      { nameTr: 'Harekeler: Ötre (Damme)', nameDe: 'Die Vokalzeichen: Damme', page: 22 },
+      { nameTr: 'Med (Uzatma) Harfleri', nameDe: 'Die Dehnungsbuchstaben', page: 24 },
+      { nameTr: 'Cezim (Sükun)', nameDe: 'Das Dschezm-Zeichen', page: 28 },
+      { nameTr: 'Şedde (Çift Okuma)', nameDe: 'Schedde (Verdoppelung)', page: 30 },
+      { nameTr: 'Tenvin (İki Üstün, İki Esre, İki Ötre)', nameDe: 'Tenwin', page: 32 },
+      { nameTr: 'Yuvarlak Te (ة)', nameDe: 'Das runde Te', page: 34 },
+      { nameTr: 'Uzatma (Med) İşareti', nameDe: 'Das Medd-Zeichen', page: 40 },
+      { nameTr: 'Harflerin Kelime İçindeki Biçimleri', nameDe: 'Buchstabenformen im Wort', page: 17 },
+      { nameTr: 'Uzatma / Çeker İşareti', nameDe: 'Das Dehnungszeichen', page: 35 },
+      { nameTr: 'Uzatan Harfler', nameDe: 'Verlängerungsbuchstaben', page: 36 },
+      { nameTr: 'Hemze (ء)', nameDe: 'Hemze', page: 37 },
+      { nameTr: 'Uzun He (Zamîr)', nameDe: 'Langes he', page: 38 },
+      { nameTr: 'Lafzatullah\'ın Okunuşu', nameDe: 'Das Wort Allah', page: 41 },
+      { nameTr: 'Hurûf-u Mukatta\'a', nameDe: 'Die Mukatta\'a-Buchstaben', page: 42 },
+      { nameTr: 'El-Takısı (Lâm-ı Tarif)', nameDe: 'El Der Artikel', page: 43 },
+    ]
+  },
+  {
+    id: 2,
+    titleTr: '2. Bölüm: Namaz Duaları ve Tesbihât',
+    titleDe: '2. Teil: Bittgebete und Tesbihât',
+    startPage: 45,
+    endPage: 56,
+    badge: '45-56',
+    icon: '🕌',
+    topics: [
+      { nameTr: 'Ezan ve Ezan Duası', nameDe: 'Der Gebetsruf (Ezan)', page: 47 },
+      { nameTr: 'Âmentü Duası', nameDe: 'Âmentu', page: 49 },
+      { nameTr: 'Sübhâneke ve Et-Tahiyyâtu', nameDe: 'Subhâneke und Et-Tahiyyâtu', page: 50 },
+      { nameTr: 'Allâhumme Salli ve Bârik', nameDe: 'Salli und Bârik', page: 51 },
+      { nameTr: 'Rabbenâ Âtinâ ve Rabbenağfirlî', nameDe: 'Rabbenâ Bittgebete', page: 52 },
+      { nameTr: 'Kunût Duaları (1 ve 2)', nameDe: 'Die Qunût-Gebete', page: 53 },
+      { nameTr: 'Namaz Tesbihâtı', nameDe: 'Tesbihât für das Ritualgebet', page: 54 },
+    ]
+  },
+  {
+    id: 3,
+    titleTr: '3. Bölüm: Kısa Namaz Sureleri',
+    titleDe: '3. Teil: Kurze Suren für das Ritualgebet',
+    startPage: 57,
+    endPage: 66,
+    badge: '57-66',
+    icon: '✨',
+    topics: [
+      { nameTr: 'Fâtiha Suresi', nameDe: 'Sure Fâtiha', page: 60 },
+      { nameTr: 'Fîl ve Kureyş Sureleri', nameDe: 'Sure Fîl & Quraysch', page: 61 },
+      { nameTr: 'Mâûn ve Kevser Sureleri', nameDe: 'Sure Mâ\'ûn & Kewser', page: 62 },
+      { nameTr: 'Kâfirûn ve Nasr Sureleri', nameDe: 'Sure Kâfirûn & Nasr', page: 63 },
+      { nameTr: 'Tebbet ve İhlâs Sureleri', nameDe: 'Sure Tebbet & Ichlâs', page: 64 },
+      { nameTr: 'Felak ve Nâs Sureleri', nameDe: 'Sure Felaq & Nâs', page: 65 },
+      { nameTr: 'Âyetü\'l-Kürsî', nameDe: 'Âyetul-Kursî', page: 66 },
+    ]
+  },
+  {
+    id: 4,
+    titleTr: '4. Bölüm: Temel Dini Bilgiler (32 Farz)',
+    titleDe: '4. Teil: 32 Hauptpflichten',
+    startPage: 67,
+    endPage: 71,
+    badge: '67-71',
+    icon: '🕋',
+    topics: [
+      { nameTr: 'İslam\'ın ve İmanın Şartları', nameDe: 'Säulen des Islam & Glaubensartikel', page: 68 },
+      { nameTr: 'Abdest, Gusül ve Teyemmümün Farzları', nameDe: 'Pflichten der Gebetswaschung', page: 68 },
+      { nameTr: 'Namazın Farzları (Dışındakiler & İçindekiler)', nameDe: 'Pflichten des Ritualgebets', page: 70 },
+      
+    ]
+  }
+];
