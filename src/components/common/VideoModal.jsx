@@ -9,13 +9,13 @@ export default function VideoModal({video,onClose,lang='tr',onJumpToPage}){
  const de=lang==='de',title=de?(video.titleDe||video.caption||'Video'):(video.titleTr||video.caption||'Video');
  const play=()=>{const v=videoRef.current;if(!v)return;v.paused?v.play().catch(()=>setNotice(de?'Zum Starten erneut tippen.':'Başlatmak için yeniden dokun.')):v.pause();};
  useEffect(()=>{
-  const previous=document.activeElement,overflow=document.body.style.overflow;document.body.style.overflow='hidden';stopCurrentAudio();[...dialogRef.current.querySelectorAll('button')].find(el=>el.getClientRects().length)?.focus();
+  const previous=document.activeElement,overflow=document.body.style.overflow,media=videoRef.current;document.body.style.overflow='hidden';stopCurrentAudio();[...dialogRef.current.querySelectorAll('button')].find(el=>el.getClientRects().length)?.focus();
   const pause=()=>videoRef.current?.pause();window.addEventListener('elifba:audio-start',pause);
   const key=e=>{
    if(e.key==='Escape')closeRef.current();
    if(e.key==='Tab'){const items=[...dialogRef.current.querySelectorAll('button,input,select,[href]')].filter(el=>!el.disabled&&el.getClientRects().length);const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}
   };window.addEventListener('keydown',key);
-  return()=>{window.removeEventListener('keydown',key);window.removeEventListener('elifba:audio-start',pause);document.body.style.overflow=overflow;stopCurrentAudio();if(previous?.isConnected)previous.focus();};
+  return()=>{media?.pause();if(media){media.removeAttribute('src');media.load();}window.removeEventListener('keydown',key);window.removeEventListener('elifba:audio-start',pause);document.body.style.overflow=overflow;stopCurrentAudio();if(previous?.isConnected)previous.focus();};
  },[]);
  const fullscreen=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(dialogRef.current.requestFullscreen)await dialogRef.current.requestFullscreen();else if(videoRef.current.webkitEnterFullscreen)videoRef.current.webkitEnterFullscreen();else throw Error();}catch{setNotice(de?'Vollbild nicht verfügbar.':'Bu tarayıcıda tam ekran kullanılamıyor.');}};
  const pip=async()=>{try{if(document.pictureInPictureElement)await document.exitPictureInPicture();else await videoRef.current.requestPictureInPicture();}catch{setNotice(de?'Bild-in-Bild nicht verfügbar.':'Bu tarayıcıda resim içinde resim açılamadı.');}};
