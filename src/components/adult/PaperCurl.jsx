@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { assetUrl } from '../../utils/urls';
 
 // Each animation owns its renderer; removing the frame also releases its RAF loop.
@@ -14,20 +14,21 @@ addEventListener('message',async event=>{
  })));
  const flip=new St.PageFlip(document.getElementById('curl'),{width:innerWidth/2,height:innerHeight,size:'fixed',autoSize:false,usePortrait:false,startPage:c.direction==='next'?0:2,showCover:false,drawShadow:true,maxShadowOpacity:.35,flippingTime:1100,useMouseEvents:false,showPageCorners:false,mobileScrollSupport:false});
  flip.on('flip',e=>{if(started&&e.data===(c.direction==='next'?2:0))finish()});
- flip.on('init',()=>{started=true;c.direction==='next'?flip.flipNext('bottom'):flip.flipPrev('bottom')});
+ flip.on('init',()=>{parent.postMessage({type:'reader-curl-ready',token:c.token},c.origin);requestAnimationFrame(()=>{started=true;c.direction==='next'?flip.flipNext('bottom'):flip.flipPrev('bottom')})});
  flip.loadFromHTML(items);
 },{once:true});
 </script></body></html>`;
 
 export default function PaperCurl({ from, to, direction, single, onComplete }) {
+ const [ready,setReady]=useState(false);
  const frame=useRef(null),complete=useRef(onComplete),token=useRef(Math.random().toString(36));complete.current=onComplete;
  useEffect(()=>{
-  const listener=event=>{if(event.source===frame.current?.contentWindow&&event.data?.type==='reader-curl-complete'&&event.data.token===token.current)complete.current();};
+  const listener=event=>{if(event.source!==frame.current?.contentWindow||event.data?.token!==token.current)return;if(event.data.type==='reader-curl-ready')setReady(true);if(event.data.type==='reader-curl-complete')complete.current();};
   const timeout=setTimeout(()=>complete.current(),4500);window.addEventListener('message',listener);
   return()=>{clearTimeout(timeout);window.removeEventListener('message',listener);};
  },[]);
  let oldSpread=from,newSpread=to;
  if(single){oldSpread=direction==='next'?[null,from[0]]:[from[0],null];newSpread=direction==='next'?[null,to[0]]:[to[0],null];}
  const pages=(direction==='next'?[...oldSpread,...newSpread]:[...newSpread,...oldSpread]).map(p=>p?assetUrl(p.image):null);
- return <iframe className="reader-paper-curl" title="" aria-hidden="true" tabIndex={-1} ref={frame} srcDoc={DOCUMENT} onLoad={()=>frame.current?.contentWindow.postMessage({type:'reader-curl',token:token.current,pages,direction,origin:location.origin},location.origin)}/>;
+ return <iframe style={{opacity:ready?1:0}} className="reader-paper-curl" title="" aria-hidden="true" tabIndex={-1} ref={frame} srcDoc={DOCUMENT} onLoad={()=>frame.current?.contentWindow.postMessage({type:'reader-curl',token:token.current,pages,direction,origin:location.origin},location.origin)}/>;
 }
