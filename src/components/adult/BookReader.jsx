@@ -53,7 +53,7 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   };
   useEffect(() => {
     setDraft(String(currentPage)); setScrub(null); setFailed({});
-    for (const p of [pagesData[currentPage - 2], pagesData[currentPage], pagesData[currentPage + 1]]) if (p) { const image = new Image(); image.src = assetUrl(p.image); }
+    for (const p of [pagesData[currentPage - 2], pagesData[currentPage], pagesData[currentPage + 1]]) if (p && p.page_number >= 6) { const image = new Image(); image.src = assetUrl(p.image); }
     if (turn && currentPage !== turn.start) { setTurn(null); turning.current = false; }
   }, [currentPage, pagesData]);
   useEffect(() => { setGlobalPlaybackSpeed(preferences.speed); }, [preferences.speed]);
