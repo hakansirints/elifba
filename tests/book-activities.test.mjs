@@ -2,9 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { activitiesForPage, createPairs, createQuestions, createMiniLesson, restoreActivityProgress, finishActivity, BOOK_ROWS, BOOK_ROW_PAGES, MEMORY_LEVELS } from '../src/data/bookActivities.js';
 import {activityRoundReducer,newActivityRound} from '../src/utils/activityRound.js';
-import { memoryReducer, newMemoryGame } from '../src/utils/memoryGame.js';
+import { memoryReducer, newMemoryGame, performMonteSwap } from '../src/utils/memoryGame.js';
 import { SHAPE_GROUPS } from '../src/data/alphabetData.js';
 import { readStore, emptyStore } from '../src/utils/learningStore.js';
+import { evaluateDrawing } from '../src/utils/drawingEvaluation.js';
 
 test('Only pages 14–16 offer the appropriate pilot activities',()=>{
   for(let page=6;page<=74;page++)assert.equal(activitiesForPage(page).length,[14,15,16].includes(page)?4:0);
@@ -80,6 +81,18 @@ test('Memory locks a mismatched pair until conceal and prevents double flips and
   const restarted=memoryReducer(s,{type:'restart',cards:createPairs(16,()=>.7,10)});
   assert.equal(restarted.cards.length,20);assert.equal(restarted.turns,0);assert.deepEqual(restarted.matched,[]);
 });
+test('Monte swap actively shuffles card positions across slots and preserves deck consistency', () => {
+  const deck = createPairs(14);
+  const swapped = performMonteSwap(deck);
+  assert.equal(swapped.length, deck.length);
+  assert.deepEqual(new Set(swapped.map(c => c.key)), new Set(deck.map(c => c.key)));
+  const movedCount = deck.filter((c, i) => swapped[i].key !== c.key).length;
+  assert.ok(movedCount >= 4, `Expected cards to swap slots, got movedCount=${movedCount}`);
+  let s = newMemoryGame(deck);
+  s = memoryReducer(s, { type: 'shuffle', cards: swapped });
+  assert.deepEqual(s.cards, swapped);
+  assert.deepEqual(s.open, []);
+});
 test('Compact book panels preserve all ten printed rows in order without dropping cells',()=>{
   assert.equal(BOOK_ROW_PAGES.length,5);assert.ok(BOOK_ROW_PAGES.every(p=>p.rows.length===2));
   assert.deepEqual(BOOK_ROW_PAGES.flatMap(p=>p.rows),BOOK_ROWS);
@@ -104,3 +117,42 @@ test('Completed activity IDs are unique; attempts are bounded, valid and survive
   const restored=readStore({getItem:()=>JSON.stringify(store)});
   assert.deepEqual(restored.reader.activityProgress,p);assert.equal(restored.reader.notes[14],'Not');assert.deepEqual(restored.reader.bookmarks,[16]);
 });
+
+test('Immediate selectAndCheck evaluates on click and handles first-try grading accurately', () => {
+  let s = newActivityRound();
+  // Wrong on first try:
+  s = activityRoundReducer(s, { type: 'selectAndCheck', id: 3, target: 5 });
+  assert.equal(s.checked, true);
+  assert.equal(s.selected, 3);
+  assert.equal(s.firstTry, false);
+  assert.equal(s.correct, 0);
+
+  // Then clicks the correct one:
+  s = activityRoundReducer(s, { type: 'selectAndCheck', id: 5, target: 5 });
+  assert.equal(s.checked, true);
+  assert.equal(s.selected, 5);
+  assert.equal(s.firstTry, false);
+  assert.equal(s.correct, 0); // No bonus point since not first try
+
+  // Next question:
+  s = activityRoundReducer(s, { type: 'next', target: 5, total: 2 });
+  assert.equal(s.index, 1);
+  assert.equal(s.checked, false);
+  assert.equal(s.firstTry, true);
+
+  // Correct on first try:
+  s = activityRoundReducer(s, { type: 'selectAndCheck', id: 7, target: 7 });
+  assert.equal(s.checked, true);
+  assert.equal(s.firstTry, true);
+  assert.equal(s.correct, 1);
+});
+
+test('Drawing evaluation guards against empty or tiny drawings and handles fallback safely', () => {
+  assert.equal(evaluateDrawing('ا', []).correct, false);
+  assert.equal(evaluateDrawing('ا', [[ [0.5, 0.5] ]]).correct, false);
+  // With non-empty dummy strokes in Node environment (fallback mode):
+  const dummyStroke = Array.from({ length: 16 }, (_, i) => [0.5, 0.1 + i * 0.05]);
+  const res = evaluateDrawing('ا', [dummyStroke]);
+  assert.ok(typeof res.correct === 'boolean');
+});
+

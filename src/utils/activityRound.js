@@ -6,6 +6,18 @@ export function activityRoundReducer(state,action) {
   if(action.type==='heard')return {...state,heard:true};
   if(action.type==='audioError')return {...state,heard:false};
   if(action.type==='choose')return state.checked||action.requiresAudio&&!state.heard?state:{...state,selected:action.id};
+  if(action.type==='selectAndCheck') {
+    if(state.done)return state;
+    const isFirst = (state.selected===null && !state.checked) ? state.firstTry : state.firstTry;
+    const isCorrect = action.id === action.target;
+    return {
+      ...state,
+      selected: action.id,
+      checked: true,
+      firstTry: isCorrect ? isFirst : false,
+      correct: state.correct + (isFirst && isCorrect ? 1 : 0)
+    };
+  }
   if(action.type==='check') {
     if(state.checked||state.selected===null||action.requiresAudio&&!state.heard)return state;
     return {...state,checked:true,correct:state.correct+(state.firstTry&&state.selected===action.target?1:0)};

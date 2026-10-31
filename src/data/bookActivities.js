@@ -4,15 +4,15 @@ export const PAGE_ACTIVITIES = {
   14: [{ id:'recognize', tr:'Mini Ders', de:'Mini-Lektion', hint:{tr:'Üç küçük adım: tanı, dinle, ayırt et.',de:'Drei kleine Schritte: erkennen, hören, unterscheiden.'} },
     {id:'listen',tr:'Dinle ve bul',de:'Hören und finden',hint:{tr:'Kaydı dinle, harfi seç.',de:'Die Aufnahme hören und den Buchstaben wählen.'}},
     {id:'pairs',tr:'Eşini bul',de:'Paare finden',hint:{tr:'Kartları çevir, harf çiftlerini keşfet!',de:'Karten umdrehen und Buchstabenpaare finden!'}},
-    {id:'trace',tr:'Harf Atölyesi',de:'Buchstabenwerkstatt',hint:{tr:'Dinle, çiz ve harfi bul.',de:'Hören, zeichnen und den Buchstaben finden.'}}],
+    {id:'trace',tr:'Bütün Harfler',de:'Alle Buchstaben',hint:{tr:'Sıralı ve karışık harfleri dinle, patlatarak bul!',de:'Höre die Buchstaben und lasse sie aufploppen!'}}],
   15: [{id:'similar',tr:'Nokta dedektifi',de:'Punkte entdecken',hint:{tr:'Benzer gövdeleri ve noktaları karşılaştır.',de:'Ähnliche Formen und Punkte vergleichen.'}},
     {id:'listen',tr:'Dinle ve bul',de:'Hören und finden',hint:{tr:'Kaydı dinle, benzerlerinden ayır.',de:'Die gehörte Form unterscheiden.'}},
     {id:'pairs',tr:'Eşini bul',de:'Paare finden',hint:{tr:'Benzer harflerin eşlerini bul.',de:'Die Paare ähnlicher Buchstaben finden.'}},
-    {id:'trace',tr:'Harf Atölyesi',de:'Buchstabenwerkstatt',hint:{tr:'Şekli incele, çiz ve benzerlerinden ayır.',de:'Die Form betrachten, zeichnen und unterscheiden.'}}],
+    {id:'trace',tr:'Bütün Harfler',de:'Alle Buchstaben',hint:{tr:'Sıralı ve karışık harfleri dinle, patlatarak bul!',de:'Höre die Buchstaben und lasse sie aufploppen!'}}],
   16: [{id:'grid',tr:'Tabloda harfi bul',de:'Im Buchstabenfeld finden',hint:{tr:'Kitaptaki sırayı izleyerek harfi bul.',de:'Den Buchstaben im Feld der Vorlage finden.'}},
     {id:'listen',tr:'Dinle ve bul',de:'Hören und finden',hint:{tr:'Kaynak seslerle kendini dene.',de:'Mit den Originalaufnahmen üben.'}},
     {id:'pairs',tr:'Eşini bul',de:'Paare finden',hint:{tr:'Yeni harf çiftleriyle yeniden oyna.',de:'Mit neuen Buchstabenpaaren spielen.'}},
-    {id:'trace',tr:'Harf Atölyesi',de:'Buchstabenwerkstatt',hint:{tr:'Harfleri çizerek tekrar et.',de:'Die Buchstaben zeichnend wiederholen.'}}],
+    {id:'trace',tr:'Bütün Harfler',de:'Alle Buchstaben',hint:{tr:'Sıralı ve karışık harfleri dinle, patlatarak bul!',de:'Höre die Buchstaben und lasse sie aufploppen!'}}],
 };
 export const activitiesForPage = page => PAGE_ACTIVITIES[page] || [];
 export const activityKey = (page, id) => `${page}:${id}`;

@@ -29,10 +29,12 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   const [compactStage, setCompactStage] = useState(innerWidth < 800);
   const [activitiesOpen,setActivitiesOpen]=useState(false);
   const activitiesTrigger=useRef(null);
+  const [sliderPhase, setSliderPhase] = useState('peek');
+  const sliderTimer = useRef(null);
   const [turn, setTurn] = useState(null), [failed, setFailed] = useState({}), [imageVersion, setImageVersion] = useState(0);
   const [panel, setPanel] = useState(false), [tab, setTab] = useState('contents'), [settings, setSettings] = useState(false), [focus, setFocus] = useState(false), [fullscreen, setFullscreen] = useState(false);
   const [draft, setDraft] = useState(String(currentPage)), [scrub, setScrub] = useState(null), [fullscreenError, setFullscreenError] = useState('');
-  const viewportRef = useRef(null), pageRef = useRef(null), gesture = useRef(null), settingsRef = useRef(null), settingsTrigger = useRef(null), panelTrigger = useRef(null);
+  const viewportRef = useRef(null), pageRef = useRef(null), gesture = useRef(null), pointers = useRef(new Map()), pinch = useRef(null), settingsRef = useRef(null), settingsTrigger = useRef(null), panelTrigger = useRef(null);
   const zoomRef = useRef(1), zoomAnchor = useRef(null), turning = useRef(false);
   const audio = useSyncExternalStore(subscribeAudio, getAudioSnapshot);
   const floatingAudio = audio.status !== 'idle' && audio.presentation !== 'activity' && (audio.presentation !== 'quiet' || audio.status === 'error');
@@ -42,6 +44,20 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   const hasActivities=preferences.activitiesEnabled===true&&activityPages.length>0;
   const closeActivities=()=>{stopCurrentAudio();setActivitiesOpen(false);};
   useEffect(()=>{setActivitiesOpen(false);stopCurrentAudio();},[currentPage,preferences.activitiesEnabled,spread]);
+  useEffect(() => {
+    if (hasActivities) {
+      setSliderPhase('expanded');
+      if (sliderTimer.current) clearTimeout(sliderTimer.current);
+      sliderTimer.current = setTimeout(() => {
+        setSliderPhase('peek');
+      }, 3600);
+    } else {
+      setSliderPhase('hidden');
+    }
+    return () => {
+      if (sliderTimer.current) clearTimeout(sliderTimer.current);
+    };
+  }, [currentPage, hasActivities]);
   const updatePreferences = patch => onReaderChange({ preferences: { ...preferences, ...patch } });
   const toggleBookmark = useCallback(() => onReaderChange({ bookmarks: reader.bookmarks.includes(currentPage) ? reader.bookmarks.filter(n => n !== currentPage) : [...reader.bookmarks, currentPage] }), [currentPage, reader.bookmarks, onReaderChange]);
   const closePanel = () => { setPanel(false); panelTrigger.current?.focus(); };
@@ -153,17 +169,65 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
     else playAudioFile(h.audio_path, { label: titleFor(h, p, i), speed: preferences.speed, presentation: isQuickLetterAudio(h, p.page_number) ? 'quiet' : 'reader', anchor: { page: p.page_number, bounds: h.bounds } });
   };
   const pointerDown = e => {
-    if (e.button !== 0 || turning.current) return;
-    gesture.current = { id: e.pointerId, x: e.clientX, y: e.clientY, left: viewportRef.current.scrollLeft, top: viewportRef.current.scrollTop, moved: false };
+    if ((e.pointerType === 'mouse' && e.button !== 0) || turning.current) return;
+    pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.current.size === 2) {
+      const [p1, p2] = [...pointers.current.values()];
+      const dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      const midX = (p1.x + p2.x) / 2, midY = (p1.y + p2.y) / 2;
+      const rect = pageRef.current.getBoundingClientRect();
+      pinch.current = {
+        dist: Math.max(20, dist),
+        zoom: zoomRef.current,
+        fx: (midX - rect.left) / rect.width,
+        fy: (midY - rect.top) / rect.height,
+      };
+      if (gesture.current) { gesture.current.moved = true; gesture.current.pinched = true; }
+      return;
+    }
+    if (pointers.current.size === 1) {
+      gesture.current = { id: e.pointerId, x: e.clientX, y: e.clientY, left: viewportRef.current.scrollLeft, top: viewportRef.current.scrollTop, moved: false, pinched: false };
+    }
   };
   const pointerMove = e => {
-    const g = gesture.current; if (!g || g.id !== e.pointerId) return;
+    if (pointers.current.has(e.pointerId)) {
+      pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    }
+    if (pointers.current.size >= 2 && pinch.current) {
+      const [p1, p2] = [...pointers.current.values()];
+      const dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      const midX = (p1.x + p2.x) / 2, midY = (p1.y + p2.y) / 2;
+      const next = clamp(pinch.current.zoom * (dist / pinch.current.dist), 0.5, 3);
+      zoomAnchor.current = { x: midX, y: midY, fx: pinch.current.fx, fy: pinch.current.fy };
+      if (Math.abs(next - zoomRef.current) > 0.001) {
+        zoomRef.current = next;
+        setZoom(next);
+      } else {
+        const rect = pageRef.current.getBoundingClientRect(), viewport = viewportRef.current;
+        viewport.scrollLeft += rect.left + rect.width * pinch.current.fx - midX;
+        viewport.scrollTop += rect.top + rect.height * pinch.current.fy - midY;
+        zoomAnchor.current = null;
+      }
+      return;
+    }
+    const g = gesture.current; if (!g || g.id !== e.pointerId || g.pinched) return;
     const dx = e.clientX - g.x, dy = e.clientY - g.y;
-    if (Math.hypot(dx, dy) > 8) { g.moved = true; e.currentTarget.setPointerCapture(e.pointerId); if (zoomRef.current > 1) { viewportRef.current.scrollLeft = g.left - dx; viewportRef.current.scrollTop = g.top - dy; } }
+    if (Math.hypot(dx, dy) > 8) {
+      g.moved = true;
+      if (!e.currentTarget.hasPointerCapture?.(e.pointerId)) e.currentTarget.setPointerCapture?.(e.pointerId);
+      if (zoomRef.current > 1) { viewportRef.current.scrollLeft = g.left - dx; viewportRef.current.scrollTop = g.top - dy; }
+    }
   };
-  const pointerUp = e => {
-    const g = gesture.current; if (!g || g.id !== e.pointerId) return;
-    if (g.moved && zoomRef.current <= 1 && Math.abs(e.clientX - g.x) > 50 && Math.abs(e.clientX - g.x) > Math.abs(e.clientY - g.y) * 1.4) go(currentPage + (e.clientX < g.x ? step : -step));
+  const pointerUp = (e, cancelled = false) => {
+    pointers.current.delete(e.pointerId);
+    if (pointers.current.size < 2) pinch.current = null;
+    if (pointers.current.size === 1) {
+      const [remId, remPos] = [...pointers.current.entries()][0];
+      gesture.current = { id: remId, x: remPos.x, y: remPos.y, left: viewportRef.current.scrollLeft, top: viewportRef.current.scrollTop, moved: true, pinched: true };
+      return;
+    }
+    const g = gesture.current; if (!g) return;
+    if (!cancelled && g.id === e.pointerId && g.moved && !g.pinched && zoomRef.current <= 1 && Math.abs(e.clientX - g.x) > 50 && Math.abs(e.clientX - g.x) > Math.abs(e.clientY - g.y) * 1.4) go(currentPage + (e.clientX < g.x ? step : -step));
     window.setTimeout(() => { if (gesture.current === g) gesture.current = null; }, 0);
   };
   const saved = reader.bookmarks.includes(currentPage);
@@ -175,19 +239,23 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
       <button className="reader-home reader-glass" onClick={togglePanel} aria-label={de?'Buchinhalt öffnen':'Kitap dizinini aç'}><BookOpen size={17}/><span>Elif-Ba</span></button>
       <div className="reader-top-tools"><button className="reader-guide-trigger reader-glass" onClick={()=>setGuide(true)} aria-label={de?'E-Book-Anleitung':'e-Kitap kullanım kılavuzu'}><CircleHelp size={18}/></button><ThemePicker theme={preferences.theme} onChange={theme=>updatePreferences({theme})} lang={lang}/><button className="reader-focus-toggle reader-glass" onClick={() => { setFocus(v => !v); setPanel(false); setSettings(false); }} aria-pressed={focus} aria-label={focus ? (de ? 'Steuerung anzeigen' : 'Kontrolleri göster') : (de ? 'Fokusmodus' : 'Odak modu')}><Focus size={17} /><span>{focus ? (de ? 'Steuerung anzeigen' : 'Kontrolleri göster') : (de ? 'Fokus' : 'Odak')}</span></button></div>
       <div className="reader-viewport" ref={viewportRef} aria-describedby="reader-help">
-        <div className="reader-desk" style={{ '--page-width': `${pageWidth}px`, '--reader-zoom': zoom, '--page-height': `${pageWidth / ASPECT}px`, '--page-count': visible.length }}>
-          <div className={`reader-book ${spread ? 'reader-spread' : ''} ${turn ? 'is-turning' : ''}`} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={() => { gesture.current = null; }} onClickCapture={e => { if (gesture.current?.moved) { e.preventDefault(); e.stopPropagation(); } }} onDragStart={e => e.preventDefault()} style={{ '--page-brightness': preferences.brightness }}>
-            {visible.map((p, index) => <div className="reader-sheet" ref={index === 0 ? pageRef : undefined} key={p.page_number}>
-              <img src={`${assetUrl(p.image)}${imageVersion ? `?v=${imageVersion}` : ''}`} alt={`${de ? 'Originalbuch, Seite' : 'Orijinal kitap, sayfa'} ${p.page_number}`} draggable="false" onError={() => setFailed(v => ({ ...v, [p.page_number]: true }))} onLoad={() => setFailed(v => ({ ...v, [p.page_number]: false }))} />
-              {failed[p.page_number] ? <div className="image-error" role="alert"><p>{de ? 'Seite konnte nicht geladen werden.' : 'Sayfa yüklenemedi.'}</p><button className="button button-white" onClick={() => setImageVersion(v => v + 1)}>{de ? 'Erneut versuchen' : 'Tekrar dene'}</button></div> : p.hotspots.filter(h => ['audio', 'video', 'goto_page'].includes(h.type)).map((h, i) => <BookHotspot key={`${p.page_number}-${h.id}-${i}`} hotspot={h} label={titleFor(h, p, i)} audio={audio} disabled={Boolean(turn)} onActivate={() => playSpot(h, p, i)} />)}
-            </div>)}
+        <div className="reader-desk" onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={e => pointerUp(e, false)} onPointerCancel={e => pointerUp(e, true)} onClickCapture={e => { if (gesture.current?.moved) { e.preventDefault(); e.stopPropagation(); } }} style={{ '--page-width': `${pageWidth}px`, '--reader-zoom': zoom, '--page-height': `${pageWidth / ASPECT}px`, '--page-count': visible.length }}>
+          <div className={`reader-book ${spread ? 'reader-spread' : ''} ${turn ? 'is-turning' : ''}`} onDragStart={e => e.preventDefault()} style={{ '--page-brightness': preferences.brightness }}>
+            {visible.map((p, index) => {
+              const hasPageActivities = activitiesForPage(p.page_number).length > 0;
+              return (
+                <div className={`reader-sheet ${hasPageActivities ? 'has-page-activities' : ''}`} ref={index === 0 ? pageRef : undefined} key={`${p.page_number}-${currentPage}`}>
+                  <img src={`${assetUrl(p.image)}${imageVersion ? `?v=${imageVersion}` : ''}`} alt={`${de ? 'Originalbuch, Seite' : 'Orijinal kitap, sayfa'} ${p.page_number}`} draggable="false" onError={() => setFailed(v => ({ ...v, [p.page_number]: true }))} onLoad={() => setFailed(v => ({ ...v, [p.page_number]: false }))} />
+                  {failed[p.page_number] ? <div className="image-error" role="alert"><p>{de ? 'Seite konnte nicht geladen werden.' : 'Sayfa yüklenemedi.'}</p><button className="button button-white" onClick={() => setImageVersion(v => v + 1)}>{de ? 'Erneut versuchen' : 'Tekrar dene'}</button></div> : p.hotspots.filter(h => ['audio', 'video', 'goto_page'].includes(h.type)).map((h, i) => <BookHotspot key={`${p.page_number}-${h.id}-${i}`} hotspot={h} pageImage={`${assetUrl(p.image)}${imageVersion ? `?v=${imageVersion}` : ''}`} label={titleFor(h, p, i)} audio={audio} disabled={Boolean(turn)} onActivate={() => playSpot(h, p, i)} />)}
+                </div>
+              );
+            })}
             {turn && <div className={`reader-curl-spread ${spread ? '' : `curl-single curl-${turn.direction}`}`}><PaperCurl from={turn.from} to={turn.to} direction={turn.direction} single={!spread} onComplete={completeTurn} /></div>}
           </div>
         </div>
       </div>
       <button className="reader-edge reader-edge-prev reader-glass" onClick={() => go(currentPage - step)} disabled={currentPage === 6 || Boolean(turn)} aria-label={de ? 'Vorherige Seite' : 'Önceki sayfa'}><ChevronLeft size={23} /></button>
       <button className="reader-edge reader-edge-next reader-glass" onClick={() => go(currentPage + step)} disabled={currentPage + visible.length > total || Boolean(turn)} aria-label={de ? 'Nächste Seite' : 'Sonraki sayfa'}><ChevronRight size={23} /></button>
-      {hasActivities&&<button ref={activitiesTrigger} className="reader-activities-trigger" aria-haspopup="dialog" aria-expanded={activitiesOpen} onClick={()=>{stopCurrentAudio();setPanel(false);setSettings(false);setActivitiesOpen(true);}}><Sparkles size={19}/>{de?'Aktivitäten auf dieser Seite':'Bu sayfanın etkinlikleri'}<span>· {activityPages.reduce((n,p)=>n+activitiesForPage(p).length,0)}</span></button>}
       <div className="reader-bottom">
         <div className="reader-scrubber"><label htmlFor="reader-position">{de ? 'Buchposition' : 'Kitaptaki konum'} <span>{Math.round((currentPage - 5) / (total - 5) * 100)}%</span></label><input id="reader-position" type="range" min="6" max={total} value={scrub ?? currentPage} onChange={e => setScrub(Number(e.target.value))} onPointerUp={e => { go(Number(e.currentTarget.value)); setScrub(null); }} onKeyUp={e => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'].includes(e.key)) { go(Number(e.currentTarget.value)); setScrub(null); } }} onBlur={e => { if (scrub !== null) { go(Number(e.currentTarget.value)); setScrub(null); } }} aria-valuetext={`${de ? 'Seite' : 'Sayfa'} ${scrub ?? currentPage}`} />{scrub !== null && <div className="reader-scrub-preview"><img src={assetUrl(pagesData[scrub - 1].thumbnail)} alt="" /><span>{de ? 'Seite' : 'Sayfa'} {scrub}</span></div>}</div>
         <div className="reader-dock reader-glass" role="toolbar" aria-label={de ? 'Lesewerkzeuge' : 'Okuma araçları'}>
@@ -201,6 +269,33 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
           <Control label={fullscreen ? (de ? 'Vollbild verlassen' : 'Tam ekrandan çık') : (de ? 'Vollbild' : 'Tam ekran')} onClick={toggleFullscreen}>{fullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}</Control>
           <button ref={settingsTrigger} className="reader-control" aria-label={de ? 'Leseeinstellungen' : 'Okuma ayarları'} aria-expanded={settings} aria-controls="reader-settings" data-tip={de ? 'Leseeinstellungen' : 'Okuma ayarları'} onClick={() => setSettings(v => !v)}><SlidersHorizontal size={18} /></button>
         </div>
+        {hasActivities && (
+          <div className="reader-activities-drawer-wrap">
+            <button
+              ref={activitiesTrigger}
+              className={`reader-activities-drawer-tab ${sliderPhase}`}
+              aria-haspopup="dialog"
+              aria-expanded={activitiesOpen}
+              onClick={() => {
+                stopCurrentAudio();
+                setPanel(false);
+                setSettings(false);
+                setActivitiesOpen(true);
+              }}
+              aria-label={de ? 'Aktivitäten auf dieser Seite' : 'Bu sayfada etkinlikler var'}
+            >
+              <span className="drawer-sparkle-pill">
+                <Sparkles size={16} className="drawer-sparkle-icon" />
+              </span>
+              <span className="drawer-label-text">
+                {de ? 'Bu sayfada etkinlikler var' : 'Bu sayfada etkinlikler var'}
+              </span>
+              <span className="drawer-count-badge">
+                · {activityPages.reduce((n, p) => n + activitiesForPage(p).length, 0)}
+              </span>
+            </button>
+          </div>
+        )}
         {settings && <div id="reader-settings" className="reader-settings reader-glass" ref={settingsRef} role="dialog" aria-label={de ? 'Leseeinstellungen' : 'Okuma ayarları'} onKeyDown={e => { if (e.key === 'Escape') { e.stopPropagation(); setSettings(false); settingsTrigger.current?.focus(); } }}><div className="reader-settings-title"><h2>{de ? 'Leseeinstellungen' : 'Okuma ayarları'}</h2><Control label={de ? 'Schließen' : 'Kapat'} onClick={() => { setSettings(false); settingsTrigger.current?.focus(); }}><X size={17} /></Control></div>
           <fieldset><legend>{de ? 'Hintergrund' : 'Okuma zemini'}</legend><div className="reader-options">{[['aqua', Sun, de ? 'Wassergrün' : 'Su Yeşili'], ['sepia', Coffee, de ? 'Sepia' : 'Sepya'], ['dark', Moon, de ? 'Dunkel' : 'Karanlık']].map(([value, Icon, label]) => <button key={value} onClick={() => updatePreferences({ theme: value })} aria-pressed={preferences.theme === value}><Icon size={17} />{label}</button>)}</div></fieldset>
           <fieldset><legend>{de ? 'Seitenansicht' : 'Sayfa görünümü'}</legend><div className="reader-options"><button onClick={() => updatePreferences({ spread: false })} aria-pressed={!preferences.spread}><File size={17} />{de ? 'Einzelseite' : 'Tek sayfa'}</button><button onClick={() => updatePreferences({ spread: true })} disabled={!wide} aria-pressed={preferences.spread && wide}><Columns2 size={17} />{de ? 'Doppelseite' : 'Çift sayfa'}</button></div>{!wide && <p>{de ? 'Doppelseiten sind auf breiten Bildschirmen verfügbar.' : 'Çift sayfa geniş ekranlarda kullanılabilir.'}</p>}</fieldset>
@@ -215,7 +310,7 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
           <p className="reader-shortcuts">← → {de ? 'Blättern' : 'Sayfa çevir'} · + − {de ? 'Zoom' : 'Yakınlaştır'} · B {de ? 'Lesezeichen' : 'Yer imi'} · F {de ? 'Vollbild' : 'Tam ekran'}</p>
         </div>}
       </div>
-      <p id="reader-help" className="reader-help">{de ? 'Mausrad: Zoom · Ziehen: Blättern / Verschieben · 0: ganze Seite' : (compactStage ? 'Yana kaydır: sayfa çevir · Yakınlaştırma: okuma ayarları' : 'Tekerlek: yakınlaştır · Sürükle: sayfa çevir / gezin · 0: sayfaya sığdır')}</p>
+      <p id="reader-help" className="reader-help">{de ? 'Mausrad / Pinch: Zoom · Ziehen: Blättern / Verschieben · 0: ganze Seite' : (compactStage ? 'Yana kaydır: sayfa çevir · İki parmakla: büyüt / küçült' : 'Tekerlek / iki parmak: yakınlaştır · Sürükle: sayfa çevir / gezin · 0: sayfaya sığdır')}</p>
       <span className="sr-only" role="status" aria-live="polite">{de ? 'Seite' : 'Sayfa'} {currentPage}{visible.length === 2 ? `–${currentPage + 1}` : ''} / {total}</span>
       {fullscreenError && <p className="reader-notice" role="status">{fullscreenError}<button onClick={() => setFullscreenError('')} aria-label={de ? 'Schließen' : 'Kapat'}><X size={15} /></button></p>}
     </div>

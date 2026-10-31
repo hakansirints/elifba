@@ -11,7 +11,7 @@
 .reader-focus-toggle { right: 24px; }
 .reader-home:hover, .reader-focus-toggle:hover { background: var(--reader-selected); }
 .reader-viewport { width: 100%; height: 100%; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
-.reader-desk { display: grid; place-items: center; width: max(100%, calc(var(--page-width) * var(--page-count) * var(--reader-zoom) + 128px)); height: max(100%, calc(var(--page-height) * var(--reader-zoom) + 206px)); padding: 80px 64px 126px; box-sizing: border-box; }
+.reader-desk { display: grid; place-items: center; width: max(100%, calc(var(--page-width) * var(--page-count) * var(--reader-zoom) + 128px)); height: max(100%, calc(var(--page-height) * var(--reader-zoom) + 206px)); padding: 80px 64px 126px; box-sizing: border-box; touch-action: none; }
 .reader-book { position: relative; display: flex; width: calc(var(--page-width) * var(--page-count) * var(--reader-zoom)); height: calc(var(--page-height) * var(--reader-zoom)); touch-action: none; user-select: none; cursor: grab; filter: brightness(var(--page-brightness, 1)); box-shadow: 0 16px 45px #2c453624, 0 2px 5px #2c453624; }
 .reader-book:active { cursor: grabbing; }
 .reader-sheet { position: relative; flex: 1 1 0; min-width: 0; height: 100%; background: #fffde8; }
@@ -20,9 +20,254 @@
 .reader-spread .reader-sheet:first-child::after { box-shadow: inset -10px 0 18px -12px #3d442a66; }
 .reader-spread .reader-sheet:nth-child(2)::after { box-shadow: inset 10px 0 18px -12px #3d442a66; }
 .reader-book.is-turning .reader-sheet { pointer-events: none; }
-.book-hotspot { position: absolute; border: 0; border-radius: 3px; background: transparent; padding: 0; }
+.book-hotspot {
+  position: absolute;
+  border: 0;
+  border-radius: var(--lift-radius, 10px);
+  background: transparent;
+  padding: 0;
+  --lift-scale: 1.25;
+  --lift-y: -10px;
+  --lift-radius: 12px;
+}
+.hotspot-compact {
+  --lift-scale: 1.35;
+  --lift-y: -8px;
+  --lift-radius: 8px;
+}
 .book-hotspot:hover, .book-hotspot.hotspot-active { background: transparent; }
 .book-hotspot:focus-visible { outline: 2px solid #527457; outline-offset: 3px; }
+
+/* Hotspot active lift & page detachment ("Kopma & Yakınlaşma") */
+.book-hotspot.hotspot-active {
+  z-index: 55;
+}
+
+/* Recessed cut-out shadow on the underlying page */
+.book-hotspot.hotspot-active::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--lift-radius, 12px);
+  background: rgba(35, 28, 18, 0.09);
+  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.28), inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  z-index: 1;
+  animation: hotspot-indentation 0.32s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+@keyframes hotspot-indentation {
+  0% { opacity: 0; transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* The lifted 3D card */
+.hotspot-lift-card {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--lift-radius, 12px);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1) translateY(0);
+  transform-origin: center center;
+  transition: transform 0.36s cubic-bezier(0.2, 0.9, 0.3, 1.15), box-shadow 0.36s ease, opacity 0.24s ease, visibility 0.24s ease;
+  will-change: transform, box-shadow, opacity;
+  z-index: 10;
+}
+
+.hotspot-passage:hover:not(.hotspot-active) {
+  cursor: pointer;
+}
+.hotspot-passage:hover:not(.hotspot-active) .hotspot-lift-card {
+  opacity: 0.88;
+  visibility: visible;
+  transform: scale(1.025) translateY(-3px);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.16),
+    0 2px 6px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(46, 125, 77, 0.35);
+}
+
+.hotspot-lift-card.is-lifted {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: scale(var(--lift-scale, 1.25)) translateY(var(--lift-y, -10px)) !important;
+  box-shadow:
+    0 32px 64px rgba(0, 0, 0, 0.42),
+    0 10px 24px rgba(0, 0, 0, 0.22),
+    0 0 0 1.5px rgba(255, 255, 255, 0.95),
+    0 0 0 3.5px rgba(46, 125, 77, 0.55);
+}
+
+.hotspot-lift-clip {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--lift-radius, 12px);
+  overflow: hidden;
+  background: #fbf9ee;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.hotspot-lift-img {
+  position: absolute;
+  max-width: none !important;
+  max-height: none !important;
+  pointer-events: none;
+  user-select: none;
+  display: block;
+}
+
+.hotspot-lift-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--lift-radius, 12px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.75);
+  pointer-events: none;
+}
+
+.hotspot-lift-badge {
+  position: absolute;
+  top: -24px;
+  right: 14px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--play-green, #2e7d4d);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(46, 125, 77, 0.45);
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.25s ease 0.1s, transform 0.25s ease 0.1s;
+  pointer-events: none;
+  letter-spacing: 0.3px;
+  z-index: 20;
+}
+
+.hotspot-lift-card.is-lifted .hotspot-lift-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hotspot-compact .hotspot-lift-badge {
+  top: -7px;
+  right: -7px;
+  padding: 3px;
+  width: 19px;
+  height: 19px;
+  justify-content: center;
+}
+
+.hotspot-badge-pulse {
+  animation: badge-sound-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes badge-sound-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.25); opacity: 0.8; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotspot-lift-card { transition: none !important; transform: none !important; }
+  .book-hotspot.hotspot-active::before { animation: none !important; }
+  .hotspot-badge-pulse { animation: none !important; }
+}
+
+/* Page activity aura glow ("Sayfada etkinlik parlaması") */
+.reader-sheet.has-page-activities {
+  animation: page-activity-glow 2.8s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+@keyframes page-activity-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 125, 77, 0);
+  }
+  25% {
+    box-shadow: 0 0 0 5px rgba(46, 125, 77, 0.8), 0 0 40px rgba(46, 125, 77, 0.45);
+  }
+  60% {
+    box-shadow: 0 0 0 3px rgba(46, 125, 77, 0.5), 0 0 24px rgba(46, 125, 77, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 125, 77, 0);
+  }
+}
+
+/* Sliding activities drawer at control bar bottom-right ("Etkinlik sürgüsü") */
+.reader-activities-drawer-wrap {
+  position: absolute;
+  right: 0;
+  bottom: -46px;
+  z-index: 25;
+  pointer-events: auto;
+}
+.reader-activities-drawer-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 6px 16px 6px 12px;
+  border-radius: 999px;
+  background: var(--reader-surface, #ffffff);
+  color: var(--reader-ink, #2d3748);
+  border: 1.5px solid rgba(46, 125, 77, 0.55);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), 0 0 16px rgba(46, 125, 77, 0.35);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.55s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  will-change: transform;
+}
+.reader-activities-drawer-tab.expanded {
+  transform: translateX(0);
+  animation: drawer-shimmer-glow 2.2s infinite ease-in-out;
+}
+.reader-activities-drawer-tab.peek {
+  transform: translateX(calc(100% - 46px));
+}
+.reader-activities-drawer-tab:hover,
+.reader-activities-drawer-tab:focus-visible {
+  transform: translateX(0) !important;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22), 0 0 24px rgba(46, 125, 77, 0.6);
+  border-color: var(--play-green, #2e7d4d);
+}
+.drawer-sparkle-pill {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(46, 125, 77, 0.15);
+  color: var(--play-green, #2e7d4d);
+  flex-shrink: 0;
+}
+.drawer-sparkle-icon {
+  animation: sparkle-gentle-spin 3s ease-in-out infinite;
+}
+.drawer-count-badge {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--play-green, #2e7d4d);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+@keyframes drawer-shimmer-glow {
+  0%, 100% {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), 0 0 16px rgba(46, 125, 77, 0.35);
+  }
+  50% {
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22), 0 0 26px rgba(46, 125, 77, 0.65);
+  }
+}
+@keyframes sparkle-gentle-spin {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.15) rotate(15deg); }
+}
 .hotspot-rail { position: absolute; top: 5px; bottom: 5px; left: -18px; width: 13px; display: flex; align-items: center; justify-content: center; color: #58765a; opacity: 0; transform: translateX(2px); transition: opacity .18s, transform .18s; pointer-events: none; }
 .hotspot-rail::before { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 2px; background: currentColor; border-radius: 3px; }
 .hotspot-rail-icon { display: grid; place-items: center; width: 19px; height: 24px; border-radius: 8px; background: #fffde8; }
