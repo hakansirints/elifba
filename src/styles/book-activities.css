@@ -351,6 +351,11 @@
   z-index: 5;
 }
 /* Card Confetti Explosion */
+.activity-letter.has-confetti,
+.memory-card.has-confetti {
+  overflow: visible !important;
+  z-index: 50 !important;
+}
 .card-confetti {
   position: absolute;
   inset: 0;

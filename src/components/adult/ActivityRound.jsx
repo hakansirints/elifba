@@ -4,13 +4,14 @@ import {BOOK_ROW_PAGES,createMiniLesson,createQuestions} from '../../data/bookAc
 import {letterById,letterName} from '../../data/alphabetData';
 import {activityRoundReducer,newActivityRound} from '../../utils/activityRound';
 import {playAudioFile,stopCurrentAudio,sfx} from '../../utils/audioPlayer';
-import {Buddy,Feedback,Finish,Glyph} from './ActivityPrimitives';
+import {Buddy,CardConfetti,Feedback,Finish,Glyph} from './ActivityPrimitives';
 
 export default function ActivityRound({page,mode,lang,speed,targetId,onFinish,onBack,onReplay,onNextLetter}) {
   const de=lang==='de',mini=mode==='recognize';
   const [questions]=useState(()=>mini?createMiniLesson(page,targetId):createQuestions(page,mode));
   const [state,dispatch]=useReducer(activityRoundReducer,undefined,newActivityRound);
   const [audioError,setAudioError]=useState(false);
+  const [confettiId,setConfettiId]=useState(null);
   const [rowPage,setRowPage]=useState(()=>Math.max(0,BOOK_ROW_PAGES.findIndex(p=>p.rows.flat().includes(questions[0].letter.id))));
   const headingRef=useRef(null),actionRef=useRef(null),audioToken=useRef(0),submitted=useRef(false),autoAudioTimer=useRef(null);
   const q=questions[state.index],letter=q.letter,kind=q.kind||mode;
@@ -38,9 +39,14 @@ export default function ActivityRound({page,mode,lang,speed,targetId,onFinish,on
     if(right)return;
     audioToken.current++;stopCurrentAudio();
     dispatch({type:'selectAndCheck',id,target:letter.id});
-    if(id===letter.id)sfx.playStar();
+    if(id===letter.id){
+      sfx.playStar();
+      setConfettiId(id);
+      setTimeout(()=>setConfettiId(null),750);
+    }
   };
   const act=()=>{
+    setConfettiId(null);
     if(wrong){dispatch({type:'retry',target:letter.id});return;}
     if(!state.checked)return;
     audioToken.current++;stopCurrentAudio();
@@ -58,7 +64,7 @@ export default function ActivityRound({page,mode,lang,speed,targetId,onFinish,on
       {['grid','shape'].includes(kind)?<div className="activity-target"><Glyph letter={letter}/></div>:kind==='listen'?<button className="activity-btn activity-primary" onClick={listen}><Volume2 size={20}/>{de?'Anhören':'Dinle'}</button>:<span className="activity-prompt-hint">{letter.shape[lang]}</span>}
       {audioError&&<p className="activity-audio-error" role="alert">{de?'Bitte erneut anhören.':'Ses açılamadı, yeniden dokun.'}</p>}
     </section><div className="activity-board">
-      {kind==='grid'?<><div className="activity-grid-pager"><button className="activity-btn" aria-label={de?'Vorherige Reihen':'Önceki satırlar'} disabled={rowPage===0} onClick={()=>setRowPage(n=>n-1)}><ChevronLeft size={18}/></button><label><span className="sr-only">{de?'Buchreihen':'Kitaptaki satırlar'}</span><select value={rowPage} onChange={e=>setRowPage(Number(e.target.value))}>{BOOK_ROW_PAGES.map((p,n)=><option key={n} value={n}>{de?'Reihen':'Satır'} {p.start+1}–{p.start+2}</option>)}</select></label><button className="activity-btn" aria-label={de?'Nächste Reihen':'Sonraki satırlar'} disabled={rowPage===4} onClick={()=>setRowPage(n=>n+1)}><ChevronRight size={18}/></button></div><div className="activity-book-grid" aria-label={de?'Buchstabenfeld der Seite 16':'Sayfa 16 harf tablosu'}>{BOOK_ROW_PAGES[rowPage].rows.map((row,r)=><div key={`${rowPage}-${r}`} dir="rtl"><small>{BOOK_ROW_PAGES[rowPage].start+r+1}</small>{row.map((id,c)=><button className={`activity-letter ${state.selected===id?'is-selected':''} ${right&&id===letter.id?'is-correct':''} ${wrong&&state.selected===id?'is-incorrect':''}`} key={c} aria-label={de?`Reihe ${BOOK_ROW_PAGES[rowPage].start+r+1}, Spalte ${'ABCDEF'[c]}`:`Satır ${BOOK_ROW_PAGES[rowPage].start+r+1}, sütun ${'ABCDEF'[c]}`} aria-pressed={state.selected===id} disabled={right} onClick={()=>choose(id)}><Glyph letter={letterById(id)}/></button>)}</div>)}</div></>:<div className="activity-options" dir="rtl" style={{'--option-count':q.options.length}}>{q.options.map(l=><button className={`activity-letter ${state.selected===l.id?'is-selected':''} ${right&&l.id===letter.id?'is-correct':''} ${wrong&&state.selected===l.id?'is-incorrect':''}`} key={l.id} disabled={right} onClick={()=>choose(l.id)} aria-label={letterName(l,lang)} aria-pressed={state.selected===l.id}><Glyph letter={l}/>{right&&l.id===letter.id&&<Check className="answer-check" size={20}/>}</button>)}</div>}
+      {kind==='grid'?<><div className="activity-grid-pager"><button className="activity-btn" aria-label={de?'Vorherige Reihen':'Önceki satırlar'} disabled={rowPage===0} onClick={()=>setRowPage(n=>n-1)}><ChevronLeft size={18}/></button><label><span className="sr-only">{de?'Buchreihen':'Kitaptaki satırlar'}</span><select value={rowPage} onChange={e=>setRowPage(Number(e.target.value))}>{BOOK_ROW_PAGES.map((p,n)=><option key={n} value={n}>{de?'Reihen':'Satır'} {p.start+1}–{p.start+2}</option>)}</select></label><button className="activity-btn" aria-label={de?'Nächste Reihen':'Sonraki satırlar'} disabled={rowPage===4} onClick={()=>setRowPage(n=>n+1)}><ChevronRight size={18}/></button></div><div className="activity-book-grid" aria-label={de?'Buchstabenfeld der Seite 16':'Sayfa 16 harf tablosu'}>{BOOK_ROW_PAGES[rowPage].rows.map((row,r)=><div key={`${rowPage}-${r}`} dir="rtl"><small>{BOOK_ROW_PAGES[rowPage].start+r+1}</small>{row.map((id,c)=><button className={`activity-letter ${state.selected===id?'is-selected':''} ${right&&id===letter.id?'is-correct':''} ${wrong&&state.selected===id?'is-incorrect':''} ${confettiId===id?'has-confetti':''}`} key={c} aria-label={de?`Reihe ${BOOK_ROW_PAGES[rowPage].start+r+1}, Spalte ${'ABCDEF'[c]}`:`Satır ${BOOK_ROW_PAGES[rowPage].start+r+1}, sütun ${'ABCDEF'[c]}`} aria-pressed={state.selected===id} disabled={right} onClick={()=>choose(id)}><Glyph letter={letterById(id)}/>{confettiId===id&&<CardConfetti/>}</button>)}</div>)}</div></>:<div className="activity-options" dir="rtl" style={{'--option-count':q.options.length}}>{q.options.map(l=><button className={`activity-letter ${state.selected===l.id?'is-selected':''} ${right&&l.id===letter.id?'is-correct':''} ${wrong&&state.selected===l.id?'is-incorrect':''} ${confettiId===l.id?'has-confetti':''}`} key={l.id} disabled={right} onClick={()=>choose(l.id)} aria-label={letterName(l,lang)} aria-pressed={state.selected===l.id}><Glyph letter={l}/>{right&&l.id===letter.id&&<Check className="answer-check" size={20}/>}{confettiId===l.id&&<CardConfetti/>}</button>)}</div>}
     </div></div>
     <Feedback tone={right?'correct':wrong?'encourage':'ready'} reward={state.index} title={right?(de?'Super gefunden!':'Harika buldun!'):wrong?(de?'Schauen wir noch einmal.':'Birlikte yeniden bakalım.'):(de?'Du schaffst das!':'Haydi, sen bulabilirsin!')} detail={detail}>
       {state.checked&&<button className="activity-btn activity-sound" onClick={listen} aria-label={de?'Buchstaben hören':'Harfi dinle'}><Volume2 size={18}/></button>}

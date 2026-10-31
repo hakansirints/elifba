@@ -1,7 +1,7 @@
 import ThemePicker from '../common/ThemePicker';
 import { assetUrl } from '../../utils/urls';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { ChevronLeft, ChevronRight, PanelLeft, ZoomIn, ZoomOut, Bookmark, Maximize2, Minimize2, SlidersHorizontal, X, Columns2, File, Focus, Eye, Sun, Moon, Coffee, Volume2, BookOpen, CircleHelp, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PanelLeft, ZoomIn, ZoomOut, Bookmark, Maximize2, Minimize2, SlidersHorizontal, X, Columns2, File, Focus, Eye, Sun, Moon, Coffee, Volume2, BookOpen, CircleHelp, Sparkles, Gamepad2 } from 'lucide-react';
 import { ARABIC_LETTERS } from '../../data/curriculumData';
 import { playAudioFile, stopCurrentAudio, setGlobalPlaybackSpeed, subscribeAudio, getAudioSnapshot } from '../../utils/audioPlayer';
 import { READER_DEFAULTS } from '../../utils/readerTools';
@@ -29,8 +29,8 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   const [compactStage, setCompactStage] = useState(innerWidth < 800);
   const [activitiesOpen,setActivitiesOpen]=useState(false);
   const activitiesTrigger=useRef(null);
-  const [sliderPhase, setSliderPhase] = useState('peek');
-  const sliderTimer = useRef(null);
+  const [shimmerActive, setShimmerActive] = useState(false);
+  const shimmerTimer = useRef(null);
   const [turn, setTurn] = useState(null), [failed, setFailed] = useState({}), [imageVersion, setImageVersion] = useState(0);
   const [panel, setPanel] = useState(false), [tab, setTab] = useState('contents'), [settings, setSettings] = useState(false), [focus, setFocus] = useState(false), [fullscreen, setFullscreen] = useState(false);
   const [draft, setDraft] = useState(String(currentPage)), [scrub, setScrub] = useState(null), [fullscreenError, setFullscreenError] = useState('');
@@ -46,16 +46,17 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   useEffect(()=>{setActivitiesOpen(false);stopCurrentAudio();},[currentPage,preferences.activitiesEnabled,spread]);
   useEffect(() => {
     if (hasActivities) {
-      setSliderPhase('expanded');
-      if (sliderTimer.current) clearTimeout(sliderTimer.current);
-      sliderTimer.current = setTimeout(() => {
-        setSliderPhase('peek');
+      setShimmerActive(true);
+      if (shimmerTimer.current) clearTimeout(shimmerTimer.current);
+      shimmerTimer.current = setTimeout(() => {
+        setShimmerActive(false);
       }, 3600);
     } else {
-      setSliderPhase('hidden');
+      setShimmerActive(false);
+      if (shimmerTimer.current) clearTimeout(shimmerTimer.current);
     }
     return () => {
-      if (sliderTimer.current) clearTimeout(sliderTimer.current);
+      if (shimmerTimer.current) clearTimeout(shimmerTimer.current);
     };
   }, [currentPage, hasActivities]);
   const updatePreferences = patch => onReaderChange({ preferences: { ...preferences, ...patch } });
@@ -268,34 +269,32 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
           <button className="reader-control reader-layout-trigger" onClick={() => updatePreferences({ spread: !preferences.spread })} aria-pressed={spread} disabled={!wide} aria-label={de ? 'Doppelseite' : 'Çift sayfa'} data-tip={de ? 'Doppelseite' : 'Çift sayfa'}><Columns2 size={18} /></button>
           <Control label={fullscreen ? (de ? 'Vollbild verlassen' : 'Tam ekrandan çık') : (de ? 'Vollbild' : 'Tam ekran')} onClick={toggleFullscreen}>{fullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}</Control>
           <button ref={settingsTrigger} className="reader-control" aria-label={de ? 'Leseeinstellungen' : 'Okuma ayarları'} aria-expanded={settings} aria-controls="reader-settings" data-tip={de ? 'Leseeinstellungen' : 'Okuma ayarları'} onClick={() => setSettings(v => !v)}><SlidersHorizontal size={18} /></button>
+          <span className="reader-dock-divider" />
+          <button
+            ref={activitiesTrigger}
+            className={`reader-control reader-learn-play-btn ${hasActivities ? 'is-active' : 'is-disabled'} ${shimmerActive ? 'is-shimmering' : ''}`}
+            disabled={!hasActivities}
+            onClick={() => {
+              if (!hasActivities) return;
+              stopCurrentAudio();
+              setPanel(false);
+              setSettings(false);
+              setActivitiesOpen(true);
+            }}
+            aria-haspopup="dialog"
+            aria-expanded={activitiesOpen}
+            aria-label={de ? 'Spielen & Lernen' : 'Eğlen & Öğren'}
+            data-tip={hasActivities ? (de ? 'Spielen & Lernen' : 'Eğlen & Öğren') : (de ? 'Keine Spiele auf dieser Seite' : 'Bu sayfada etkinlik yok')}
+          >
+            <Gamepad2 size={18} className="learn-play-icon" />
+            <span className="learn-play-text">{de ? 'Spielen & Lernen' : 'Eğlen & Öğren'}</span>
+            {hasActivities && (
+              <span className="learn-play-badge">
+                {activityPages.reduce((n, p) => n + activitiesForPage(p).length, 0)}
+              </span>
+            )}
+          </button>
         </div>
-        {hasActivities && (
-          <div className="reader-activities-drawer-wrap">
-            <button
-              ref={activitiesTrigger}
-              className={`reader-activities-drawer-tab ${sliderPhase}`}
-              aria-haspopup="dialog"
-              aria-expanded={activitiesOpen}
-              onClick={() => {
-                stopCurrentAudio();
-                setPanel(false);
-                setSettings(false);
-                setActivitiesOpen(true);
-              }}
-              aria-label={de ? 'Aktivitäten auf dieser Seite' : 'Bu sayfada etkinlikler var'}
-            >
-              <span className="drawer-sparkle-pill">
-                <Sparkles size={16} className="drawer-sparkle-icon" />
-              </span>
-              <span className="drawer-label-text">
-                {de ? 'Bu sayfada etkinlikler var' : 'Bu sayfada etkinlikler var'}
-              </span>
-              <span className="drawer-count-badge">
-                · {activityPages.reduce((n, p) => n + activitiesForPage(p).length, 0)}
-              </span>
-            </button>
-          </div>
-        )}
         {settings && <div id="reader-settings" className="reader-settings reader-glass" ref={settingsRef} role="dialog" aria-label={de ? 'Leseeinstellungen' : 'Okuma ayarları'} onKeyDown={e => { if (e.key === 'Escape') { e.stopPropagation(); setSettings(false); settingsTrigger.current?.focus(); } }}><div className="reader-settings-title"><h2>{de ? 'Leseeinstellungen' : 'Okuma ayarları'}</h2><Control label={de ? 'Schließen' : 'Kapat'} onClick={() => { setSettings(false); settingsTrigger.current?.focus(); }}><X size={17} /></Control></div>
           <fieldset><legend>{de ? 'Hintergrund' : 'Okuma zemini'}</legend><div className="reader-options">{[['aqua', Sun, de ? 'Wassergrün' : 'Su Yeşili'], ['sepia', Coffee, de ? 'Sepia' : 'Sepya'], ['dark', Moon, de ? 'Dunkel' : 'Karanlık']].map(([value, Icon, label]) => <button key={value} onClick={() => updatePreferences({ theme: value })} aria-pressed={preferences.theme === value}><Icon size={17} />{label}</button>)}</div></fieldset>
           <fieldset><legend>{de ? 'Seitenansicht' : 'Sayfa görünümü'}</legend><div className="reader-options"><button onClick={() => updatePreferences({ spread: false })} aria-pressed={!preferences.spread}><File size={17} />{de ? 'Einzelseite' : 'Tek sayfa'}</button><button onClick={() => updatePreferences({ spread: true })} disabled={!wide} aria-pressed={preferences.spread && wide}><Columns2 size={17} />{de ? 'Doppelseite' : 'Çift sayfa'}</button></div>{!wide && <p>{de ? 'Doppelseiten sind auf breiten Bildschirmen verfügbar.' : 'Çift sayfa geniş ekranlarda kullanılabilir.'}</p>}</fieldset>

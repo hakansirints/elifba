@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, Check, RotateCcw, Sparkles, Star, Trophy, Volume
 import { LETTERS, letterName } from '../../data/alphabetData';
 import { performMonteSwap } from '../../utils/memoryGame';
 import { playAudioFile, stopCurrentAudio, sfx } from '../../utils/audioPlayer';
-import { Buddy, Feedback, Glyph } from './ActivityPrimitives';
+import { Buddy, CardConfetti, Feedback, Glyph } from './ActivityPrimitives';
 
 function shuffleList(list) {
   const next = [...list];
@@ -13,25 +13,6 @@ function shuffleList(list) {
   }
   return next;
 }
-
-const CONFETTI_PIECES = [
-  { x: 38, y: -10, rot: 180, color: '#f59e0b', delay: 0 },
-  { x: 32, y: -32, rot: 240, color: '#10b981', delay: 20 },
-  { x: 18, y: -46, rot: -160, color: '#3b82f6', delay: 10 },
-  { x: 4, y: -50, rot: 320, color: '#ec4899', delay: 30 },
-  { x: -12, y: -48, rot: -220, color: '#8b5cf6', delay: 0 },
-  { x: -28, y: -36, rot: 190, color: '#f97316', delay: 25 },
-  { x: -40, y: -16, rot: -270, color: '#06b6d4', delay: 15 },
-  { x: -44, y: 6, rot: 140, color: '#84cc16', delay: 5 },
-  { x: -36, y: 28, rot: -180, color: '#ef4444', delay: 20 },
-  { x: -16, y: 40, rot: 260, color: '#eab308', delay: 10 },
-  { x: 2, y: 44, rot: -300, color: '#10b981', delay: 30 },
-  { x: 22, y: 36, rot: 210, color: '#6366f1', delay: 15 },
-  { x: 36, y: 20, rot: -240, color: '#f43f5e', delay: 5 },
-  { x: 42, y: 4, rot: 300, color: '#0ea5e9', delay: 25 },
-  { x: 22, y: -20, rot: -120, color: '#e11d48', delay: 10 },
-  { x: -20, y: 18, rot: 160, color: '#a855f7', delay: 20 },
-];
 
 export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFinish }) {
   const de = lang === 'de';
@@ -386,23 +367,7 @@ export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFini
                         <Check size={11} strokeWidth={3} />
                       </span>
                     )}
-                    {hasConfetti && (
-                      <span className="card-confetti" aria-hidden="true">
-                        {CONFETTI_PIECES.map((piece, i) => (
-                          <span
-                            key={i}
-                            className="confetti-piece"
-                            style={{
-                              '--tx': `${piece.x}px`,
-                              '--ty': `${piece.y}px`,
-                              '--rot': `${piece.rot}deg`,
-                              '--bg': piece.color,
-                              '--delay': `${piece.delay}ms`,
-                            }}
-                          />
-                        ))}
-                      </span>
-                    )}
+                    {hasConfetti && <CardConfetti />}
                   </button>
                 );
               })}
