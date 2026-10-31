@@ -21,6 +21,3 @@ function subscribe(callback) {
 export function useRoute() {
   return useSyncExternalStore(subscribe, getRoute);
 }
-export function safeReturn(value) {
-  return typeof value === 'string' && /^\/(yetiskin|cocuk)(\/|$)/.test(value) ? value : null;
-}

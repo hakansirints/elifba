@@ -15,7 +15,7 @@ assert.ok(!fs.existsSync('dist/data/original_config'),'Original development file
 console.log(`Standalone package OK: ${inventory.files.length} required media files; 69 reader pages (source IDs 6–74).`);
 const origin=process.argv[2];
 if(origin){
-  for(const route of ['/','/yetiskin/ders/ustun-01','/cocuk/gorev/ustun-01','/yetiskin/temel-bilgiler','/e-kitap/sayfa/18']){
+  for(const route of ['/','/yetiskin/alfabe/tanima','/cocuk','/yetiskin/alfabe/pratik','/e-kitap/sayfa/18']){
     const res=await fetch(origin+route);assert.equal(res.status,200,route);assert.match(res.headers.get('content-type'),/text\/html/);assert.match(await res.text(),/id="root"/);
   }
   const data=await fetch(origin+'/data/pages_metadata.json');assert.match(data.headers.get('content-type'),/json/);assert.equal((await data.json()).length,74);

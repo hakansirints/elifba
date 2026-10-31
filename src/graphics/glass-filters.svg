@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="elifba-refract-card" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+      <!-- 0.5 is a neutral displacement channel. The center stays neutral; edges bend inward. -->
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22x%22%3E%3Cstop%20stop-color%3D%22%23ff0000%22%2F%3E%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23800000%22%2F%3E%3Cstop%20offset%3D%22.82%22%20stop-color%3D%22%23800000%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000000%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23x%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="xProfile"/>
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22y%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%2300ff00%22%2F%3E%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23008000%22%2F%3E%3Cstop%20offset%3D%22.82%22%20stop-color%3D%22%23008000%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000000%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23y%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="yProfile"/>
+      <feBlend in="xProfile" in2="yProfile" mode="screen" result="normalMap"/>
+      <feDisplacementMap in="SourceGraphic" in2="normalMap" scale="14" xChannelSelector="R" yChannelSelector="G" result="bentBackdrop"/>
+      <!-- A vector height field supplies the light-facing rim, independently of foreground content. -->
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22h%22%3E%3Cstop%20offset%3D%22.65%22%20stop-color%3D%22white%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22black%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23h%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="heightField"/>
+      <feColorMatrix in="heightField" type="luminanceToAlpha" result="bump"/>
+      <feSpecularLighting in="bump" surfaceScale="3" specularConstant="0.22" specularExponent="28" lighting-color="white" result="rimLight">
+        <feDistantLight azimuth="225" elevation="50"/>
+      </feSpecularLighting>
+      <feComposite in="rimLight" in2="SourceGraphic" operator="in" result="clippedLight"/>
+      <feBlend in="bentBackdrop" in2="clippedLight" mode="screen"/>
+    </filter>
+    <filter id="elifba-refract-button" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+      <!-- 0.5 is a neutral displacement channel. The center stays neutral; edges bend inward. -->
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22x%22%3E%3Cstop%20stop-color%3D%22%23ff0000%22%2F%3E%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23800000%22%2F%3E%3Cstop%20offset%3D%22.82%22%20stop-color%3D%22%23800000%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000000%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23x%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="xProfile"/>
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22y%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%2300ff00%22%2F%3E%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23008000%22%2F%3E%3Cstop%20offset%3D%22.82%22%20stop-color%3D%22%23008000%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000000%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23y%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="yProfile"/>
+      <feBlend in="xProfile" in2="yProfile" mode="screen" result="normalMap"/>
+      <feDisplacementMap in="SourceGraphic" in2="normalMap" scale="7" xChannelSelector="R" yChannelSelector="G" result="bentBackdrop"/>
+      <!-- A vector height field supplies the light-facing rim, independently of foreground content. -->
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22h%22%3E%3Cstop%20offset%3D%22.65%22%20stop-color%3D%22white%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22black%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23h%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="heightField"/>
+      <feColorMatrix in="heightField" type="luminanceToAlpha" result="bump"/>
+      <feSpecularLighting in="bump" surfaceScale="3" specularConstant="0.22" specularExponent="28" lighting-color="white" result="rimLight">
+        <feDistantLight azimuth="225" elevation="50"/>
+      </feSpecularLighting>
+      <feComposite in="rimLight" in2="SourceGraphic" operator="in" result="clippedLight"/>
+      <feBlend in="bentBackdrop" in2="clippedLight" mode="screen"/>
+    </filter>
+  </defs>
+</svg>

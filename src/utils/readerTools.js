@@ -1,15 +1,19 @@
-export const READER_DEFAULTS = { theme: 'light', spread: false, speed: 1, brightness: 1 };
+import { normalizeTheme } from './themes.js';
+import { restoreActivityProgress } from '../data/bookActivities.js';
+export const READER_DEFAULTS = { theme: 'aqua', spread: false, speed: 1, brightness: 1, activitiesEnabled: null };
 export function restoreReader(saved = {}, total = 74) {
   const preferences = saved.preferences || {};
   return {
     page: Math.max(1, Math.min(total, Math.trunc(Number(saved.page)) || 1)),
     bookmarks: [...new Set((Array.isArray(saved.bookmarks) ? saved.bookmarks : []).filter(n => Number.isInteger(n) && n >= 1 && n <= total))],
     notes: Object.fromEntries(Object.entries(saved.notes || {}).filter(([n, text]) => Number.isInteger(Number(n)) && Number(n) >= 1 && Number(n) <= total && typeof text === 'string').map(([n, text]) => [n, text.slice(0, 10000)])),
+    activityProgress: restoreActivityProgress(saved.activityProgress),
     preferences: {
-      theme: ['light', 'sepia', 'dark'].includes(preferences.theme) ? preferences.theme : 'light',
+      theme: normalizeTheme(preferences.theme),
       spread: preferences.spread === true,
       speed: [0.5, 0.75, 1, 1.25, 1.5, 2].includes(preferences.speed) ? preferences.speed : 1,
       brightness: Number.isFinite(preferences.brightness) ? Math.max(0.7, Math.min(1, preferences.brightness)) : 1,
+      activitiesEnabled: typeof preferences.activitiesEnabled === 'boolean' ? preferences.activitiesEnabled : null,
     },
   };
 }

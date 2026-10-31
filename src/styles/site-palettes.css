@@ -1,0 +1,39 @@
+/* Three retained color modes, independent of the glass effect. */
+:root {
+  --site-bg:#fdfbf7;
+  --site-ink:#123e37;
+  --site-muted:#45635b;
+  --site-surface:rgba(237,250,245,.76);
+  --site-tint:#d7eee4;
+  --site-line:rgba(44,113,94,.24);
+  --site-edge:rgba(255,255,255,.8);
+  --site-shadow:rgba(16,65,50,.13);
+  --site-accent:#14654f;
+  --site-thick:#a91f36;
+  color-scheme:light;
+}
+:root[data-theme="sepia"] {
+  --site-bg:#f4ecd8;
+  --site-ink:#4e3613;
+  --site-muted:#71583c;
+  --site-surface:rgba(255,247,226,.8);
+  --site-tint:#eaddbe;
+  --site-line:rgba(139,102,40,.28);
+  --site-edge:rgba(255,253,235,.85);
+  --site-shadow:rgba(88,56,16,.14);
+  --site-accent:#795019;
+  --site-thick:#9c2633;
+}
+:root[data-theme="dark"] {
+  --site-bg:#0f172a;
+  --site-ink:#ecfdf5;
+  --site-muted:#c0d2d3;
+  --site-surface:rgba(26,46,57,.85);
+  --site-tint:#294d50;
+  --site-line:rgba(148,221,201,.3);
+  --site-edge:rgba(211,255,243,.32);
+  --site-shadow:rgba(0,0,0,.35);
+  --site-accent:#9de8d0;
+  --site-thick:#ffb0bf;
+  color-scheme:dark;
+}

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="tr" data-theme="aqua">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elif-Ba · CSS ve SVG cam kırılması</title>
+<link rel="stylesheet" href="../src/styles/site-palettes.css">
+<link rel="stylesheet" href="../src/styles/glass-refraction.css">
+<style>
+body{margin:0;background:var(--site-bg);color:var(--site-ink);font:16px/1.7 system-ui,sans-serif}
+main{max-width:1000px;margin:auto;padding:32px 24px}h1{font-size:clamp(26px,4vw,40px)}p{color:var(--site-muted)}
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.toolbar button{padding:10px 16px;min-height:44px;font:inherit}
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px}.scene{height:250px;display:grid;place-items:center;background-color:var(--site-tint);background-image:repeating-linear-gradient(0deg,transparent 0 19px,#37866b60 19px 21px),repeating-linear-gradient(90deg,transparent 0 19px,#37866b60 19px 21px);border-radius:20px}
+.letter{font:inherit;width:190px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;--glass-bevel:12px}.letter span:first-child{font-family:'Traditional Arabic',serif;font-size:72px;line-height:1.4}.letter span:last-child{font-size:14px}
+[data-refraction=off]::before{padding:0!important;mask:none!important;-webkit-mask:none!important;backdrop-filter:blur(.4px)!important;-webkit-backdrop-filter:blur(.4px)!important}
+.info{padding:24px;border:1px solid var(--site-line);border-radius:18px;margin:28px 0}.refract-btn{padding:12px 20px;font:inherit;cursor:pointer}.status{min-height:28px}
+@media(max-width:600px){.comparison{grid-template-columns:1fr}.scene{height:220px}}
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="elifba-refract-card" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+      <!-- 0.5 is a neutral displacement channel. The center stays neutral; edges bend inward. -->
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22x%22%3E%3Cstop%20stop-color%3D%22%23ff0000%22%2F%3E%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23800000%22%2F%3E%3Cstop%20offset%3D%22.82%22%20stop-color%3D%22%23800000%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000000%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23x%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="xProfile"/>
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22y%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%2300ff00%22%2F%3E%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23008000%22%2F%3E%3Cstop%20offset%3D%22.82%22%20stop-color%3D%22%23008000%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000000%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23y%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="yProfile"/>
+      <feBlend in="xProfile" in2="yProfile" mode="screen" result="normalMap"/>
+      <feDisplacementMap in="SourceGraphic" in2="normalMap" scale="14" xChannelSelector="R" yChannelSelector="G" result="bentBackdrop"/>
+      <!-- A vector height field supplies the light-facing rim, independently of foreground content. -->
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22h%22%3E%3Cstop%20offset%3D%22.65%22%20stop-color%3D%22white%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22black%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23h%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="heightField"/>
+      <feColorMatrix in="heightField" type="luminanceToAlpha" result="bump"/>
+      <feSpecularLighting in="bump" surfaceScale="3" specularConstant="0.22" specularExponent="28" lighting-color="white" result="rimLight">
+        <feDistantLight azimuth="225" elevation="50"/>
+      </feSpecularLighting>
+      <feComposite in="rimLight" in2="SourceGraphic" operator="in" result="clippedLight"/>
+      <feBlend in="bentBackdrop" in2="clippedLight" mode="screen"/>
+    </filter>
+    <filter id="elifba-refract-button" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+      <!-- 0.5 is a neutral displacement channel. The center stays neutral; edges bend inward. -->
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22x%22%3E%3Cstop%20stop-color%3D%22%23ff0000%22%2F%3E%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23800000%22%2F%3E%3Cstop%20offset%3D%22.82%22%20stop-color%3D%22%23800000%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000000%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23x%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="xProfile"/>
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22y%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%2300ff00%22%2F%3E%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23008000%22%2F%3E%3Cstop%20offset%3D%22.82%22%20stop-color%3D%22%23008000%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000000%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23y%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="yProfile"/>
+      <feBlend in="xProfile" in2="yProfile" mode="screen" result="normalMap"/>
+      <feDisplacementMap in="SourceGraphic" in2="normalMap" scale="7" xChannelSelector="R" yChannelSelector="G" result="bentBackdrop"/>
+      <!-- A vector height field supplies the light-facing rim, independently of foreground content. -->
+      <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22128%22%20height%3D%22128%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22h%22%3E%3Cstop%20offset%3D%22.65%22%20stop-color%3D%22white%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22black%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22128%22%20height%3D%22128%22%20fill%3D%22url%28%23h%29%22%2F%3E%3C%2Fsvg%3E" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="heightField"/>
+      <feColorMatrix in="heightField" type="luminanceToAlpha" result="bump"/>
+      <feSpecularLighting in="bump" surfaceScale="3" specularConstant="0.22" specularExponent="28" lighting-color="white" result="rimLight">
+        <feDistantLight azimuth="225" elevation="50"/>
+      </feSpecularLighting>
+      <feComposite in="rimLight" in2="SourceGraphic" operator="in" result="clippedLight"/>
+      <feBlend in="bentBackdrop" in2="clippedLight" mode="screen"/>
+    </filter>
+  </defs>
+</svg>
+
+<main>
+<h1>CSS + SVG: kenarda gerçek piksel yer değiştirmesi</h1>
+<p>Kartların altındaki ızgara, kırılma farkını görmen içindir. Arapça harf her iki örnekte de aynı, filtresiz ön plan katmanındadır.</p>
+<div class="toolbar" aria-label="Renk modu"><button data-theme-choice="sepia">Sepya</button><button data-theme-choice="aqua">Su Yeşili</button><button data-theme-choice="dark">Karanlık</button></div>
+<div class="comparison">
+<section><h2>Normal cam · karşılaştırma</h2><div class="scene"><button class="refract-card letter" data-refraction="off" aria-label="Normal cam: Be"><span lang="ar" dir="rtl">ب</span><span>SVG kırılması kapalı</span></button></div></section>
+<section><h2>SVG displacement · etkin</h2><div class="scene"><button class="refract-card letter" aria-label="Kırılmalı cam: Be"><span lang="ar" dir="rtl">ب</span><span>SVG kırılması açık</span></button></div></section>
+</div>
+<div class="info"><h2>Buton örneği</h2><button class="refract-btn" id="listen">Be sesini dinle</button><p class="status" id="status" role="status">Hazır.</p><p>İki panelin kenarındaki çizgileri karşılaştır. SVG backdrop filtre desteği olmayan tarayıcılarda iki panel de normal cam görünümüne döner.</p></div>
+</main>
+<script>
+document.querySelectorAll('[data-theme-choice]').forEach(button=>button.addEventListener('click',()=>{document.documentElement.dataset.theme=button.dataset.themeChoice}));
+const button=document.getElementById('listen'), status=document.getElementById('status');let audio;
+button.addEventListener('click',()=>{audio?.pause();audio=new Audio('../assets/audio/arabic/arp02.mp3');audio.addEventListener('playing',()=>{button.setAttribute('aria-pressed','true');status.textContent='Be kaydı çalıyor.'});audio.addEventListener('ended',()=>{button.setAttribute('aria-pressed','false');status.textContent='Hazır.'});audio.addEventListener('error',()=>{status.textContent='Ses açılamadı.'});audio.play().catch(()=>status.textContent='Ses için yeniden dokun.');});
+</script>
+</body></html>

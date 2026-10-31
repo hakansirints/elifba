@@ -1,0 +1,92 @@
+/* Original CSS + SVG refraction. Include glass-filters.svg once in the HTML body.
+   Only the ::before backdrop is displaced; foreground text is never filtered. */
+:root {
+  --glass-radius:18px;
+  --glass-bevel:7px;
+  /* Keep the lens farther from the frame than its maximum 7px displacement. */
+  --glass-lens-inset:10px;
+  --glass-fill:rgba(241,250,246,.48);
+  --glass-fallback:#edf7f1;
+  --glass-edge:rgba(255,255,255,.85);
+  --glass-depth:rgba(20,61,47,.16);
+  --glass-filter:url("#elifba-refract-card");
+}
+:root[data-theme=sepia] {
+  --glass-fill:rgba(255,246,221,.5);
+  --glass-fallback:#faf0da;
+  --glass-edge:rgba(255,253,235,.9);
+  --glass-depth:rgba(84,58,20,.18);
+}
+:root[data-theme=dark] {
+  --glass-fill:rgba(23,43,58,.72);
+  --glass-fallback:#172b3a;
+  --glass-edge:rgba(211,247,239,.5);
+  --glass-depth:rgba(0,0,0,.38);
+}
+.glass-filter-defs { position:absolute; width:0; height:0; overflow:hidden; pointer-events:none; }
+:where(.refract-card,.refract-btn) { position:relative; isolation:isolate; }
+:is(.refract-card,.refract-btn),.platform :is(.refract-card,.refract-btn) {
+  color:var(--site-ink,#153d34); border:1px solid var(--site-line,#b4cabe);
+  border-radius:var(--glass-radius); background:var(--glass-fallback);
+  box-shadow:0 6px 18px -8px var(--glass-depth);
+  transition:transform 180ms ease-out,border-color 180ms ease-out;
+}
+.refract-btn { --glass-radius:13px; --glass-bevel:4px; --glass-lens-inset:6px; --glass-filter:url("#elifba-refract-button"); }
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+  :is(.refract-card,.refract-btn),.platform :is(.refract-card,.refract-btn) { background:var(--glass-fill); }
+  :is(.refract-card,.refract-btn)::before {
+    content:""; position:absolute; inset:var(--glass-lens-inset); z-index:-1; border-radius:max(0px,calc(var(--glass-radius) - var(--glass-lens-inset))); pointer-events:none;
+    /* Never sample the component's own border or corner highlight into the lens. */
+    clip-path:inset(0 round max(0px,calc(var(--glass-radius) - var(--glass-lens-inset))));
+    /* The unmasked fallback is a clear, ordinary frosted surface. */
+    -webkit-backdrop-filter:blur(3px) saturate(130%);
+    backdrop-filter:blur(3px) saturate(130%);
+  }
+}
+@supports (backdrop-filter:url("#elifba-refract-card")) and (mask-image:linear-gradient(#000,transparent)) {
+  @media (hover:hover) and (pointer:fine) {
+    :is(.refract-card,.refract-btn)::before {
+      /* Fade the lens toward the center; no hard seam where displacement ends. */
+      -webkit-mask:linear-gradient(90deg,#000,transparent var(--glass-bevel),transparent calc(100% - var(--glass-bevel)),#000),linear-gradient(#000,transparent var(--glass-bevel),transparent calc(100% - var(--glass-bevel)),#000);
+      mask:linear-gradient(90deg,#000,transparent var(--glass-bevel),transparent calc(100% - var(--glass-bevel)),#000),linear-gradient(#000,transparent var(--glass-bevel),transparent calc(100% - var(--glass-bevel)),#000);
+      -webkit-mask-composite:source-over; mask-composite:add;
+      -webkit-backdrop-filter:var(--glass-filter) blur(.4px) saturate(125%);
+      backdrop-filter:var(--glass-filter) blur(.4px) saturate(125%);
+    }
+  }
+}
+/* A data-tip component owns ::after for its tooltip, not for glass decoration. */
+:is(.refract-card,.refract-btn):not([data-tip])::after {
+  content:""; position:absolute; inset:0; border-radius:inherit; z-index:0; pointer-events:none;
+  /* One soft bevel owns the rim; do not redraw it with several sharp inset rings. */
+  box-shadow:inset 0 1px 2px var(--glass-edge),inset 0 -1px 2px var(--glass-depth);
+  background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 27%,transparent 73%,rgba(255,255,255,.04));
+}
+:where(.refract-card,.refract-btn)>* { position:relative; z-index:1; }
+.refract-card:is(button,a):not(:disabled):hover,.refract-btn:not(:disabled):hover { transform:translateY(-1px); border-color:var(--site-accent,#17674e); }
+:is(.refract-card,.refract-btn):focus-visible { outline:3px solid var(--site-accent,#17674e); outline-offset:3px; }
+.refract-card:is(.selected,[aria-pressed=true]),.refract-card:has(> [data-playing=true]),.refract-btn[aria-pressed=true] {
+  border-color:var(--site-accent,#17674e); box-shadow:0 0 0 2px var(--site-line,#b4cabe),0 6px 18px -8px var(--glass-depth);
+}
+.refract-btn:not(:disabled):active { transform:translateY(1px); }
+.platform .refract-btn.button-primary { --glass-fill:rgba(18,91,67,.94); --glass-fallback:#125b43; color:white; }
+[data-theme=sepia] .platform .refract-btn.button-primary { --glass-fill:rgba(112,74,26,.94); --glass-fallback:#704a1a; }
+.alphabet-glyph { text-shadow:none; }
+.alphabet-glyph.tone-thick { color:var(--site-thick); }.alphabet-glyph.tone-variable { color:var(--site-accent); }
+.alphabet-letter-grid,.alphabet-book-scroll { padding:3px; }
+.alphabet-detail,.alphabet-sound-detail { background:var(--site-surface); }
+.refraction-stage { border-radius:20px; background:linear-gradient(120deg,transparent 34%,var(--site-tint) 45%,transparent 60%); }
+@media(max-width:700px),(pointer:coarse) {
+  .alphabet-letter-grid .refract-card::before,.alphabet-book-row .refract-card::before { -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  :is(.refract-card,.refract-btn),.platform :is(.refract-card,.refract-btn) { transition:none; transform:none; }
+}
+@media(prefers-reduced-transparency:reduce) {
+  :is(.refract-card,.refract-btn),.platform :is(.refract-card,.refract-btn) { background:var(--glass-fallback); }
+  :is(.refract-card,.refract-btn)::before { display:none; }
+}
+@media(forced-colors:active) {
+  :is(.refract-card,.refract-btn),.platform :is(.refract-card,.refract-btn) { background:Canvas; color:CanvasText; border-color:ButtonText; box-shadow:none; }
+  :is(.refract-card,.refract-btn)::before,:is(.refract-card,.refract-btn):not([data-tip])::after { display:none; }
+}

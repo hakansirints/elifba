@@ -1,4 +1,4 @@
-// 29 Arapça Harf ve DİTİB Elif-Ba Eşleştirmesi
+// Kaynak kitabın 28 harfi ve Lâmelif birleşimi; ses eşleştirmeleri korunur.
 export const ARABIC_LETTERS = [
   { id: 1, char: 'ا', nameTr: 'Elif', nameDe: 'Alif', audio: 'assets/audio/arabic/arp01.mp3', color: 'from-amber-400 to-orange-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
   { id: 2, char: 'ب', nameTr: 'Bâ', nameDe: 'Ba', audio: 'assets/audio/arabic/arp02.mp3', color: 'from-emerald-400 to-teal-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
@@ -29,83 +29,6 @@ export const ARABIC_LETTERS = [
   { id: 27, char: 'ه', nameTr: 'Hê', nameDe: 'Ha (göğüs)', audio: 'assets/audio/arabic/arp27.mp3', color: 'from-indigo-400 to-purple-600', soundHintTr: 'Boğaz dibi', soundHintDe: 'Brustlaut' },
   { id: 28, char: 'لا', nameTr: 'Lâmelif', nameDe: 'Lam-Alif', audio: 'assets/audio/arabic/arp28.mp3', color: 'from-fuchsia-400 to-pink-600', soundHintTr: 'Lâm ve Elif birleşimi', soundHintDe: 'Kombination' },
   { id: 29, char: 'ى', nameTr: 'Yâ', nameDe: 'Ya', audio: 'assets/audio/arabic/arp29.mp3', color: 'from-rose-400 to-red-500', soundHintTr: 'İnce harf', soundHintDe: 'Dünn' },
-];
-
-export const VOWELS_DATA = [
-  {
-    id: 'fetha',
-    nameTr: 'Üstün (Fetha)',
-    nameDe: 'Fetha (Üstün)',
-    symbol: 'َ',
-    descTr: 'Harfin üzerine konur. İnce harfleri "E", kalın harfleri "A" sesiyle okutur.',
-    descDe: 'Wird über den Buchstaben gesetzt. Dünne Buchstaben mit "E", dicke mit "A".',
-    pageNumber: 18,
-    examples: [
-      { char: 'اَ', sound: 'assets/audio/arabic/arp01_2.mp3', textTr: 'E', textDe: 'E' },
-      { char: 'بَ', sound: 'assets/audio/arabic/arp02_1.mp3', textTr: 'Be', textDe: 'Be' },
-      { char: 'تَ', sound: 'assets/audio/arabic/arp03_1.mp3', textTr: 'Te', textDe: 'Te' },
-      { char: 'ثَ', sound: 'assets/audio/arabic/arp04_1.mp3', textTr: 'Se', textDe: 'The' },
-      { char: 'جَ', sound: 'assets/audio/arabic/arp05_1.mp3', textTr: 'Ce', textDe: 'Dsche' },
-      { char: 'خَ', sound: 'assets/audio/arabic/arp07_1.mp3', textTr: 'Ha (kalın)', textDe: 'Cha' },
-    ]
-  },
-  {
-    id: 'kesra',
-    nameTr: 'Esre (Kesra)',
-    nameDe: 'Kesra (Esre)',
-    symbol: 'ِ',
-    descTr: 'Harfin altına konur. İnce harfleri "İ", kalın harfleri "I-İ" arası bir sesle okutur.',
-    descDe: 'Wird unter den Buchstaben gesetzt. Dünne Buchstaben mit "I", dicke zwischen "I-I".',
-    pageNumber: 20,
-    examples: [
-      { char: 'اِ', sound: 'assets/audio/arabic/arp01_4.mp3', textTr: 'İ', textDe: 'I' },
-      { char: 'بِ', sound: 'assets/audio/arabic/arp02_3.mp3', textTr: 'Bi', textDe: 'Bi' },
-      { char: 'تِ', sound: 'assets/audio/arabic/arp03_3.mp3', textTr: 'Ti', textDe: 'Ti' },
-      { char: 'ثِ', sound: 'assets/audio/arabic/arp04_3.mp3', textTr: 'Si', textDe: 'Thi' },
-      { char: 'جِ', sound: 'assets/audio/arabic/arp05_3.mp3', textTr: 'Ci', textDe: 'Dschi' },
-      { char: 'طِ', sound: 'assets/audio/arabic/arp16_3.mp3', textTr: 'Tı', textDe: 'Tı' },
-    ]
-  },
-  {
-    id: 'damme',
-    nameTr: 'Ötre (Damme)',
-    nameDe: 'Damme (Ötre)',
-    symbol: 'ُ',
-    descTr: 'Harfin üzerine konur. İnce harfleri "Ü", kalın harfleri "U" sesiyle okutur.',
-    descDe: 'Wird über den Buchstaben gesetzt. Dünne Buchstaben mit "Ü", dicke mit "U".',
-    pageNumber: 22,
-    examples: [
-      { char: 'اُ', sound: 'assets/audio/arabic/arp01_6.mp3', textTr: 'Ü', textDe: 'U' },
-      { char: 'بُ', sound: 'assets/audio/arabic/arp02_5.mp3', textTr: 'Bü', textDe: 'Bu' },
-      { char: 'تُ', sound: 'assets/audio/arabic/arp03_5.mp3', textTr: 'Tü', textDe: 'Tu' },
-      { char: 'ثُ', sound: 'assets/audio/arabic/arp04_5.mp3', textTr: 'Sü', textDe: 'Thu' },
-      { char: 'جُ', sound: 'assets/audio/arabic/arp05_5.mp3', textTr: 'Cü', textDe: 'Dschu' },
-      { char: 'صُ', sound: 'assets/audio/arabic/arp14_5.mp3', textTr: 'Su', textDe: 'Su' },
-    ]
-  }
-];
-
-export const VIDEOS_DATA = [
-  { id: 'fatiha', titleTr: 'Fâtiha Sûresi', titleDe: 'Sure Fâtiha', file: 'assets/videos/fatiha2.mp4', pageNumber: 60, audioTr: 'assets/audio/turkish/fatihatr.mp3', audioDe: 'assets/audio/german/fatihade.mp3', icon: '📖' },
-  { id: 'ayetelkursi', titleTr: 'Âyetü\'l-Kürsî', titleDe: 'Âyetul-Kursî', file: 'assets/videos/ayetelkursi.mp4', pageNumber: 66, audioTr: 'assets/audio/turkish/ayetelkursitr.mp3', audioDe: 'assets/audio/german/ayetelkurside.mp3', icon: '✨' },
-  { id: 'fil', titleTr: 'Fîl Sûresi', titleDe: 'Sure Fîl', file: 'assets/videos/fil.mp4', pageNumber: 61, audioTr: 'assets/audio/turkish/filtr.mp3', audioDe: 'assets/audio/german/filde.mp3', icon: '🐘' },
-  { id: 'kureys', titleTr: 'Kureyş Sûresi', titleDe: 'Sure Quraysch', file: 'assets/videos/kureys.mp4', pageNumber: 61, audioTr: 'assets/audio/turkish/kureystr.mp3', audioDe: 'assets/audio/german/kureysde.mp3', icon: '🏜️' },
-  { id: 'maun', titleTr: 'Mâûn Sûresi', titleDe: 'Sure Mâ\'ûn', file: 'assets/videos/maun_1.mp4', pageNumber: 62, audioTr: 'assets/audio/turkish/mauntr.mp3', audioDe: 'assets/audio/german/maunde.mp3', icon: '🤝' },
-  { id: 'kevser', titleTr: 'Kevser Sûresi', titleDe: 'Sure Kewser', file: 'assets/videos/kevserson2.mp4', pageNumber: 62, audioTr: 'assets/audio/turkish/kevsertr.mp3', audioDe: 'assets/audio/german/kevserde.mp3', icon: '🌊' },
-  { id: 'kafirun', titleTr: 'Kâfirûn Sûresi', titleDe: 'Sure Kâfirûn', file: 'assets/videos/Kafirun_1.mp4', pageNumber: 63, audioTr: 'assets/audio/turkish/karifuntr.mp3', audioDe: 'assets/audio/german/karifunde.mp3', icon: '🛡️' },
-  { id: 'nasr', titleTr: 'Nasr Sûresi', titleDe: 'Sure Nasr', file: 'assets/videos/nasr_1.mp4', pageNumber: 63, audioTr: 'assets/audio/turkish/nasrtr.mp3', audioDe: 'assets/audio/german/nasrde.mp3', icon: '🕊️' },
-  { id: 'tebbet', titleTr: 'Tebbet Sûresi', titleDe: 'Sure Tebbet', file: 'assets/videos/tebbet.mp4', pageNumber: 64, audioTr: 'assets/audio/turkish/tebbettr.mp3', audioDe: 'assets/audio/german/tebbetde.mp3', icon: '🔥' },
-  { id: 'ihlas', titleTr: 'İhlâs Sûresi', titleDe: 'Sure Ichlâs', file: 'assets/videos/ihlas.mp4', pageNumber: 64, audioTr: 'assets/audio/turkish/ihlastr.mp3', audioDe: 'assets/audio/german/ihlasde.mp3', icon: '💎' },
-  { id: 'felak', titleTr: 'Felak Sûresi', titleDe: 'Sure Felaq', file: 'assets/videos/felak.mp4', pageNumber: 65, audioTr: 'assets/audio/turkish/felaktr.mp3', audioDe: 'assets/audio/german/felakde.mp3', icon: '🌅' },
-  { id: 'nas', titleTr: 'Nâs Sûresi', titleDe: 'Sure Nâs', file: 'assets/videos/nas.mp4', pageNumber: 65, audioTr: 'assets/audio/turkish/nastr.mp3', audioDe: 'assets/audio/german/nasde.mp3', icon: '🌟' },
-  { id: 'subhaneke', titleTr: 'Sübhâneke Duâsı', titleDe: 'Subhâneke Gebet', file: 'assets/videos/subhaneke.mp4', pageNumber: 50, audioTr: 'assets/audio/turkish/subhaneketr.mp3', audioDe: 'assets/audio/german/subhanekede.mp3', icon: '🤲' },
-  { id: 'tahiyyat', titleTr: 'Et-Tahiyyâtu Duâsı', titleDe: 'Et-Tahiyyâtu Gebet', file: 'assets/videos/tahiyyat.mp4', pageNumber: 50, audioTr: 'assets/audio/turkish/ettahiyyatutr.mp3', audioDe: 'assets/audio/german/ettahiyyatude.mp3', icon: '🕊️' },
-  { id: 'salli', titleTr: 'Allâhumme Salli', titleDe: 'Allâhumme Salli', file: 'assets/videos/sallison2.mp4', pageNumber: 51, audioTr: 'assets/audio/turkish/sallitr.mp3', audioDe: 'assets/audio/german/sallide.mp3', icon: '🌹' },
-  { id: 'barik', titleTr: 'Allâhumme Bârik', titleDe: 'Allâhumme Bârik', file: 'assets/videos/barikson2.mp4', pageNumber: 51, audioTr: 'assets/audio/turkish/bariktr.mp3', audioDe: 'assets/audio/german/barikde.mp3', icon: '🌿' },
-  { id: 'rabbenaatina', titleTr: 'Rabbenâ Âtinâ', titleDe: 'Rabbenâ Âtinâ', file: 'assets/videos/rabbenaatina.mp4', pageNumber: 52, audioTr: 'assets/audio/turkish/rabbenaatinatr.mp3', audioDe: 'assets/audio/german/rabbenaatinade.mp3', icon: '🤲' },
-  { id: 'rabbenafirlii', titleTr: 'Rabbenâğfirlî', titleDe: 'Rabbenaghfirlî', file: 'assets/videos/rabbenafirlii.mp4', pageNumber: 52, audioTr: 'assets/audio/turkish/rabbenegfirlitr.mp3', audioDe: 'assets/audio/german/rabbenegfirlide.mp3', icon: '🌧️' },
-  { id: 'kunut1', titleTr: 'Kunût Duâsı 1', titleDe: 'Qunût-Gebet 1', file: 'assets/videos/Kunut_1_1.mp4', pageNumber: 53, audioTr: 'assets/audio/turkish/kunut1tr.mp3', audioDe: 'assets/audio/german/kunut1de.mp3', icon: '🌙' },
-  { id: 'kunut2', titleTr: 'Kunût Duâsı 2', titleDe: 'Qunût-Gebet 2', file: 'assets/videos/kunut2.mp4', pageNumber: 53, audioTr: 'assets/audio/turkish/kunut2tr.mp3', audioDe: 'assets/audio/german/kunut2de.mp3', icon: '⭐' }
 ];
 
 export const SECTIONS_DATA = [
@@ -186,7 +109,7 @@ export const SECTIONS_DATA = [
       { nameTr: 'İslam\'ın ve İmanın Şartları', nameDe: 'Säulen des Islam & Glaubensartikel', page: 68 },
       { nameTr: 'Abdest, Gusül ve Teyemmümün Farzları', nameDe: 'Pflichten der Gebetswaschung', page: 68 },
       { nameTr: 'Namazın Farzları (Dışındakiler & İçindekiler)', nameDe: 'Pflichten des Ritualgebets', page: 70 },
-      
+
     ]
   }
 ];

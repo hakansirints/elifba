@@ -95,6 +95,18 @@ class SoundFX {
   }
 
   // Star sound
+  playFlip() {
+    if (!this.enabled) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const tone=this.ctx.createOscillator(),gain=this.ctx.createGain(),now=this.ctx.currentTime;
+      tone.type='sine';tone.frequency.setValueAtTime(440,now);tone.frequency.exponentialRampToValueAtTime(620,now+.06);
+      gain.gain.setValueAtTime(.045,now);gain.gain.exponentialRampToValueAtTime(.001,now+.08);
+      tone.connect(gain);gain.connect(this.ctx.destination);tone.start(now);tone.stop(now+.08);
+    } catch (e) {}
+  }
+
   playStar() {
     if (!this.enabled) return;
     this.init();
