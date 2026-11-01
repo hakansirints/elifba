@@ -1,18 +1,54 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { activitiesForPage, createPairs, createQuestions, createMiniLesson, restoreActivityProgress, finishActivity, BOOK_ROWS, BOOK_ROW_PAGES, MEMORY_LEVELS } from '../src/data/bookActivities.js';
+import { createTrainQuestions, createChameleonQuestions, createDetectiveQuestions, createPuzzleQuestions, LETTER_POSITIONS } from '../src/data/letterPositions.js';
 import {activityRoundReducer,newActivityRound} from '../src/utils/activityRound.js';
 import { memoryReducer, newMemoryGame, performMonteSwap } from '../src/utils/memoryGame.js';
 import { SHAPE_GROUPS } from '../src/data/alphabetData.js';
 import { readStore, emptyStore } from '../src/utils/learningStore.js';
 import { evaluateDrawing } from '../src/utils/drawingEvaluation.js';
 
-test('Only pages 14–16 offer the appropriate pilot activities',()=>{
-  for(let page=6;page<=74;page++)assert.equal(activitiesForPage(page).length,[14,15,16].includes(page)?4:0);
+test('Only pages 14–17 offer the appropriate pilot activities',()=>{
+  for(let page=6;page<=74;page++)assert.equal(activitiesForPage(page).length,[14,15,16,17].includes(page)?4:0);
   assert.equal(activitiesForPage(14)[0].id,'recognize');
   assert.equal(activitiesForPage(15)[0].id,'similar');
   assert.equal(activitiesForPage(16)[0].id,'grid');
+  assert.equal(activitiesForPage(17)[0].id,'train');
+  assert.equal(activitiesForPage(17)[1].id,'chameleon');
+  assert.equal(activitiesForPage(17)[2].id,'detective');
+  assert.equal(activitiesForPage(17)[3].id,'puzzle');
   assert.deepEqual(createQuestions(17,'listen'),[]);
+});
+
+test('Page 17 letter positions and games generate valid questions with four options and correct answers',()=>{
+  assert.equal(LETTER_POSITIONS.length, 28);
+  const trainQs = createTrainQuestions(() => 0.5, 6);
+  assert.equal(trainQs.length, 6);
+  for (const q of trainQs) {
+    assert.equal(q.options.length, 4);
+    assert.ok(q.options.includes(q.correctForm));
+  }
+
+  const chamQs = createChameleonQuestions(() => 0.5, 6);
+  assert.equal(chamQs.length, 6);
+  for (const q of chamQs) {
+    assert.equal(q.options.length, 4);
+    assert.ok(q.options.includes(q.correctForm));
+  }
+
+  const detQs = createDetectiveQuestions(() => 0.5, 6);
+  assert.equal(detQs.length, 6);
+  for (const q of detQs) {
+    assert.equal(q.options.length, 4);
+    assert.ok(['initial', 'medial', 'final', 'isolated'].includes(q.correctId));
+  }
+
+  const puzQs = createPuzzleQuestions(() => 0.5, 6);
+  assert.equal(puzQs.length, 6);
+  for (const q of puzQs) {
+    assert.equal(q.options.length, 4);
+    assert.ok(q.options.includes(q.correctForm));
+  }
 });
 test('Rounds have six distinct targets and one correct option; similar choices share a shape group',()=>{
   for(const page of [14,15,16])for(const mode of activitiesForPage(page).filter(a=>!['pairs','trace'].includes(a.id))){

@@ -31,7 +31,7 @@ export default function ActivityRound({page,mode,lang,speed,targetId,onFinish,on
   };
   useEffect(()=>{
     if(kind==='listen'&&!state.checked){
-      autoAudioTimer.current=setTimeout(()=>{listen();},1000);
+      autoAudioTimer.current=setTimeout(()=>{listen();},500);
       return()=>{if(autoAudioTimer.current){clearTimeout(autoAudioTimer.current);autoAudioTimer.current=null;}};
     }
   },[state.index,kind]);
@@ -57,7 +57,7 @@ export default function ActivityRound({page,mode,lang,speed,targetId,onFinish,on
   };
   if(state.done)return <Finish lang={lang} correct={state.correct} total={questions.length} onBack={onBack} onReplay={onReplay} onNextLetter={mini?onNextLetter:undefined}/>;
   const title=kind==='listen'?(de?'Welchen Buchstaben hörst du?':'Hangi harfi duydun?'):['grid','shape'].includes(kind)?(de?'Finde die gleiche Form.':'Aynı harfi bul.'):(de?`Wo ist ${letterName(letter,lang)}?`:`${letterName(letter,lang)} harfini bul.`);
-  const detail=wrong?letter.shape[lang]:right?`${letter.char} · ${letterName(letter,lang)}`:requiresAudio&&!state.heard?(de?'Erst anhören, dann wählen.':'Önce kaydı dinle, sonra seç.'):(de?'Wähle den richtigen Buchstaben.':'Doğru harfe dokun.');
+  const detail=wrong?letter.shape[lang]:right?letter.char:requiresAudio&&!state.heard?(de?'Erst anhören, dann wählen.':'Önce kaydı dinle, sonra seç.'):(de?'Wähle den richtigen Buchstaben.':'Doğru harfe dokun.');
   return <div className="activity-round activity-game-frame">
     <div className="activity-round-meta"><span>{mini?(de?['Erkennen','Hören','Unterscheiden'][state.index]:['Tanı','Dinle','Ayırt et'][state.index]):(de?'Entdeckung':'Keşif')} · {state.index+1} / {questions.length}</span><progress value={state.index+(right?1:0)} max={questions.length} aria-label={de?'Fortschritt':'Etkinlik ilerlemesi'}/><span className="activity-stars"><Star size={15}/>{state.correct}</span></div>
     <div className="activity-workspace"><section className="activity-prompt"><Buddy happy={right}/><h3 ref={headingRef} tabIndex={-1}>{title}</h3>

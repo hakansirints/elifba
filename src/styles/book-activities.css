@@ -28,7 +28,7 @@
 .activity-brand>.elifba-mark {width:48px;height:48px;}
 .activity-drawer-header h2 {font-family:'Fredoka','Inter',sans-serif;font-size:23px;margin:0;line-height:1.2;}
 .activity-header-actions {display:flex;gap:9px;align-items:center;flex-shrink:0;}
-.activity-drawer-body {padding:14px 22px;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0;overflow:hidden;}
+.activity-drawer-body {padding:14px 22px;display:flex;flex-direction:column;gap:12px;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
 .activity-drawer-footer {display:flex;justify-content:space-between;gap:10px;padding:7px 20px;border-top:1px solid var(--reader-line);font-size:11px;color:var(--reader-muted);flex-shrink:0;}
 .activity-drawer-footer>span {display:flex;align-items:center;gap:5px;}
 .activity-session-heading {display:flex;align-items:center;gap:12px;min-height:42px;flex-shrink:0;min-width:0;}
@@ -103,8 +103,12 @@
 .memory-toolbar label {display:flex;align-items:center;gap:7px;}
 .memory-toolbar select {min-height:34px;padding:4px 7px;}
 .memory-toolbar .activity-btn {min-height:34px;padding:6px 9px;}
+.memory-stats {display:flex;align-items:center;gap:12px;}
 .memory-meter {display:flex;align-items:center;gap:5px;white-space:nowrap;}
 .memory-meter>svg {color:var(--play-pop);}
+.activity-timer-badge {display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--reader-ink);background:var(--activity-card,#ffffff);border:1.5px solid var(--reader-line);padding:3px 9px;border-radius:999px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.activity-timer-badge svg {color:#c58917;flex-shrink:0;}
+.all-letters-completion-time {display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#c58917;background:var(--play-sun,#fff4d9);padding:6px 14px;border-radius:999px;margin:6px 0 12px;}
 .activity-pairs {display:grid;grid-template-columns:repeat(var(--memory-cols),minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:10px;min-height:0;padding-bottom:4px;}
 .memory-card {position:relative;perspective:800px;border:0;background:transparent;min-width:0;min-height:0;padding:0;border-radius:16px;color:var(--reader-ink);}
 .book-reader .memory-card:disabled {opacity:1;cursor:default;}
@@ -112,8 +116,8 @@
 .memory-card.is-open .memory-card-inner {transform:rotateY(180deg);}
 .memory-face {position:absolute;inset:0;display:grid;place-items:center;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:2px solid var(--memory-edge);}
 .memory-back {background:var(--memory-back);color:var(--play-pop);box-shadow:0 3px 0 var(--memory-edge);}
-.memory-back>svg {width:clamp(18px,3vw,36px);height:clamp(18px,3vw,36px);}
-.memory-back small {position:absolute;top:5px;left:8px;font-size:11px;color:var(--reader-muted);}
+.memory-back>svg {width:clamp(36px,6vw,72px);height:clamp(36px,6vw,72px);filter:drop-shadow(0 2px 4px rgba(155,101,18,0.18));}
+.memory-back small {position:absolute;top:5px;left:8px;font-size:11px;color:var(--reader-muted);z-index:2;}
 .memory-front {transform:rotateY(180deg);background:var(--activity-card);border-color:var(--reader-line);}
 .memory-front .activity-glyph {font-size:clamp(32px,4.5vw,62px);}
 .memory-card.is-matched .memory-front {background:var(--play-good);border-color:var(--play-green-edge);}
@@ -145,27 +149,27 @@
 .reader-activity-toggle {display:flex;justify-content:space-between;gap:16px;align-items:center;margin:16px 0;padding:12px 0;border-block:1px solid var(--reader-line);font-size:13px;}
 .reader-activity-toggle input {width:22px;height:22px;accent-color:#347455;flex-shrink:0;}.reader-settings-row select {max-width:135px;}
 @media(max-width:600px) and (orientation:portrait) {
-  .activity-drawer-backdrop {padding:8px;}
-  .activity-drawer-backdrop .reader-dialog {height:min(760px,calc(100dvh - 16px));border-radius:22px;}
-  .activity-drawer-header {padding:10px 12px;min-height:66px;gap:8px;}.activity-brand {gap:8px;}.activity-brand>.elifba-mark {width:38px;height:42px;}.activity-drawer-header h2 {font-size:18px;}.activity-close-label,.activity-eyebrow {display:none;}
-  .activity-header-actions {gap:7px;}.activity-header-actions .activity-btn {padding:8px;min-height:38px;}
-  .activity-drawer-body {padding:10px 12px;gap:10px;}.activity-drawer-footer {padding:6px 12px;font-size:11px;}.activity-drawer-footer>span:last-child {display:none;}
-  .activity-session-heading {gap:8px;min-height:38px;}.activity-session-heading h3 {font-size:14px;}.activity-session-heading .activity-btn {min-height:36px;padding:8px;font-size:12px;}.activity-session-heading:has(.activity-letter-picker) h3 {display:none;}.activity-session-heading:has(.activity-letter-picker) .activity-btn span {display:none;}
-  .activity-invite {font-size:14px;}.activity-page-picker select {max-width:90px;padding:6px;min-height:36px;font-size:12px;}.activity-letter-picker select {width:112px;min-height:36px;padding:6px;font-size:13px;}
-  .activity-cards {grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(4,minmax(0,1fr));gap:11px;}
-  .activity-card {grid-template-columns:42px minmax(0,1fr);gap:4px 11px;padding:11px;border-radius:19px;}.activity-card-icon {width:42px;height:48px;border-radius:15px;}.activity-card-icon svg {width:24px;height:24px;}.activity-card strong {font-size:21px;}.activity-card>span:not(.activity-card-icon) {font-size:12px;line-height:1.3;}.activity-card small {font-size:11px;}
-  .activity-game-frame {grid-template-rows:32px minmax(0,1fr) 120px;gap:10px;}
-  .activity-workspace {display:flex;flex-direction:column;gap:12px;}
-  .activity-prompt {display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:6px 10px;text-align:left;padding:6px 2px;flex-shrink:0;justify-items:start;}
-  .activity-prompt .activity-buddy {grid-row:1/3;width:42px;height:46px;}.activity-prompt h3 {font-size:23px;grid-column:2;}.activity-target,.activity-prompt>.activity-btn {grid-column:3;grid-row:1/3;}
-  .activity-prompt-hint,.activity-audio-error {font-size:12px;grid-column:2;}.activity-target .activity-glyph {font-size:45px;}.activity-prompt>.activity-btn {padding:8px;font-size:12px;}
-  .activity-board {flex:1;gap:8px;}.activity-options {grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}.activity-glyph {font-size:59px;}
-  .activity-feedback {grid-template-columns:34px minmax(0,1fr);grid-template-rows:1fr 38px;gap:5px 10px;padding:9px 11px;}.activity-feedback .activity-buddy {width:33px;height:35px;}.feedback-actions {grid-column:2;grid-row:2;}.feedback-copy strong {font-size:17px;}.feedback-copy p {font-size:11px;line-height:1.3;margin-top:3px;}.feedback-actions .activity-btn {min-height:36px;padding:7px 10px;}
-  .activity-book-grid>div {grid-template-columns:12px repeat(6,minmax(0,1fr));gap:4px;}.activity-book-grid .activity-glyph {font-size:28px;}.activity-book-grid .activity-letter {border-radius:10px;}.activity-grid-pager {gap:6px;}.activity-grid-pager .activity-btn,.activity-grid-pager select {min-height:32px;font-size:12px;padding:5px;}
-  .activity-pairs {grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:9px;}.activity-pairs.pairs-8 {grid-template-rows:repeat(4,minmax(0,1fr));}.activity-pairs.pairs-10 {grid-template-rows:repeat(5,minmax(0,1fr));}
-  .memory-front .activity-glyph {font-size:42px;}.memory-check {width:16px;height:16px;}.memory-check svg {width:12px;height:12px;}.memory-toolbar {font-size:11px;gap:6px;}.memory-toolbar label {font-size:0;gap:0;}.memory-toolbar select {font-size:12px;}.memory-turns {font-size:11px;}.memory-face {border-radius:12px;}.memory-back small {top:3px;left:5px;}
-  .activity-finish {grid-template-columns:1fr;text-align:center;gap:20px;padding:10px;}.finish-mascot {gap:16px;}.activity-finish h3 {font-size:26px;}.activity-finish p {font-size:13px;margin:12px 0;}.activity-finish .activity-actions {justify-content:center;}.finish-mascot .activity-buddy {width:90px;height:96px;}
-  .activity-trace-guide {font-size:145px;}.activity-pencil-tools {font-size:11px;gap:6px;}.activity-listen-preview .activity-glyph {font-size:90px;}.activity-listen-preview strong {font-size:19px;}.activity-workshop .activity-prompt:has(.activity-target) .activity-target {display:none;}
+  .activity-drawer-backdrop {padding:6px;}
+  .activity-drawer-backdrop .reader-dialog {height:calc(100dvh - 12px);max-height:calc(100dvh - 12px);border-radius:20px;display:flex;flex-direction:column;overflow:hidden;}
+  .activity-drawer-header {padding:8px 12px;min-height:56px;gap:8px;}.activity-brand {gap:8px;}.activity-brand>.elifba-mark {width:34px;height:38px;}.activity-drawer-header h2 {font-size:17px;}.activity-close-label,.activity-eyebrow {display:none;}
+  .activity-header-actions {gap:6px;}.activity-header-actions .activity-btn {padding:6px 9px;min-height:36px;}
+  .activity-drawer-body {padding:8px 10px;gap:8px;overflow-y:auto;-webkit-overflow-scrolling:touch;}.activity-drawer-footer {padding:5px 10px;font-size:10px;}.activity-drawer-footer>span:last-child {display:none;}
+  .activity-session-heading {gap:6px;min-height:34px;}.activity-session-heading h3 {font-size:13px;}.activity-session-heading .activity-btn {min-height:32px;padding:6px;font-size:11px;}.activity-session-heading:has(.activity-letter-picker) h3 {display:none;}.activity-session-heading:has(.activity-letter-picker) .activity-btn span {display:none;}
+  .activity-invite {font-size:13px;}.activity-page-picker select {max-width:90px;padding:5px;min-height:32px;font-size:12px;}.activity-letter-picker select {width:112px;min-height:32px;padding:5px;font-size:12px;}
+  .activity-cards {display:flex;flex-direction:column;grid-template-columns:none;grid-template-rows:none;gap:9px;overflow-y:auto;}
+  .activity-card {grid-template-columns:40px minmax(0,1fr);gap:4px 10px;padding:10px 12px;border-radius:18px;min-height:68px;flex-shrink:0;}.activity-card-icon {width:40px;height:44px;border-radius:14px;}.activity-card-icon svg {width:22px;height:22px;}.activity-card strong {font-size:19px;}.activity-card>span:not(.activity-card-icon) {font-size:11.5px;line-height:1.3;}.activity-card small {font-size:11px;}
+  .activity-game-frame {display:flex;flex-direction:column;gap:8px;grid-template-rows:none;flex:1;min-height:0;overflow-y:auto;}
+  .activity-workspace {display:flex;flex-direction:column;gap:8px;min-height:0;overflow:visible;}
+  .activity-prompt {display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:4px 8px;text-align:left;padding:4px 2px;flex-shrink:0;justify-items:start;}
+  .activity-prompt .activity-buddy {grid-row:1/3;width:38px;height:40px;}.activity-prompt h3 {font-size:20px;grid-column:2;}.activity-target,.activity-prompt>.activity-btn {grid-column:3;grid-row:1/3;}
+  .activity-prompt-hint,.activity-audio-error {font-size:11px;grid-column:2;}.activity-target .activity-glyph {font-size:40px;}.activity-prompt>.activity-btn {padding:6px 9px;font-size:11px;}
+  .activity-board {flex:1;gap:6px;min-height:0;}.activity-options {grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}.activity-glyph {font-size:52px;}
+  .activity-feedback {display:grid;grid-template-columns:30px minmax(0,1fr);grid-template-rows:auto auto;gap:5px 8px;padding:7px 10px;flex-shrink:0;}.activity-feedback .activity-buddy {width:28px;height:30px;}.feedback-actions {grid-column:1 / -1;justify-content:flex-end;margin-top:2px;}.feedback-copy strong {font-size:15px;}.feedback-copy p {font-size:11px;line-height:1.25;margin-top:2px;}.feedback-actions .activity-btn {min-height:34px;padding:6px 12px;font-size:12px;}
+  .activity-book-grid>div {grid-template-columns:12px repeat(6,minmax(0,1fr));gap:3px;}.activity-book-grid .activity-glyph {font-size:26px;}.activity-book-grid .activity-letter {border-radius:9px;}.activity-grid-pager {gap:5px;}.activity-grid-pager .activity-btn,.activity-grid-pager select {min-height:30px;font-size:11px;padding:4px;}
+  .activity-pairs {grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:6px;min-height:0;overflow-y:auto;}.activity-pairs.pairs-8 {grid-template-rows:repeat(4,minmax(0,1fr));}.activity-pairs.pairs-10 {grid-template-rows:repeat(5,minmax(0,1fr));}
+  .memory-front .activity-glyph {font-size:36px;}.memory-check {width:15px;height:15px;}.memory-check svg {width:11px;height:11px;}.memory-toolbar {font-size:11px;gap:5px;flex-wrap:wrap;}.memory-toolbar label {font-size:0;gap:0;}.memory-toolbar select {font-size:11px;padding:3px;min-height:30px;}.memory-turns {font-size:11px;}.memory-face {border-radius:11px;}.memory-back small {top:2px;left:4px;}
+  .activity-finish {grid-template-columns:1fr;text-align:center;gap:14px;padding:8px;}.finish-mascot {gap:12px;}.activity-finish h3 {font-size:22px;}.activity-finish p {font-size:12px;margin:8px 0;}.activity-finish .activity-actions {justify-content:center;}.finish-mascot .activity-buddy {width:76px;height:80px;}
+  .activity-trace-guide {font-size:120px;}.activity-pencil-tools {font-size:11px;gap:5px;}.activity-listen-preview .activity-glyph {font-size:80px;}.activity-listen-preview strong {font-size:18px;}.activity-workshop .activity-prompt:has(.activity-target) .activity-target {display:none;}
   .reader-activities-trigger {bottom:146px;font-size:12px;padding:10px 16px;}
 }
 @media(max-height:650px) {
@@ -184,7 +188,7 @@
   .activity-card {display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:9px;padding:13px;}.activity-card strong {font-size:20px;}.activity-card>span:not(.activity-card-icon) {font-size:12px;}
   .activity-workspace {grid-template-columns:minmax(145px,.8fr) minmax(0,2.2fr);gap:14px;}.activity-prompt {gap:5px;}.activity-prompt>.activity-buddy {display:none;}.activity-prompt h3 {font-size:19px;}.activity-prompt>.activity-btn {min-height:34px;padding:6px 10px;}.activity-prompt-hint {font-size:11px;}.activity-options {gap:9px;}.activity-letter {border-radius:15px;}.activity-glyph {font-size:43px;}
   .activity-book-grid>div {gap:4px;grid-template-columns:12px repeat(6,minmax(0,1fr));}.activity-book-grid .activity-glyph {font-size:26px;}.activity-trace-guide {font-size:105px;}.activity-pencil-tools .activity-btn,.activity-pencil-tools label {min-height:30px;}.activity-pencil-tools .activity-btn {padding:5px 8px;}.activity-drawing,.activity-drawing-slot {gap:7px;}
-  .memory-face {border-radius:10px;}.memory-front .activity-glyph {font-size:33px;}.memory-back>svg {width:22px;height:22px;}.memory-back small {top:2px;left:5px;}.activity-listen-preview .activity-glyph {font-size:52px;}.activity-listen-preview p {font-size:11px;}
+  .memory-face {border-radius:10px;}.memory-front .activity-glyph {font-size:33px;}.memory-back>svg {width:44px;height:44px;}.memory-back small {top:2px;left:5px;}.activity-listen-preview .activity-glyph {font-size:52px;}.activity-listen-preview p {font-size:11px;}
 }
 @media(orientation:landscape) and (max-height:350px) {
   .activity-drawer-header {min-height:40px;padding:3px 10px;}.activity-drawer-body {padding:5px 10px;gap:5px;}.activity-session-heading {min-height:28px;}.activity-session-heading .activity-btn {min-height:28px;}.activity-letter-picker select,.activity-page-picker select {min-height:28px;padding:3px 6px;}
@@ -452,7 +456,838 @@
   .all-letters-grid .activity-letter { min-height: 36px; max-height: 42px; border-radius: 10px; }
   .all-letters-grid .activity-glyph { font-size: 20px; }
   .all-letters-stages button { font-size: 11px; padding: 3px 6px; }
+  .memory-stats { gap: 6px; }
+  .activity-timer-badge { font-size: 11px; padding: 2px 7px; }
+
+  /* Position games mobile rules */
+  .train-track-wrap {
+    width: calc(100% + 24px) !important;
+    margin-left: -12px !important;
+    margin-right: -12px !important;
+  }
+  .train-locomotive { width: 78px; }
+  .train-wagon-car { width: 68px; }
+  .wagon-cargo-bed { height: 60px; }
+  .wagon-cargo-card .activity-glyph { font-size: 32px; }
+  .wagon-slot-q { font-size: 20px; }
+  .wagon-roof-tag { font-size: 9px; padding: 1px 5px; }
+  .chameleon-wardrobe { gap: 6px; }
+  .chameleon-slot { padding: 4px 2px; border-radius: 12px; }
+  .chameleon-slot .activity-glyph { font-size: 28px; }
+  .detective-lens { width: 98px !important; height: 98px !important; }
+  .detective-glyph { font-size: 46px !important; }
+  .detective-audio-btn { left: calc(50% + 60px) !important; width: 38px !important; height: 38px !important; }
+  .detective-pos-btn { padding: 8px 4px; min-height: 50px; border-radius: 13px; }
+  .detective-btn-title { font-size: 13.5px; }
+  .detective-btn-sub { font-size: 9px; }
+  .puzzle-slot { min-width: 64px; padding: 5px 6px; border-radius: 12px; }
+  .puzzle-slot .activity-glyph { font-size: 30px; }
+  .position-options-grid { gap: 8px; }
+  .position-option-card { min-height: 52px; border-radius: 14px; }
+  .position-option-card .activity-glyph { font-size: 36px; }
 }
+
+/* =========================================
+   PAGE 17: POSITION GAMES WORKSHOP STYLES
+   ========================================= */
+/* Hide all scrollbars across dialog and activities */
+.activity-drawer-backdrop .reader-dialog,
+.activity-drawer-body,
+.position-workshop,
+.activity-game-frame,
+.all-letters-board-scroll {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.activity-drawer-backdrop .reader-dialog::-webkit-scrollbar,
+.activity-drawer-body::-webkit-scrollbar,
+.position-workshop::-webkit-scrollbar,
+.activity-game-frame::-webkit-scrollbar,
+.all-letters-board-scroll::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.position-workshop {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.position-workshop::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.position-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  justify-content: center;
+  align-items: stretch;
+}
+.rtl-flow {
+  direction: rtl;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Shake error animation (when student picks/drops a wrong card) */
+@keyframes card-shake-error {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-7px) rotate(-1.5deg); }
+  40%, 80% { transform: translateX(7px) rotate(1.5deg); }
+}
+.shake-wrong {
+  animation: card-shake-error 0.45s ease-in-out both !important;
+  border-color: #ef4444 !important;
+  background: #fef2f2 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.28) !important;
+}
+.shake-slot-wrong {
+  animation: card-shake-error 0.45s ease-in-out both !important;
+  border-color: #ef4444 !important;
+}
+
+/* Draggable card properties */
+.draggable-card {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+.draggable-card:active {
+  cursor: grabbing;
+}
+
+/* 1. Train Game */
+.train-game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.train-instruction {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.train-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.train-badge {
+  background: var(--play-sun, #fff4d9);
+  border: 1.5px solid var(--play-pop, #9b6512);
+  color: var(--reader-ink);
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13.5px;
+}
+.train-instruction-text {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--reader-muted);
+}
+
+/* Continuous Train Track & Animation - Spans Edge-to-Edge across card */
+.train-track-wrap {
+  width: calc(100% + 44px);
+  margin-left: -22px;
+  margin-right: -22px;
+  position: relative;
+  padding: 6px 0 0;
+  overflow: hidden;
+}
+
+/* Railroad Track Ties */
+.train-track-ties {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 1;
+}
+.train-track-rail {
+  height: 4px;
+  background: #64748b;
+  border-radius: 1px;
+}
+.train-track-rail.top-rail {
+  background: #64748b;
+}
+.train-track-rail.bot-rail {
+  background: #475569;
+}
+.train-track-sleepers {
+  height: 6px;
+  background: repeating-linear-gradient(90deg, #b45309 0 8px, transparent 8px 20px);
+  opacity: 0.85;
+}
+
+/* Stage containing the train and the barrier sitting directly on the track */
+.train-track-scene {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  z-index: 2;
+  padding-bottom: 10px; /* Aligns wheel bottoms directly on the top rail */
+}
+
+/* Connected Train: Locomotive + Couplers + Wagons */
+.train-composition {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  direction: rtl;
+  position: relative;
+  z-index: 2;
+  transition: transform 1.25s cubic-bezier(0.25, 1, 0.4, 1), opacity 1.25s ease;
+}
+
+.train-composition.is-departing {
+  animation: train-zoom-right 1.25s cubic-bezier(0.35, 0, 0.25, 1) forwards;
+}
+.train-composition.is-arriving {
+  animation: train-arrive-center 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.train-composition.is-arriving .train-wheel {
+  animation: wheel-spin-fast 0.35s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes train-zoom-right {
+  0% { transform: translateX(0); opacity: 1; }
+  25% { transform: translateX(35px); opacity: 1; }
+  100% { transform: translateX(calc(100vw + 250px)); opacity: 0; }
+}
+
+@keyframes train-arrive-center {
+  0% {
+    transform: translateX(calc(-100vw - 250px));
+    opacity: 0.2;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Railway Crossing Barrier (Hemzemin Geçit Bariyeri) */
+.railway-barrier {
+  width: clamp(38px, 6.5vw, 50px);
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  margin-left: 2px;
+  position: relative;
+  z-index: 3;
+}
+.barrier-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.barrier-arm-group {
+  transform-box: view-box;
+  transform-origin: 47px 46px;
+  transition: transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.barrier-arm-group.arm-open {
+  transform: rotate(84deg);
+}
+.barrier-arm-group.arm-closed {
+  transform: rotate(0deg);
+}
+
+.barrier-light-red {
+  animation: barrier-red-blink 1s infinite alternate ease-in-out;
+}
+@keyframes barrier-red-blink {
+  from { filter: drop-shadow(0 0 1px #ef4444); opacity: 0.85; }
+  to { filter: drop-shadow(0 0 5px #ef4444); opacity: 1; }
+}
+
+.barrier-light-green {
+  animation: barrier-green-glow 0.8s infinite alternate ease-in-out;
+}
+@keyframes barrier-green-glow {
+  from { filter: drop-shadow(0 0 2px #10b981); opacity: 0.9; }
+  to { filter: drop-shadow(0 0 7px #10b981); opacity: 1; }
+}
+
+/* Locomotive (Front Right) */
+.train-locomotive {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: clamp(96px, 16vw, 122px);
+  flex-shrink: 0;
+}
+.loco-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.loco-smoke {
+  position: absolute;
+  top: -14px;
+  right: 24px;
+  display: flex;
+  gap: 3px;
+  pointer-events: none;
+}
+.smoke-bubble {
+  display: block;
+  background: rgba(200, 210, 220, 0.75);
+  border-radius: 50%;
+  animation: smoke-float 1.5s infinite ease-out;
+}
+.smoke-bubble.s1 { width: 7px; height: 7px; animation-delay: 0s; }
+.smoke-bubble.s2 { width: 11px; height: 11px; animation-delay: 0.35s; }
+.smoke-bubble.s3 { width: 15px; height: 15px; animation-delay: 0.75s; }
+@keyframes smoke-float {
+  0% { opacity: 0.9; transform: translateY(0) scale(0.6); }
+  100% { opacity: 0; transform: translateY(-22px) translateX(-10px) scale(1.6); }
+}
+
+.train-locomotive.is-chugging .train-wheel {
+  animation: wheel-spin-fast 0.35s linear infinite;
+  transform-origin: center;
+}
+@keyframes wheel-spin-fast {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Coupler Hitch between Cars */
+.train-coupler-chain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  margin-bottom: 15px;
+  flex-shrink: 0;
+}
+.train-coupler-chain span {
+  display: block;
+  width: 100%;
+  height: 5px;
+  background: #374151;
+  border-radius: 3px;
+  border: 1px solid #1f2937;
+}
+
+/* Train Wagon Car: Letter Card sitting ON TOP of the flatbed chassis */
+.train-wagon-car {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: clamp(82px, 14.5vw, 114px);
+  flex-shrink: 0;
+  position: relative;
+  transition: transform 0.15s;
+}
+.wagon-roof-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--reader-ink);
+  background: var(--play-sun, #fff4d9);
+  border: 1.5px solid var(--reader-line);
+  padding: 1px 7px;
+  border-radius: 999px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+
+/* CARGO BED: Card sits squarely on top */
+.wagon-cargo-bed {
+  width: 100%;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.wagon-cargo-card {
+  width: 100%;
+  height: 100%;
+  background: var(--activity-card);
+  border: 2px solid var(--reader-line);
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+  display: grid;
+  place-items: center;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+.wagon-cargo-card .activity-glyph {
+  font-size: clamp(38px, 5.2vw, 54px);
+  line-height: 1;
+}
+
+.wagon-cargo-card.is-solved-card {
+  border-color: var(--play-green-edge);
+  background: var(--play-good);
+  box-shadow: 0 4px 12px rgba(46, 125, 77, 0.25);
+  animation: card-pop 0.35s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+/* Target Missing Slot on Wagon Bed */
+.wagon-cargo-slot {
+  width: 100%;
+  height: 100%;
+  border: 2.5px dashed var(--play-pop, #9b6512);
+  border-radius: 16px;
+  background: rgba(255, 244, 217, 0.65);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  animation: slot-pulse 1.8s infinite ease-in-out;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+.wagon-cargo-slot .wagon-slot-q {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--play-pop);
+}
+.wagon-cargo-slot .wagon-slot-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--reader-muted);
+}
+
+.train-wagon-car.is-drag-hover .wagon-cargo-slot {
+  border-color: #10b981;
+  background: rgba(209, 250, 229, 0.9);
+  transform: scale(1.05);
+}
+
+/* Flatbed Platform / Chassis underneath the card */
+.wagon-chassis {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3px;
+}
+.wagon-flatbed-beam {
+  width: 104%;
+  height: 9px;
+  background: #78350f;
+  border-radius: 2px;
+  border: 1.5px solid #451a03;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+  position: relative;
+}
+.wagon-flatbed-beam::before,
+.wagon-flatbed-beam::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  width: 4px;
+  height: 6px;
+  background: #451a03;
+  border-radius: 1px;
+}
+.wagon-flatbed-beam::before { left: 2px; }
+.wagon-flatbed-beam::after { right: 2px; }
+
+.wagon-wheels-truck {
+  display: flex;
+  justify-content: space-around;
+  width: 76%;
+  margin-top: -2px;
+}
+.wagon-wheel {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1f2937;
+  border: 2.5px solid #9ca3af;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 2. Chameleon Game */
+.chameleon-game-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+.chameleon-prompt {
+  width: 100%;
+  max-width: 560px;
+}
+.chameleon-header-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--play-berry);
+  border: 1.5px solid #d4a5d4;
+  padding: 6px 14px;
+  border-radius: 16px;
+}
+.chameleon-badge-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.chameleon-header-badge strong {
+  font-size: 14.5px;
+  display: block;
+}
+.chameleon-header-badge p {
+  margin: 1px 0 0;
+  font-size: 12px;
+  color: var(--reader-muted);
+}
+.chameleon-wardrobe {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 580px;
+  direction: rtl;
+}
+.chameleon-slot {
+  background: var(--activity-card);
+  border: 2px solid var(--reader-line);
+  border-radius: 16px;
+  padding: 6px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 3px 0 var(--reader-line);
+  position: relative;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+}
+.chameleon-slot.is-target {
+  border: 2px dashed var(--play-pop);
+  background: var(--play-sun);
+  animation: slot-pulse 1.8s infinite ease-in-out;
+}
+.chameleon-slot.is-matched-slot {
+  border-color: var(--play-green-edge);
+  background: var(--play-good);
+  box-shadow: 0 3px 0 var(--play-green-edge);
+}
+.chameleon-slot.is-drag-hover {
+  border-color: #10b981 !important;
+  background: rgba(209, 250, 229, 0.9) !important;
+  transform: scale(1.05);
+}
+.chameleon-slot-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--reader-muted);
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+.chameleon-slot-display {
+  min-height: 54px;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  position: relative;
+}
+.chameleon-drop-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.chameleon-drop-prompt small {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--reader-muted);
+}
+.chameleon-slot-placeholder {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--play-pop);
+}
+
+/* 3. Detective Game */
+.detective-game-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+.detective-clue-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: var(--play-sky);
+  border: 2px solid var(--play-select);
+  border-radius: 20px;
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 4px 0 var(--play-select);
+}
+.detective-badge-top {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--reader-ink);
+  text-align: center;
+}
+.detective-lens-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  margin: 4px 0 6px;
+}
+.detective-lens {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--activity-card, #ffffff);
+  border: 4.5px solid var(--play-select);
+  display: grid;
+  place-items: center;
+  position: relative;
+  box-shadow: inset 0 3px 10px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.08);
+}
+.detective-glyph {
+  font-size: clamp(52px, 7.5vw, 66px) !important;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+.detective-audio-btn {
+  position: absolute;
+  left: calc(50% + 74px);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--activity-card, #ffffff);
+  border: 2px solid var(--play-select);
+  color: var(--play-pop, #b45309);
+  box-shadow: 0 3px 0 var(--play-select);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.12s, background 0.12s;
+  z-index: 2;
+}
+.detective-audio-btn:hover {
+  background: var(--play-sky);
+  transform: scale(1.08);
+}
+.detective-audio-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--play-select);
+}
+.detective-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 480px;
+}
+.detective-pos-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 9px 8px;
+  border: 2px solid var(--reader-line);
+  border-radius: 15px;
+  background: var(--activity-card);
+  color: var(--reader-ink);
+  box-shadow: 0 3px 0 var(--reader-line);
+  min-height: 58px;
+  cursor: pointer;
+  transition: transform 0.12s, border-color 0.12s;
+  position: relative;
+}
+.detective-pos-btn:hover:not(:disabled) {
+  border-color: var(--play-select);
+}
+.detective-pos-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--reader-line);
+}
+.detective-pos-btn.is-selected {
+  background: var(--play-sky);
+  border-color: var(--play-select);
+  box-shadow: 0 3px 0 var(--play-select);
+}
+.detective-pos-btn.is-correct {
+  background: var(--play-good);
+  border-color: var(--play-green-edge);
+  box-shadow: 0 3px 0 var(--play-green-edge);
+}
+.detective-pos-btn.is-incorrect {
+  background: var(--play-sun);
+  border-style: dashed;
+}
+.detective-btn-icon {
+  font-size: 14px;
+}
+.detective-btn-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.detective-btn-sub {
+  font-size: 10px;
+  color: var(--reader-muted);
+}
+
+/* 4. Puzzle Game */
+.puzzle-game-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+.puzzle-word-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: var(--play-sun);
+  border: 2px solid #e09f3e;
+  border-radius: 20px;
+  padding: 10px 16px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 4px 0 #e09f3e;
+}
+.puzzle-word-header {
+  font-size: 12.5px;
+  color: var(--reader-ink);
+  text-align: center;
+}
+.puzzle-word-slots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  direction: rtl;
+  width: 100%;
+}
+.puzzle-slot {
+  background: var(--activity-card);
+  border: 2px solid var(--reader-line);
+  border-radius: 16px;
+  padding: 6px 10px;
+  min-width: 82px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 3px 0 var(--reader-line);
+  position: relative;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+}
+.puzzle-slot.is-missing-slot {
+  border: 2.5px dashed var(--play-pop);
+  background: rgba(255, 255, 255, 0.65);
+  animation: slot-pulse 1.8s infinite ease-in-out;
+}
+.puzzle-slot.is-solved {
+  border-color: var(--play-green-edge);
+  background: var(--play-good);
+  box-shadow: 0 3px 0 var(--play-green-edge);
+}
+.puzzle-slot.is-drag-hover {
+  border-color: #10b981 !important;
+  background: rgba(209, 250, 229, 0.9) !important;
+  transform: scale(1.05);
+}
+.puzzle-slot-role {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--reader-muted);
+}
+.puzzle-slot-content {
+  min-height: 48px;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  position: relative;
+}
+.puzzle-missing-mark {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--play-pop);
+}
+
+/* Options Grid */
+.position-options-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
+.position-option-card {
+  min-height: 60px;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  padding: 4px;
+}
+.position-option-card .activity-glyph {
+  font-size: clamp(36px, 5vw, 52px);
+}
+
+@keyframes slot-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes card-pop {
+  0% { transform: scale(0.85); }
+  60% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
 @media(prefers-reduced-motion:reduce) {
   .memory-card-inner,.activity-card,.activity-btn,.activity-letter {transition:none;}.activity-buddy.is-happy,.reward-burst svg {animation:none;}.reward-burst {display:none;}
 }

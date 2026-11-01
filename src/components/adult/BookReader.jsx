@@ -22,6 +22,32 @@ function Control({ label, children, ...props }) {
   return <button type="button" className="reader-control" aria-label={label} data-tip={label} {...props}>{children}</button>;
 }
 
+function FlagTR() {
+  return (
+    <svg width="22" height="15" viewBox="0 0 1200 800" className="reader-flag-icon" aria-hidden="true">
+      <rect width="1200" height="800" fill="#E30A17" rx="60"/>
+      <circle cx="425" cy="400" r="200" fill="#ffffff"/>
+      <circle cx="475" cy="400" r="160" fill="#E30A17"/>
+      <polygon fill="#ffffff" points="583.3,400 706.7,440.1 630.5,335.2 630.5,464.8 706.7,359.9"/>
+    </svg>
+  );
+}
+
+function FlagDE() {
+  return (
+    <svg width="22" height="15" viewBox="0 0 5 3" className="reader-flag-icon" aria-hidden="true">
+      <clipPath id="reader-flag-de-clip">
+        <rect width="5" height="3" rx="0.3"/>
+      </clipPath>
+      <g clipPath="url(#reader-flag-de-clip)">
+        <rect width="5" height="1" y="0" fill="#000000"/>
+        <rect width="5" height="1" y="1" fill="#DD0000"/>
+        <rect width="5" height="1" y="2" fill="#FFCE00"/>
+      </g>
+    </svg>
+  );
+}
+
 export default function BookReader({ pagesData, currentPage = 6, onPageChange, onOpenVideo, lang = 'tr', reader = { bookmarks: [], notes: {}, preferences: READER_DEFAULTS }, onReaderChange = () => {}, onLangChange, effects=true, onEffectsChange }) {
   const de = lang === 'de', total = pagesData.length, page = pagesData[currentPage - 1];
   const preferences = { ...READER_DEFAULTS, ...reader.preferences };
@@ -300,13 +326,8 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
           <fieldset><legend>{de ? 'Seitenansicht' : 'Sayfa görünümü'}</legend><div className="reader-options"><button onClick={() => updatePreferences({ spread: false })} aria-pressed={!preferences.spread}><File size={17} />{de ? 'Einzelseite' : 'Tek sayfa'}</button><button onClick={() => updatePreferences({ spread: true })} disabled={!wide} aria-pressed={preferences.spread && wide}><Columns2 size={17} />{de ? 'Doppelseite' : 'Çift sayfa'}</button></div>{!wide && <p>{de ? 'Doppelseiten sind auf breiten Bildschirmen verfügbar.' : 'Çift sayfa geniş ekranlarda kullanılabilir.'}</p>}</fieldset>
           <div className="reader-fit-options"><button onClick={() => zoomCenter(1)}><BookOpen size={16} />{de ? 'Ganze Seite' : 'Sayfaya sığdır'}</button><button onClick={fitWidth}><Eye size={16} />{de ? 'Seitenbreite' : 'Genişliğe sığdır'}</button></div>
           <label className="reader-settings-row"><span><ZoomIn size={16} />{de ? 'Zoom' : 'Yakınlaştırma'} · {Math.round(zoom * 100)}%</span><input type="range" min=".5" max="3" step=".05" value={zoom} onChange={e => zoomCenter(Number(e.target.value))} /></label>
-          <label className="reader-settings-row"><span><Sun size={16} />{de ? 'Seitenhelligkeit' : 'Sayfa parlaklığı'}</span><input type="range" min=".7" max="1" step=".05" value={preferences.brightness} onChange={e => updatePreferences({ brightness: Number(e.target.value) })} /></label>
           <label className="reader-settings-row"><span><Volume2 size={16} />{de ? 'Audiotempo' : 'Seslendirme hızı'}</span><select value={preferences.speed} onChange={e => updatePreferences({ speed: Number(e.target.value) })}>{[.5, .75, 1, 1.25, 1.5, 2].map(value => <option value={value} key={value}>{value}×</option>)}</select></label>
-          <label className="reader-activity-toggle"><span>{de?'Aktivitäten anzeigen':'Etkinlikleri göster'}</span><input type="checkbox" checked={preferences.activitiesEnabled===true} onChange={e=>updatePreferences({activitiesEnabled:e.target.checked})}/></label>
-          <p className="reader-shortcuts">{de?'Kurze Spiele auf passenden Buchseiten. Die Buchaufnahmen bleiben auch ohne Aktivitäten verfügbar.':'Uygun sayfalarda kısa oyunları açar. Gizlediğinde kitabın ses kayıtları kullanılmaya devam eder.'}</p>
-          <label className="reader-settings-row"><span>{de?'Sprache':'Dil'}</span><select value={lang} onChange={e=>onLangChange?.(e.target.value)}><option value="tr">Türkçe</option><option value="de">Deutsch</option></select></label>
-          <label className="reader-activity-toggle"><span>{de?'Klangeffekte':'Ses efektleri'}</span><input type="checkbox" checked={effects} onChange={e=>onEffectsChange?.(e.target.checked)}/></label>
-          <p className="reader-shortcuts">← → {de ? 'Blättern' : 'Sayfa çevir'} · + − {de ? 'Zoom' : 'Yakınlaştır'} · B {de ? 'Lesezeichen' : 'Yer imi'} · F {de ? 'Vollbild' : 'Tam ekran'}</p>
+          <fieldset><legend>{de ? 'Sprache' : 'Dil'}</legend><div className="reader-options"><button type="button" className="reader-lang-btn" onClick={() => onLangChange?.('tr')} aria-pressed={lang === 'tr'}><FlagTR /><span>Türkçe</span></button><button type="button" className="reader-lang-btn" onClick={() => onLangChange?.('de')} aria-pressed={lang === 'de'}><FlagDE /><span>Deutsch</span></button></div></fieldset>
         </div>}
       </div>
       <p id="reader-help" className="reader-help">{de ? 'Mausrad / Pinch: Zoom · Ziehen: Blättern / Verschieben · 0: ganze Seite' : (compactStage ? 'Yana kaydır: sayfa çevir · İki parmakla: büyüt / küçült' : 'Tekerlek / iki parmak: yakınlaştır · Sürükle: sayfa çevir / gezin · 0: sayfaya sığdır')}</p>

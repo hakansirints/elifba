@@ -1,9 +1,15 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, RotateCcw, Sparkles, Star, Trophy, Volume2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, RotateCcw, Sparkles, Star, Timer, Trophy, Volume2 } from 'lucide-react';
 import { LETTERS, letterName } from '../../data/alphabetData';
 import { performMonteSwap } from '../../utils/memoryGame';
 import { playAudioFile, stopCurrentAudio, sfx } from '../../utils/audioPlayer';
 import { Buddy, CardConfetti, Feedback, Glyph } from './ActivityPrimitives';
+
+const formatTimer = secs => {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+};
 
 function shuffleList(list) {
   const next = [...list];
@@ -24,6 +30,7 @@ export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFini
   const [confettiCardId, setConfettiCardId] = useState(null);
   const [wrongId, setWrongId] = useState(null);
   const [stars, setStars] = useState(0);
+  const [seconds, setSeconds] = useState(0);
   const [audioError, setAudioError] = useState(false);
   const [heard, setHeard] = useState(false);
   const [roundKey, setRoundKey] = useState(0);
@@ -36,6 +43,18 @@ export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFini
   const clearTimers = () => {
     if (autoTimer.current) { clearTimeout(autoTimer.current); autoTimer.current = null; }
   };
+
+  useEffect(() => {
+    let interval = null;
+    if (!stageComplete) {
+      interval = setInterval(() => {
+        setSeconds(s => s + 1);
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [stageComplete]);
 
   useEffect(() => {
     return () => {
@@ -139,6 +158,7 @@ export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFini
     audioToken.current++;
     stopCurrentAudio();
     setStage(1);
+    setSeconds(0);
     setStageComplete(false);
     setCards(LETTERS);
     setFoundIds(new Set());
@@ -155,6 +175,7 @@ export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFini
     audioToken.current++;
     stopCurrentAudio();
     setStage(2);
+    setSeconds(0);
     setStageComplete(false);
     const shuffled = shuffleList(LETTERS);
     setCards(shuffled);
@@ -166,7 +187,7 @@ export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFini
     setRoundKey(k => k + 1);
   };
 
-  // Auto-play sound 1s after target changes
+  // Auto-play sound 0.5s after target changes
   useEffect(() => {
     if (stageComplete || !target) return;
     setHeard(false);
@@ -174,7 +195,7 @@ export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFini
     clearTimers();
     autoTimer.current = setTimeout(() => {
       listen();
-    }, 1000);
+    }, 500);
     return () => clearTimers();
   }, [target?.id, roundKey, stageComplete]);
 
@@ -281,6 +302,10 @@ export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFini
         </div>
 
         <div className="all-letters-top-right">
+          <span className="activity-timer-badge" aria-label={de ? `Zeit: ${formatTimer(seconds)}` : `Süre: ${formatTimer(seconds)}`}>
+            <Timer size={14} />
+            <span>{formatTimer(seconds)}</span>
+          </span>
           <span className="activity-stars">
             <Star size={16} fill="currentColor" />{stars}
           </span>
@@ -325,6 +350,10 @@ export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFini
                   ? (de ? '1. Stufe erfolgreich beendet!' : '1. Aşama Başarıyla Tamamlandı!')
                   : (de ? 'Alle 29 Buchstaben gemeistert!' : '29 Harfin Tamamını Başarıyla Buldun!')}
               </h2>
+              <div className="all-letters-completion-time">
+                <Timer size={15} />
+                <span>{de ? `Zeit: ${formatTimer(seconds)}` : `Tamamlama Süresi: ${formatTimer(seconds)}`}</span>
+              </div>
               <p>
                 {stage === 1
                   ? (de ? 'Du hast alle Buchstaben gefunden. Jetzt kannst du Stufe 2 mit gemischten Karten spielen!' : 'Sıralı 29 harfin tamamını başarıyla buldun! Şimdi kartların yer değiştirdiği 2. Aşamaya geçebilirsin.')

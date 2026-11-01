@@ -40,10 +40,12 @@ export default function BookHotspot({ hotspot, pageImage, label, audio, disabled
             />
           </span>
           <span className="hotspot-lift-ring" />
-          <span className="hotspot-lift-badge">
-            <AudioLines size={13} className={active && audio.status === 'playing' ? 'is-pulsing' : ''} />
-            {!compact && <span>{active && audio.status === 'playing' ? 'Okunuyor...' : 'Dinle'}</span>}
-          </span>
+          {!compact && (
+            <span className="hotspot-lift-badge">
+              <AudioLines size={13} className={active && audio.status === 'playing' ? 'is-pulsing' : ''} />
+              <span>{active && audio.status === 'playing' ? 'Okunuyor...' : 'Dinle'}</span>
+            </span>
+          )}
         </span>
       )}
       {media && (

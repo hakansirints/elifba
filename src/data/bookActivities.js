@@ -13,6 +13,10 @@ export const PAGE_ACTIVITIES = {
     {id:'listen',tr:'Dinle ve bul',de:'Hören und finden',hint:{tr:'Kaynak seslerle kendini dene.',de:'Mit den Originalaufnahmen üben.'}},
     {id:'pairs',tr:'Eşini bul',de:'Paare finden',hint:{tr:'Yeni harf çiftleriyle yeniden oyna.',de:'Mit neuen Buchstabenpaaren spielen.'}},
     {id:'trace',tr:'Bütün Harfler',de:'Alle Buchstaben',hint:{tr:'Sıralı ve karışık harfleri dinle, patlatarak bul!',de:'Höre die Buchstaben und lasse sie aufploppen!'}}],
+  17: [{id:'train',tr:'Harf Treni',de:'Buchstaben-Zug',hint:{tr:'Vagonları birleştir: Başta, ortada ve sonda yazılışları trene yerleştir!',de:'Waggons verbinden: Anfangs-, Mittel- und Endform in den Zug setzen!'}},
+    {id:'chameleon',tr:'Harf Bukalemunu',de:'Buchstaben-Chamäleon',hint:{tr:'Harfin 4 halini tamamla: Yalnız, başta, ortada ve sonda kıyafetlerini bul!',de:'Die 4 Formen sammeln: Allein, Anfang, Mitte und Ende zuordnen!'}},
+    {id:'detective',tr:'Harf Dedektifi',de:'Formen-Detektiv',hint:{tr:'Bu harf nerede duruyor? Başta mı, ortada mı, sonda mı? Büyüteçle keşfet!',de:'Wo steht die Form? Anfang, Mitte oder Ende? Mit der Lupe ermitteln!'}},
+    {id:'puzzle',tr:'Eksik Parçayı Tamamla',de:'Buchstaben-Puzzle',hint:{tr:'Kelime yapbozundaki boşluğa doğru bağlanan harf parçasını yerleştir!',de:'Finde das passende Puzzleteil mit den richtigen Verbindungslinien!'}}],
 };
 export const activitiesForPage = page => PAGE_ACTIVITIES[page] || [];
 export const activityKey = (page, id) => `${page}:${id}`;
@@ -37,7 +41,7 @@ export function createQuestions(page, mode, random=Math.random) {
   });
 }
 export function createMiniLesson(page,letterId=1,random=Math.random) {
-  if(!activitiesForPage(page).length)return [];
+  if(!activitiesForPage(page).some(a=>a.id==='recognize'))return [];
   const letter=LETTERS.find(l=>l.id===letterId);
   if(!letter)return [];
   const group=SHAPE_GROUPS.find(g=>g.ids.includes(letter.id));

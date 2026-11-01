@@ -94,6 +94,11 @@ class SoundFX {
     } catch (e) {}
   }
 
+  // Alias for error/wrong attempt sound
+  playError() {
+    this.playTryAgain();
+  }
+
   // Star sound
   playFlip() {
     if (!this.enabled) return;

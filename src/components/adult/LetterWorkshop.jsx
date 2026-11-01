@@ -194,12 +194,12 @@ export default function LetterWorkshop({ page, targetId, lang, speed, onFinish, 
     }, { once: true });
   };
 
-  // Auto-play audio exactly 1 second after entering listen tab
+  // Auto-play audio exactly 0.5 seconds after entering listen tab
   useEffect(() => {
     if (tab === 'listen' && !heard) {
       autoAudioTimer.current = setTimeout(() => {
         listen();
-      }, 1000);
+      }, 500);
       return () => {
         if (autoAudioTimer.current) clearTimeout(autoAudioTimer.current);
       };
@@ -361,7 +361,7 @@ export default function LetterWorkshop({ page, targetId, lang, speed, onFinish, 
             <>
               <div className="activity-target"><Glyph letter={letter} /></div>
               <button className="activity-btn activity-primary" onClick={listen}>
-                <Volume2 size={20} />{de ? 'Anhören' : 'Dinle'} · {letterName(letter, lang)}
+                <Volume2 size={20} />{de ? 'Anhören' : 'Dinle'}
               </button>
             </>
           ) : (
@@ -376,7 +376,6 @@ export default function LetterWorkshop({ page, targetId, lang, speed, onFinish, 
           {tab === 'listen' ? (
             <div className="activity-listen-preview">
               <Glyph letter={letter} />
-              <strong>{letterName(letter, lang)}</strong>
               <p>{letter.shape[lang]}</p>
             </div>
           ) : null}

@@ -377,6 +377,9 @@
 .reader-options { display: flex; gap: 6px; }
 .reader-options button { display: flex; align-items: center; justify-content: center; flex: 1; gap: 7px; min-height: 42px; padding: 8px 6px; border: 1px solid var(--reader-line); border-radius: 11px; font-size: 11px; }
 .reader-options button[aria-pressed=true] { background: var(--reader-selected); border-color: #68866b80; }
+.reader-flag-icon { width: 22px; height: 15px; border-radius: 3px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); flex-shrink: 0; display: block; }
+.reader-lang-btn { font-weight: 500; gap: 8px !important; }
+.reader-lang-btn[aria-pressed=true] { font-weight: 700; }
 .reader-settings fieldset p { margin-top: 7px; color: var(--reader-muted); font-size: 10px; line-height: 1.7; }
 .reader-fit-options { display: flex; gap: 7px; margin: 18px 0; }
 .reader-fit-options button { display: flex; align-items: center; justify-content: center; gap: 7px; flex: 1; min-height: 40px; border-radius: 10px; background: var(--reader-selected); font-size: 10px; }
