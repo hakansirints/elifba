@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { sfx } from '../../utils/audioPlayer';
 
+/**
+ * 3D Curled Fold-Over Ribbon Tab for Balloon Game
+ * Sayfanın altından/arkasından çıkıp sol orta kenar üzerine katlanan kırmızı 3D kurdele
+ */
 export function PageBalloonLauncher({ lang = 'tr', disabled = false, onLaunch }) {
   const de = lang === 'de';
   const [isHovered, setIsHovered] = useState(false);
@@ -20,17 +24,10 @@ export function PageBalloonLauncher({ lang = 'tr', disabled = false, onLaunch })
   };
 
   return (
-    <div className="page-launcher-item">
-      {/* Tooltip / Badge that pops up on hover: "Balon Patlat" */}
-      <div className={`pbl-hover-badge ${isHovered ? 'is-visible' : ''}`} aria-hidden={!isHovered}>
-        <span>{de ? 'Fliegende Ballons' : 'Balon Patlat'}</span>
-        <span className="pbl-badge-arrow" />
-      </div>
-
-      {/* Balloon Icon Button */}
+    <div className="ribbon-fold-tab-item">
       <button
         type="button"
-        className={`page-balloon-icon-btn ${isHovered ? 'is-hovered' : ''}`}
+        className={`ribbon-fold-btn ribbon-fold-btn-red ${isHovered ? 'is-hovered' : ''}`}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         onMouseEnter={() => setIsHovered(true)}
@@ -43,93 +40,122 @@ export function PageBalloonLauncher({ lang = 'tr', disabled = false, onLaunch })
         title={de ? 'Fliegende Ballons' : 'Balon Patlat'}
       >
         <svg
-          viewBox="0 0 52 56"
-          className="pbl-icon-svg"
+          viewBox="0 0 84 48"
+          className="ribbon-fold-svg"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
           <defs>
-            {/* Primary Red 3D glossy gradient */}
-            <radialGradient id="pblRed3D" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#ff8a8a" />
-              <stop offset="30%" stopColor="#ef4444" />
-              <stop offset="75%" stopColor="#b91c1c" />
-              <stop offset="100%" stopColor="#7f1d1d" />
+            {/* 3D Crimson Gradient matching user's folded ribbon */}
+            <linearGradient id="foldCrimsonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#7f1d1d" />
+              <stop offset="12%" stopColor="#991b1b" />
+              <stop offset="35%" stopColor="#dc2626" />
+              <stop offset="85%" stopColor="#ef4444" />
+              <stop offset="100%" stopColor="#b91c1c" />
+            </linearGradient>
+
+            {/* Ambient Shadow inside the curls */}
+            <radialGradient id="foldCurlDarkRed" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#450a0a" />
+              <stop offset="85%" stopColor="#250303" />
+              <stop offset="100%" stopColor="#000000" />
             </radialGradient>
 
-            {/* Cyan 3D gradient */}
-            <radialGradient id="pblCyan3D" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#7dd3fc" />
-              <stop offset="35%" stopColor="#0ea5e9" />
-              <stop offset="75%" stopColor="#0284c7" />
-              <stop offset="100%" stopColor="#0369a1" />
-            </radialGradient>
-
-            {/* Amber 3D gradient */}
-            <radialGradient id="pblAmber3D" cx="35%" cy="30%" r="70%">
+            {/* Gold Filigree Stroke */}
+            <linearGradient id="foldGoldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#fef08a" />
-              <stop offset="35%" stopColor="#f59e0b" />
-              <stop offset="75%" stopColor="#d97706" />
-              <stop offset="100%" stopColor="#92400e" />
-            </radialGradient>
+              <stop offset="50%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#d97706" />
+            </linearGradient>
 
-            {/* Specular glare reflection */}
-            <linearGradient id="pblGlare3D" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
+            {/* Specular Glare */}
+            <linearGradient id="foldRedGlare" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
             </linearGradient>
           </defs>
 
-          {/* Strings */}
-          <path d="M15 28 Q 21 38 26 46" stroke="#94a3b8" strokeWidth="1.2" strokeLinecap="round" />
-          <path d="M37 29 Q 31 39 26 46" stroke="#94a3b8" strokeWidth="1.2" strokeLinecap="round" />
-          <path d="M26 35 L 26 46" stroke="#94a3b8" strokeWidth="1.3" strokeLinecap="round" />
-          <path d="M26 46 Q 23 49 25 52 Q 28 55 24 56" stroke="#f59e0b" strokeWidth="1.3" strokeLinecap="round" />
+          {/* Top Curl Inner Hollow (emerging from behind the page sheet) */}
+          <path d="M 14 6 C 10 6 4 4 2 8 C 0 12 3 16 8 15 Z" fill="url(#foldCurlDarkRed)" />
+          {/* Bottom Curl Inner Hollow */}
+          <path d="M 14 42 C 10 42 4 44 2 40 C 0 36 3 32 8 33 Z" fill="url(#foldCurlDarkRed)" />
 
-          {/* Balloon Blue (left) */}
-          <g>
-            <ellipse cx="16" cy="19" rx="10.5" ry="12.5" transform="rotate(-8 16 19)" fill="url(#pblCyan3D)" />
-            <ellipse cx="13" cy="15" rx="3" ry="4.5" transform="rotate(-24 13 15)" fill="url(#pblGlare3D)" />
-            <polygon points="14.5,30 17.5,30 16.5,31.5 15,31.5" fill="#0284c7" />
-          </g>
+          {/* Main Curled Fold-Over Ribbon Body: wraps at x=14 and extends to x=78 with rounded dome end */}
+          <path
+            d="
+              M 14 6
+              C 10 6 3 3 1 7
+              C -1 11 2 16 8 15
+              L 12 15
+              L 12 33
+              L 8 33
+              C 2 32 -1 37 1 41
+              C 3 45 10 42 14 42
+              L 68 42
+              C 76 42 82 36 82 28
+              L 82 20
+              C 82 12 76 6 68 6
+              Z
+            "
+            fill="url(#foldCrimsonGrad)"
+            stroke="url(#foldGoldBorder)"
+            strokeWidth="1.3"
+            strokeLinejoin="round"
+          />
 
-          {/* Balloon Amber (right) */}
-          <g>
-            <ellipse cx="37" cy="20" rx="10.5" ry="12.5" transform="rotate(8 37 20)" fill="url(#pblAmber3D)" />
-            <ellipse cx="34" cy="16" rx="3" ry="4.5" transform="rotate(-12 34 16)" fill="url(#pblGlare3D)" />
-            <polygon points="35.5,31 38.5,31 37.5,32.5 36,32.5" fill="#b45309" />
-          </g>
+          {/* Specular Highlight along top fold surface */}
+          <path d="M 14 9 L 68 9 C 73 9 77 12 78 16 L 14 16 Z" fill="url(#foldRedGlare)" />
 
-          {/* Balloon Red (center front) */}
-          <g>
-            <ellipse cx="26" cy="21" rx="12.5" ry="15" fill="url(#pblRed3D)" />
-            <ellipse cx="22" cy="15.5" rx="4" ry="6.5" transform="rotate(-22 22 15.5)" fill="url(#pblGlare3D)" />
-            <polygon points="24,34.5 28,34.5 27,36.5 25,36.5" fill="#991b1b" />
-            {/* Arabic letter 'ب' on red balloon */}
+          {/* Crease line where ribbon wraps over page edge at x=14 */}
+          <line x1="14" y1="6" x2="14" y2="42" stroke="#450a0a" strokeWidth="1.2" opacity="0.7" />
+          <line x1="15" y1="6" x2="15" y2="42" stroke="#fca5a5" strokeWidth="0.8" opacity="0.6" />
+
+          {/* High-Res 3D Balloon Icon inside the tab */}
+          <g transform="translate(36, 6) scale(0.68)">
+            {/* Strings */}
+            <path d="M15 28 Q 21 38 26 46" stroke="#fef08a" strokeWidth="1.4" strokeLinecap="round" />
+            <path d="M37 29 Q 31 39 26 46" stroke="#fef08a" strokeWidth="1.4" strokeLinecap="round" />
+            <path d="M26 35 L 26 46" stroke="#fef08a" strokeWidth="1.5" strokeLinecap="round" />
+            {/* Blue Balloon (left) */}
+            <ellipse cx="16" cy="19" rx="10" ry="12" fill="#0284c7" />
+            <ellipse cx="13" cy="15" rx="3" ry="4" fill="#ffffff" opacity="0.7" />
+            {/* Gold Balloon (right) */}
+            <ellipse cx="37" cy="20" rx="10" ry="12" fill="#d97706" />
+            <ellipse cx="34" cy="16" rx="3" ry="4" fill="#ffffff" opacity="0.7" />
+            {/* Center Red Balloon with Letter 'ب' */}
+            <ellipse cx="26" cy="21" rx="12.5" ry="15" fill="#ef4444" stroke="#ffffff" strokeWidth="1" />
+            <ellipse cx="22" cy="15.5" rx="4" ry="6" fill="#ffffff" opacity="0.8" />
             <text
-              x="26"
-              y="25.5"
+              x="26.5"
+              y="26"
               textAnchor="middle"
               fill="#ffffff"
-              fontSize="11"
+              fontSize="12"
               fontWeight="900"
-              fontFamily="'Amiri', 'Traditional Arabic', serif"
-              style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.4))' }}
+              fontFamily="'Amiri', serif"
             >
               ب
             </text>
           </g>
-
-          {/* Sparkles */}
-          <path d="M43 7 L44 10 L47 11 L44 12 L43 15 L42 12 L39 11 L42 10 Z" fill="#fbbf24" className="pbl-sparkle" />
-          <path d="M7 11 L8 13 L10 14 L8 15 L7 17 L6 15 L4 14 L6 13 Z" fill="#38bdf8" className="pbl-sparkle pbl-sparkle-2" />
         </svg>
+
+        {/* Hover Label Badge extending into the right margin */}
+        <span className={`ribbon-edge-badge ribbon-edge-badge-red ${isHovered ? 'is-visible' : ''}`} aria-hidden={!isHovered}>
+          <span>🎈</span>
+          <span>{de ? 'Fliegende Ballons' : 'Balon Patlat'}</span>
+          <span className="ribbon-badge-arrow">▸</span>
+        </span>
       </button>
     </div>
   );
 }
 
+/**
+ * 3D Curled Fold-Over Ribbon Tab for Listen Activity
+ * Sayfanın altından/arkasından çıkıp sol orta kenar üzerine katlanan zümrüt 3D kurdele
+ */
 export function PageListenLauncher({ lang = 'tr', disabled = false, onLaunch }) {
   const de = lang === 'de';
   const [isHovered, setIsHovered] = useState(false);
@@ -149,16 +175,10 @@ export function PageListenLauncher({ lang = 'tr', disabled = false, onLaunch }) 
   };
 
   return (
-    <div className="page-launcher-item">
-      {/* Tooltip / Badge: "Dinle ve bul" */}
-      <div className={`pbl-hover-badge pbl-hover-badge-teal ${isHovered ? 'is-visible' : ''}`} aria-hidden={!isHovered}>
-        <span>{de ? 'Hören und finden' : 'Dinle ve bul'}</span>
-        <span className="pbl-badge-arrow pbl-badge-arrow-teal" />
-      </div>
-
+    <div className="ribbon-fold-tab-item">
       <button
         type="button"
-        className={`page-listen-icon-btn ${isHovered ? 'is-hovered' : ''}`}
+        className={`ribbon-fold-btn ribbon-fold-btn-green ${isHovered ? 'is-hovered' : ''}`}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         onMouseEnter={() => setIsHovered(true)}
@@ -171,66 +191,110 @@ export function PageListenLauncher({ lang = 'tr', disabled = false, onLaunch }) 
         title={de ? 'Hören und finden' : 'Dinle ve bul'}
       >
         <svg
-          viewBox="0 0 52 56"
-          className="pbl-icon-svg pll-icon-svg"
+          viewBox="0 0 84 48"
+          className="ribbon-fold-svg"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
           <defs>
-            <radialGradient id="pllTeal3D" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#5eead4" />
-              <stop offset="35%" stopColor="#14b8a6" />
-              <stop offset="75%" stopColor="#0d9488" />
-              <stop offset="100%" stopColor="#042f2e" />
+            {/* 3D Emerald Gradient matching app brand */}
+            <linearGradient id="foldEmeraldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#064e3b" />
+              <stop offset="12%" stopColor="#065f46" />
+              <stop offset="35%" stopColor="#059669" />
+              <stop offset="85%" stopColor="#10b981" />
+              <stop offset="100%" stopColor="#047857" />
+            </linearGradient>
+
+            {/* Ambient Shadow inside green curls */}
+            <radialGradient id="foldCurlDarkGreen" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#022c22" />
+              <stop offset="85%" stopColor="#011812" />
+              <stop offset="100%" stopColor="#000000" />
             </radialGradient>
-            <radialGradient id="pllAmber3D" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#fef08a" />
-              <stop offset="40%" stopColor="#f59e0b" />
-              <stop offset="100%" stopColor="#b45309" />
-            </radialGradient>
+
+            {/* Specular Glare */}
+            <linearGradient id="foldGreenGlare" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            </linearGradient>
           </defs>
 
-          {/* Sound waves left */}
-          <path d="M7 23 C5.5 25.5 5.5 30.5 7 33" stroke="#f59e0b" strokeWidth="2.2" strokeLinecap="round" />
-          <path d="M4 19 C1.5 24 1.5 32 4 37" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" opacity="0.6" />
+          {/* Top Curl Inner Hollow */}
+          <path d="M 14 6 C 10 6 4 4 2 8 C 0 12 3 16 8 15 Z" fill="url(#foldCurlDarkGreen)" />
+          {/* Bottom Curl Inner Hollow */}
+          <path d="M 14 42 C 10 42 4 44 2 40 C 0 36 3 32 8 33 Z" fill="url(#foldCurlDarkGreen)" />
 
-          {/* Sound waves right */}
-          <path d="M45 23 C46.5 25.5 46.5 30.5 45 33" stroke="#f59e0b" strokeWidth="2.2" strokeLinecap="round" />
-          <path d="M48 19 C50.5 24 50.5 32 48 37" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" opacity="0.6" />
+          {/* Main Curled Fold-Over Ribbon Body */}
+          <path
+            d="
+              M 14 6
+              C 10 6 3 3 1 7
+              C -1 11 2 16 8 15
+              L 12 15
+              L 12 33
+              L 8 33
+              C 2 32 -1 37 1 41
+              C 3 45 10 42 14 42
+              L 68 42
+              C 76 42 82 36 82 28
+              L 82 20
+              C 82 12 76 6 68 6
+              Z
+            "
+            fill="url(#foldEmeraldGrad)"
+            stroke="url(#foldGoldBorder)"
+            strokeWidth="1.3"
+            strokeLinejoin="round"
+          />
 
-          {/* Headband arch */}
-          <path d="M12 28 C12 15 20 9 26 9 C32 9 40 15 40 28" fill="none" stroke="#0f766e" strokeWidth="4.5" strokeLinecap="round" />
-          <path d="M19 12 C21.5 10.5 24 10 26 10 C28 10 30.5 10.5 33 12" fill="none" stroke="#2dd4bf" strokeWidth="2.4" strokeLinecap="round" />
+          {/* Specular Highlight along top fold surface */}
+          <path d="M 14 9 L 68 9 C 73 9 77 12 78 16 L 14 16 Z" fill="url(#foldGreenGlare)" />
 
-          {/* Left Ear Cushion */}
-          <g>
-            <rect x="9.5" y="24" width="7" height="15" rx="3.5" fill="url(#pllTeal3D)" stroke="#042f2e" strokeWidth="1" />
-            <rect x="14" y="26" width="2.5" height="11" rx="1.2" fill="#ccfbf1" opacity="0.85" />
+          {/* Crease line where ribbon wraps over page edge */}
+          <line x1="14" y1="6" x2="14" y2="42" stroke="#022c22" strokeWidth="1.2" opacity="0.7" />
+          <line x1="15" y1="6" x2="15" y2="42" stroke="#a7f3d0" strokeWidth="0.8" opacity="0.6" />
+
+          {/* High-Res 3D Headphone Icon */}
+          <g transform="translate(37, 6) scale(0.68)">
+            {/* Sound waves */}
+            <path d="M7 23 C5.5 25.5 5.5 30.5 7 33" stroke="#fef08a" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M45 23 C46.5 25.5 46.5 30.5 45 33" stroke="#fef08a" strokeWidth="2.5" strokeLinecap="round" />
+            {/* Headband arch */}
+            <path d="M12 28 C12 15 20 9 26 9 C32 9 40 15 40 28" fill="none" stroke="#fef08a" strokeWidth="4.5" strokeLinecap="round" />
+            {/* Ear Cushions */}
+            <rect x="9.5" y="24" width="7" height="15" rx="3.5" fill="#042f2e" stroke="#fef08a" strokeWidth="1.2" />
+            <rect x="35.5" y="24" width="7" height="15" rx="3.5" fill="#042f2e" stroke="#fef08a" strokeWidth="1.2" />
+            {/* Golden Musical Note in Center */}
+            <path d="M26 21 L26 33" stroke="#fef08a" strokeWidth="2.8" strokeLinecap="round" />
+            <circle cx="23" cy="33.5" r="3.2" fill="#fef08a" />
+            <path d="M26 22 C29 22 31 24.5 31 27" fill="none" stroke="#fef08a" strokeWidth="2.4" strokeLinecap="round" />
           </g>
-
-          {/* Right Ear Cushion */}
-          <g>
-            <rect x="35.5" y="24" width="7" height="15" rx="3.5" fill="url(#pllTeal3D)" stroke="#042f2e" strokeWidth="1" />
-            <rect x="35.5" y="26" width="2.5" height="11" rx="1.2" fill="#ccfbf1" opacity="0.85" />
-          </g>
-
-          {/* Center Musical Note in Amber */}
-          <path d="M26 22 L26 33" stroke="#f59e0b" strokeWidth="2.4" strokeLinecap="round" />
-          <circle cx="23" cy="33.5" r="3" fill="#f59e0b" />
-          <path d="M26 23 C29 23 31 25.5 31 28" fill="none" stroke="#f59e0b" strokeWidth="2.2" strokeLinecap="round" />
-
-          {/* Top golden sparkle */}
-          <path d="M26 3 L27 5.5 L30 6.5 L27 7.5 L26 10 L25 7.5 L22 6.5 L25 5.5 Z" fill="#fbbf24" className="pbl-sparkle" />
         </svg>
+
+        {/* Hover Label Badge */}
+        <span className={`ribbon-edge-badge ribbon-edge-badge-teal ${isHovered ? 'is-visible' : ''}`} aria-hidden={!isHovered}>
+          <span>🎧</span>
+          <span>{de ? 'Hören und finden' : 'Dinle ve bul'}</span>
+          <span className="ribbon-badge-arrow" style={{ color: '#34d399' }}>▸</span>
+        </span>
       </button>
     </div>
   );
 }
 
+/**
+ * Sayfa 14 Sol Orta Kenar Etkinlik Başlatıcıları
+ */
 export default function Page14ActivityLaunchers({ lang = 'tr', disabled = false, onLaunchBalloon, onLaunchListen }) {
+  const de = lang === 'de';
   return (
-    <div className="page-activity-launchers-row">
+    <div
+      className="page-edge-ribbon-launchers"
+      role="region"
+      aria-label={de ? 'Seitenaktivitäten' : 'Sayfa etkinlikleri'}
+    >
       <PageBalloonLauncher lang={lang} disabled={disabled} onLaunch={onLaunchBalloon} />
       <PageListenLauncher lang={lang} disabled={disabled} onLaunch={onLaunchListen} />
     </div>
