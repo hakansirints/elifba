@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arapça Vav (و) - Clippy Maskot Tasarımları</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-sub: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #e78a4e;
+      --green: #22c55e;
+      --red: #ef4444;
+      --glass-light: rgba(255,255,255,0.7);
+    }
+    .theme-dark {
+      --bg: #141617;
+      --card-bg: #1d2021;
+      --card-sub: #282828;
+      --border: #3c3836;
+      --text: #d4be98;
+      --muted: #a89984;
+      --accent: #e78a4e;
+      --green: #a9b665;
+      --red: #ea6962;
+      --glass-light: rgba(212,190,152,0.12);
+    }
+    .theme-sepia {
+      --bg: #f4ecd8;
+      --card-bg: #fdf6e7;
+      --card-sub: #eee4ce;
+      --border: #d7cbb1;
+      --text: #4e3613;
+      --muted: #7e6c52;
+      --accent: #b45309;
+      --green: #4d7c0f;
+      --red: #b91c1c;
+      --glass-light: rgba(255,248,225,0.6);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 0.25s, color 0.25s;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* ==========================================================================
+       RIGID FIXED-PIVOT ANIMATIONS (ZERO LIMB DETACHMENT)
+       All arm rotations use exact pixel transform-origin matching shoulder sockets!
+       ========================================================================== */
+    @keyframes rootIdle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(1deg); }
+    }
+    @keyframes eyeBlink {
+      0%, 92%, 100% { transform: scaleY(1); }
+      96% { transform: scaleY(0.08); }
+    }
+    @keyframes browCurious {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3.5px); }
+    }
+    @keyframes leftArmWave {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-28deg); }
+      75% { transform: rotate(20deg); }
+    }
+    @keyframes leftArmScratch {
+      0%, 100% { transform: rotate(-10deg); }
+      50% { transform: rotate(-35deg); }
+    }
+    @keyframes rightArmShrug {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(18deg); }
+    }
+    @keyframes tapGlassBody {
+      0%, 100% { transform: scale(1) translateZ(0); }
+      20% { transform: scale(1.1) translate(-4px, -6px); }
+      32% { transform: scale(1.18) translate(0px, -10px); }
+      42% { transform: scale(1.12) translate(-2px, -6px); }
+      54% { transform: scale(1.18) translate(0px, -10px); }
+      70% { transform: scale(1) translate(0, 0); }
+    }
+    @keyframes tapGlassArm {
+      0%, 100% { transform: rotate(0deg); }
+      28% { transform: rotate(-36deg) scale(1.1); }
+      38% { transform: rotate(-22deg) scale(1.05); }
+      50% { transform: rotate(-36deg) scale(1.1); }
+      68% { transform: rotate(0deg); }
+    }
+    @keyframes jumpCelebrate {
+      0%, 100% { transform: translateY(0) scale(1, 1); }
+      25% { transform: translateY(-28px) scale(0.94, 1.12) rotate(-6deg); }
+      50% { transform: translateY(-16px) scale(1.06, 0.96) rotate(6deg); }
+      75% { transform: translateY(0) scale(1.1, 0.92); }
+    }
+    @keyframes armsCheerLeft {
+      0%, 100% { transform: rotate(-45deg); }
+      50% { transform: rotate(-70deg); }
+    }
+    @keyframes armsCheerRight {
+      0%, 100% { transform: rotate(45deg); }
+      50% { transform: rotate(70deg); }
+    }
+    @keyframes sadSlouch {
+      0%, 100% { transform: translateY(5px) scale(0.97, 0.95); }
+      50% { transform: translateY(11px) scale(1.02, 0.9) rotate(-2deg); }
+    }
+    @keyframes thinkSway {
+      0%, 100% { transform: rotate(-6deg) translateY(-2px); }
+      50% { transform: rotate(5deg) translateY(-4px); }
+    }
+    @keyframes rippleExpand {
+      0% { transform: scale(0.2); opacity: 0.9; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+    @keyframes springCoil {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.78); }
+    }
+
+    .anim-root-idle { animation: rootIdle 3.2s ease-in-out infinite; }
+    .anim-blink { animation: eyeBlink 4.2s infinite; transform-origin: center; }
+    .anim-brow { animation: browCurious 2.6s ease-in-out infinite; }
+    .anim-tap-body { animation: tapGlassBody 1.9s ease-in-out infinite; }
+    .anim-tap-arm { animation: tapGlassArm 1.9s ease-in-out infinite; }
+    .anim-jump-body { animation: jumpCelebrate 0.82s cubic-bezier(0.28, 0.84, 0.42, 1) infinite; }
+    .anim-cheer-l { animation: armsCheerLeft 0.82s ease-in-out infinite; }
+    .anim-cheer-r { animation: armsCheerRight 0.82s ease-in-out infinite; }
+    .anim-sad-body { animation: sadSlouch 2.6s ease-in-out infinite; }
+    .anim-scratch-l { animation: leftArmScratch 1.5s ease-in-out infinite; }
+    .anim-shrug-r { animation: rightArmShrug 2.2s ease-in-out infinite; }
+    .anim-think-body { animation: thinkSway 2.8s ease-in-out infinite; }
+    .anim-wave-l { animation: leftArmWave 1.3s ease-in-out infinite; }
+    .anim-ripple { animation: rippleExpand 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite; transform-origin: center; }
+    .anim-spring { animation: springCoil 1.2s ease-in-out infinite; transform-origin: bottom; }
+
+    .state-btn.active {
+      background-color: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(231, 138, 78, 0.35);
+    }
+  </style>
+</head>
+<body class="theme-dark p-4 md:p-8 min-h-screen">
+
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <header class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[var(--border)] mb-8">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[var(--accent)] text-white mb-2">
+          📎 Microsoft Clippy Esinlenmesi · Vav ( و ) Maskot Tasarımı
+        </div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-[var(--text)]">
+          Vav ( و ) Ataç Maskot Atölyesi
+        </h1>
+        <p class="text-sm text-[var(--muted)] mt-1">
+          Ataç (Clippy) formunu en doğal taşıyan harf <strong>Vav ( و )</strong> seçildi. Kolların gövdeden ayrılma sorunu <em>sabit omuz eklemleri</em> ile giderildi. 5 farklı tasarım stilini incele ve seç.
+        </p>
+      </div>
+
+      <!-- Theme Controls -->
+      <div class="flex items-center gap-1.5 p-1.5 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)]">
+        <button onclick="setTheme('light')" id="theme-light-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all">
+          ☀️ Aydınlık
+        </button>
+        <button onclick="setTheme('sepia')" id="theme-sepia-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all">
+          📜 Sepya
+        </button>
+        <button onclick="setTheme('dark')" id="theme-dark-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all bg-[var(--accent)] text-white">
+          🌙 Gruvbox Koyu
+        </button>
+      </div>
+    </header>
+
+    <!-- Global State Controller -->
+    <div class="p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-md mb-8">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-[var(--muted)] block">Tepki ve Hareket Modu</span>
+          <span class="text-xs text-[var(--accent)] font-semibold">Tüm modeller seçili harekete aynı anda geçer:</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="setState('tap')" id="btn-tap" class="state-btn active px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>🔔</span> <span>Ekrana Vurma (Tık Tık!)</span>
+          </button>
+          <button onclick="setState('success')" id="btn-success" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>🎉</span> <span>Başarı (Yay Gibi Zıplama)</span>
+          </button>
+          <button onclick="setState('fail')" id="btn-fail" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>💧</span> <span>Hata (Omuz Silkme & Baş Kaşıma)</span>
+          </button>
+          <button onclick="setState('think')" id="btn-think" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>🤔</span> <span>Düşünme (Çene Tutma)</span>
+          </button>
+          <button onclick="setState('idle')" id="btn-idle" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>👋</span> <span>Boşta (Göz Kırpma & El Sallama)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- The 5 Clippy-Inspired Arabic Vav Models -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+
+      <!-- MODEL 1: KLASİK METALİK ATAÇ VAV -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border-2 border-[var(--accent)] shadow-md flex flex-col relative overflow-hidden">
+        <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-[var(--accent)] text-white">
+          ⭐ Tavsiye Edilen
+        </div>
+        <div class="mb-3">
+          <span class="text-xs font-bold text-amber-500 uppercase tracking-wider">Stil 1 · Klasik Clippy Ruhu</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Klasik Metalik Vav</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Orijinal Microsoft Clippy'nin bükülmüş çelik tel dokusuna sadık model. Çift katmanlı metal parlaması, yuvarlak gözleri ve gövdeye kaynaklanmış sabit omuz eklemleri vardır.
+        </p>
+
+        <!-- Canvas -->
+        <div class="h-60 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m1-container" class="w-48 h-48 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(1)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Uygulamada Dene
+        </button>
+      </div>
+
+      <!-- MODEL 2: ALTIN HAT SANATI VAV -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-emerald-500 uppercase tracking-wider">Stil 2 · Hat & Zümrüt</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Hat & Altın Zümrüt Vav</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Geleneksel hat sanatındaki zarif kamış kalem kalınlık-incelik dengesi ve altın kenarlı zümrüt kaplama. Hem manevi vakar hem sevimli bir arkadaşlık taşır.
+        </p>
+
+        <div class="h-60 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m2-container" class="w-48 h-48 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(2)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Uygulamada Dene
+        </button>
+      </div>
+
+      <!-- MODEL 3: 3D DUOLINGO TARZI DOLGUN VAV -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-sky-500 uppercase tracking-wider">Stil 3 · Modern Duolingo 3D</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Duolingo Hacimli Vav</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Tıpkı Duolingo baykuşu Duo gibi tombul, yumuşak ışık gölgeli, sevimli pembe yanaklı ve oyuncak benzeri dolgun 3D polimer dokulu modern maskot.
+        </p>
+
+        <div class="h-60 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m3-container" class="w-48 h-48 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(3)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Uygulamada Dene
+        </button>
+      </div>
+
+      <!-- MODEL 4: ZIPZIP YAY VAV -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-purple-500 uppercase tracking-wider">Stil 4 · Zıpzıp Yay Gövde</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Zıpzıp Yay Vav</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Ataçın yay mekaniğini vurgulayan, gövdesi spiral akordeon gibi sıkışıp fırlayabilen, başının üstünde minik bir kâşif fuları/püskülü olan dinamik yardımcı.
+        </p>
+
+        <div class="h-60 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m4-container" class="w-48 h-48 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(4)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Uygulamada Dene
+        </button>
+      </div>
+
+      <!-- MODEL 5: CAM / NEOMORFİK GRUVBOX VAV -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-orange-500 uppercase tracking-wider">Stil 5 · Sitenin Cam Dokusu</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Neomorfik Cam Vav</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Web sitemizin cam refraksiyon ve Gruvbox Material temasına kusursuz oturan; buzlu cam gövdeli, sıcak terakota vurgulu minimalist premium maskot.
+        </p>
+
+        <div class="h-60 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m5-container" class="w-48 h-48 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(5)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Uygulamada Dene
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Live In-Situ Simulation (Finish Screen Integration) -->
+    <div class="p-6 md:p-8 rounded-3xl bg-[var(--card-bg)] border-2 border-[var(--accent)] shadow-xl relative overflow-hidden">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-6">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-[var(--accent)]">Canlı Etkinlik Entegrasyonu</span>
+          <h2 class="text-xl font-bold text-[var(--text)]">Etkinlik Bitiş Kartında Seçili Maskot</h2>
+        </div>
+        <div class="text-xs text-[var(--muted)]">
+          Seçili Model: <strong id="preview-mascot-name" class="text-[var(--accent)]">Model 1: Klasik Metalik Vav</strong>
+        </div>
+      </div>
+
+      <!-- Dialog Card Mockup -->
+      <div class="max-w-xl mx-auto p-6 md:p-8 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)] text-center relative shadow-inner">
+        <!-- Maskot Yuvası -->
+        <div class="w-36 h-36 mx-auto mb-2 flex items-center justify-center relative">
+          <div id="mockup-mascot-slot" class="w-full h-full flex items-center justify-center">
+            <!-- Selected Mascot SVG cloned here -->
+          </div>
+        </div>
+
+        <!-- Clippy Konuşma Baloncuğu -->
+        <div id="clippy-speech" class="inline-block px-4 py-2.5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] text-xs text-[var(--text)] mb-4 shadow-md relative font-medium max-w-sm">
+          <span id="speech-text">"Tık tık tık! Buradayım! Sana Elif-Ba yolculuğunda eşlik etmek için sabırsızlanıyorum!"</span>
+          <div class="w-3 h-3 bg-[var(--card-bg)] border-b border-l border-[var(--border)] transform rotate-45 absolute -top-1.5 left-1/2 -translate-x-1/2"></div>
+        </div>
+
+        <!-- Star Rating -->
+        <div class="flex items-center justify-center gap-1.5 text-amber-400 text-2xl mb-2">
+          <span>★</span><span>★</span><span>★</span>
+        </div>
+
+        <h3 class="text-2xl font-black text-[var(--text)] mb-1">
+          Sen bir harf kâşifisin!
+        </h3>
+        <p class="text-sm text-[var(--muted)] mb-6 max-w-sm mx-auto">
+          20 adımı tamamladın, 19 tanesini ilk denemede buldun. Emeğine sağlık!
+        </p>
+
+        <!-- Buttons -->
+        <div class="flex items-center justify-center gap-3">
+          <button class="px-5 py-2.5 rounded-xl text-sm font-bold bg-[var(--green)] text-black shadow-md flex items-center gap-1.5 hover:opacity-90 transition-opacity">
+            <span>🔄</span> Bir tur daha
+          </button>
+          <button class="px-5 py-2.5 rounded-xl text-sm font-bold border border-[var(--border)] bg-[var(--card-bg)] text-[var(--text)]">
+            Etkinlikler
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentState = 'tap'; // 'tap' | 'success' | 'fail' | 'think' | 'idle'
+    let currentSelectedMascot = 1;
+
+    // Web Audio Synthesizer for Clippy's Authentic Glass Tap Sound
+    let audioCtx = null;
+    function playTapSound() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        // Two quick high glass 'tinks' (2800Hz, 3200Hz)
+        [0, 0.12].forEach((delay, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(i === 0 ? 3100 : 3400, now + delay);
+          gain.gain.setValueAtTime(0.3, now + delay);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.08);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + delay);
+          osc.stop(now + delay + 0.085);
+        });
+      } catch (e) {}
+    }
+
+    const speechTexts = {
+      tap: '"Tık tık tık! Hey kâşif! Buradayım! Bir harfi anlamakta zorlanırsan bana her zaman danışabilirsin!"',
+      success: '"Harika bir başarı! Bütün harfleri doğru yakaladın, yay gibi havalara uçuyorum!"',
+      fail: '"Hoppala! Hiç sorun değil! Yanılmak öğrenmenin en tatlı parçasıdır, gel bir daha deneyelim!"',
+      think: '"Hımm... Acaba bu ses hangi harfin mahrecinden çıkıyordu? Birlikte biraz düşünelim mi?"',
+      idle: '"Selam kâşif! Bugün yeni bir Elif-Ba sayfasını keşfetmeye hazır mısın?"'
+    };
+
+    // =========================================================================
+    // SVG MASCOT BUILDER WITH RIGID SHOULDER PIVOTS (ZERO LIMB DETACHMENT)
+    // Left shoulder socket: (56, 72) -> arm origin: 56px 72px
+    // Right shoulder socket: (96, 72) -> arm origin: 96px 72px
+    // =========================================================================
+
+    function buildVavMascotSVG(themeConfig, state) {
+      const {
+        primaryStroke,
+        secondaryStroke,
+        coreFill,
+        gloveFill,
+        gloveStroke,
+        specularHighlight,
+        springDetails,
+        wireGlow
+      } = themeConfig;
+
+      // Class mappings based on state
+      let bodyAnimClass = 'anim-root-idle';
+      let leftArmAnimClass = 'anim-wave-l';
+      let rightArmAnimClass = '';
+      let eyeExpression = 'normal';
+      let showGlassTaps = false;
+
+      if (state === 'tap') {
+        bodyAnimClass = 'anim-tap-body';
+        leftArmAnimClass = 'anim-tap-arm';
+        eyeExpression = 'focus';
+        showGlassTaps = true;
+      } else if (state === 'success') {
+        bodyAnimClass = 'anim-jump-body';
+        leftArmAnimClass = 'anim-cheer-l';
+        rightArmAnimClass = 'anim-cheer-r';
+        eyeExpression = 'joy';
+      } else if (state === 'fail') {
+        bodyAnimClass = 'anim-sad-body';
+        leftArmAnimClass = 'anim-scratch-l';
+        rightArmAnimClass = 'anim-shrug-r';
+        eyeExpression = 'sad';
+      } else if (state === 'think') {
+        bodyAnimClass = 'anim-think-body';
+        leftArmAnimClass = '';
+        rightArmAnimClass = '';
+        eyeExpression = 'think';
+      }
+
+      // Dynamic Eye Rendering
+      let eyesSvg = '';
+      if (eyeExpression === 'joy') {
+        eyesSvg = `
+          <!-- Happy Clippy Curved Eyes (Half-Moons) -->
+          <ellipse cx="69" cy="56" rx="8" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+          <path d="M 64,57 Q 69,50 74,57" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+          <ellipse cx="87" cy="56" rx="8" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+          <path d="M 82,57 Q 87,50 92,57" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- High Arched Cheerful Eyebrows -->
+          <path d="M 62,40 Q 69,32 76,40" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M 80,40 Q 87,32 94,40" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+        `;
+      } else if (eyeExpression === 'sad') {
+        eyesSvg = `
+          <!-- Sad Droopy Clippy Eyes -->
+          <ellipse cx="69" cy="58" rx="7.5" ry="10" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+          <circle cx="69" cy="62" r="3.5" fill="#1c1917"/>
+          <circle cx="71" cy="60" r="1.5" fill="#ffffff"/>
+          <ellipse cx="87" cy="58" rx="7.5" ry="10" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+          <circle cx="87" cy="62" r="3.5" fill="#1c1917"/>
+          <circle cx="89" cy="60" r="1.5" fill="#ffffff"/>
+          <!-- Sympathetic Slanted Eyebrows -->
+          <path d="M 62,46 L 74,50" stroke="#1c1917" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M 94,46 L 82,50" stroke="#1c1917" stroke-width="3.2" stroke-linecap="round"/>
+        `;
+      } else if (eyeExpression === 'think') {
+        eyesSvg = `
+          <!-- Inquisitive Thinking Eyes Looking Up -->
+          <ellipse cx="69" cy="55" rx="8" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+          <circle cx="71" cy="51" r="3.5" fill="#1c1917"/>
+          <ellipse cx="87" cy="55" rx="8" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+          <circle cx="89" cy="51" r="3.5" fill="#1c1917"/>
+          <!-- One high, one low eyebrow -->
+          <path d="M 62,38 Q 69,31 76,38" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M 81,43 Q 87,45 93,42" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+        `;
+      } else {
+        // Normal / Focus (Clippy signature glance with one raised brow)
+        eyesSvg = `
+          <g class="anim-blink">
+            <ellipse cx="69" cy="55" rx="8.5" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <circle cx="${showGlassTaps ? '67' : '70'}" cy="55" r="3.8" fill="#1c1917"/>
+            <circle cx="${showGlassTaps ? '69' : '72'}" cy="53" r="1.5" fill="#ffffff"/>
+            <ellipse cx="87" cy="55" rx="8.5" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <circle cx="${showGlassTaps ? '85' : '88'}" cy="55" r="3.8" fill="#1c1917"/>
+            <circle cx="${showGlassTaps ? '87' : '90'}" cy="53" r="1.5" fill="#ffffff"/>
+          </g>
+          <g class="anim-brow">
+            <path d="M 62,40 Q 69,33 76,39" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 80,42 Q 87,43 94,39" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+          </g>
+        `;
+      }
+
+      // Dynamic Left Arm Construction (Pivot ALWAYS locked at 56, 72)
+      let leftArmPath = `M 56,72 Q 40,64 30,48`;
+      let leftHandX = 26, leftHandY = 44;
+      if (state === 'tap') {
+        leftArmPath = `M 56,72 Q 38,68 28,48`;
+        leftHandX = 24; leftHandY = 42;
+      } else if (state === 'fail') {
+        leftArmPath = `M 56,72 Q 38,60 52,44`;
+        leftHandX = 54; leftHandY = 40;
+      } else if (state === 'think') {
+        leftArmPath = `M 56,72 Q 62,82 72,78`;
+        leftHandX = 73; leftHandY = 76;
+      } else if (state === 'success') {
+        leftArmPath = `M 56,72 Q 36,54 28,34`;
+        leftHandX = 26; leftHandY = 30;
+      }
+
+      // Dynamic Right Arm Construction (Pivot ALWAYS locked at 96, 72)
+      let rightArmPath = `M 96,72 Q 112,78 120,90`;
+      let rightHandX = 122, rightHandY = 92;
+      if (state === 'success') {
+        rightArmPath = `M 96,72 Q 118,54 126,34`;
+        rightHandX = 128; rightHandY = 30;
+      } else if (state === 'fail') {
+        rightArmPath = `M 96,72 Q 116,84 124,76`;
+        rightHandX = 126; rightHandY = 74;
+      }
+
+      return `
+        <svg viewBox="0 0 160 160" width="150" height="150" class="overflow-visible select-none">
+          <!-- Glass Tap Ripple Waves -->
+          ${showGlassTaps ? `
+            <circle cx="22" cy="40" r="12" fill="none" stroke="#38bdf8" stroke-width="2.5" class="anim-ripple"/>
+            <circle cx="22" cy="40" r="22" fill="none" stroke="#38bdf8" stroke-width="1.5" class="anim-ripple" style="animation-delay: -0.4s;"/>
+            <text x="20" y="24" font-size="11" font-weight="900" fill="#38bdf8" text-anchor="middle">TIK!</text>
+          ` : ''}
+
+          <!-- Floor Shadow -->
+          <ellipse cx="80" cy="150" rx="38" ry="6" fill="#000000" opacity="0.22"/>
+
+          <!-- ROOT CHARACTER GROUP (Squash, Stretch, Jump, Tap) -->
+          <g class="${bodyAnimClass}" style="transform-origin: 80px 145px;">
+
+            <!-- Extra Spring Details if defined -->
+            ${springDetails || ''}
+
+            <!-- Waw Tail (Curved sweeping spring spine) -->
+            <path d="M 86,54 C 105,54 118,68 114,88 C 110,112 85,138 52,142 C 42,143 54,132 68,124 C 84,115 95,98 94,86 C 92,72 82,68 76,68" fill="none" stroke="${primaryStroke}" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 86,54 C 105,54 118,68 114,88 C 110,112 85,138 52,142 C 42,143 54,132 68,124 C 84,115 95,98 94,86 C 92,72 82,68 76,68" fill="none" stroke="${secondaryStroke}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <!-- Waw Loop Head (The Clippy Loop) -->
+            <circle cx="78" cy="58" r="24" fill="${coreFill}" stroke="${primaryStroke}" stroke-width="6"/>
+            <!-- Subtle 3D Highlight sheen -->
+            <path d="M 64,46 C 72,40 86,40 94,48" fill="none" stroke="${specularHighlight}" stroke-width="2.5" stroke-linecap="round"/>
+
+            <!-- Clippy Big Expressive Eyes & Eyebrows -->
+            ${eyesSvg}
+
+            <!-- Rosy Cheeks -->
+            <ellipse cx="61" cy="65" rx="4.5" ry="3" fill="#f43f5e" opacity="0.6"/>
+            <ellipse cx="95" cy="65" rx="4.5" ry="3" fill="#f43f5e" opacity="0.6"/>
+
+            <!-- ========================================================== -->
+            <!-- RIGID LEFT ARM (Pivot point EXACTLY on shoulder socket 56, 72) -->
+            <!-- ========================================================== -->
+            <g class="${leftArmAnimClass}" style="transform-origin: 56px 72px;">
+              <!-- Arm Stroke starting exactly at (56, 72) -->
+              <path d="${leftArmPath}" fill="none" stroke="${primaryStroke}" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="${leftArmPath}" fill="none" stroke="${secondaryStroke}" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- White Cartoon Glove Hand -->
+              <ellipse cx="${leftHandX}" cy="${leftHandY}" rx="8" ry="7" fill="${gloveFill}" stroke="${gloveStroke}" stroke-width="2"/>
+              ${state === 'tap' ? `
+                <!-- Pointing index finger tapping screen -->
+                <path d="M ${leftHandX - 2},${leftHandY} L ${leftHandX - 9},${leftHandY - 3}" stroke="${gloveStroke}" stroke-width="3" stroke-linecap="round"/>
+              ` : `
+                <path d="M ${leftHandX - 2},${leftHandY - 4} L ${leftHandX - 4},${leftHandY - 8}" stroke="${gloveStroke}" stroke-width="2" stroke-linecap="round"/>
+              `}
+            </g>
+
+            <!-- ========================================================== -->
+            <!-- RIGID RIGHT ARM (Pivot point EXACTLY on shoulder socket 96, 72) -->
+            <!-- ========================================================== -->
+            <g class="${rightArmAnimClass}" style="transform-origin: 96px 72px;">
+              <!-- Arm Stroke starting exactly at (96, 72) -->
+              <path d="${rightArmPath}" fill="none" stroke="${primaryStroke}" stroke-width="4.5" stroke-linecap="round"/>
+              <path d="${rightArmPath}" fill="none" stroke="${secondaryStroke}" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- White Cartoon Glove Hand -->
+              <ellipse cx="${rightHandX}" cy="${rightHandY}" rx="7.5" ry="7" fill="${gloveFill}" stroke="${gloveStroke}" stroke-width="2"/>
+            </g>
+
+            <!-- Shoulder Joint Reinforcement Cuffs (Ensures 100% gapless illusion) -->
+            <circle cx="56" cy="72" r="4.5" fill="${primaryStroke}"/>
+            <circle cx="96" cy="72" r="4.5" fill="${primaryStroke}"/>
+
+          </g>
+        </svg>
+      `;
+    }
+
+    // =========================================================================
+    // THE 5 DISTINCT DESIGN THEMES APPLIED TO THE VAV CLIPPY
+    // =========================================================================
+
+    // Model 1: Klasik Metalik Çelik Ataç (Authentic Office 97 Paperclip Chrome)
+    function renderModel1(state) {
+      return buildVavMascotSVG({
+        primaryStroke: '#64748b',
+        secondaryStroke: '#cbd5e1',
+        coreFill: '#1e293b',
+        gloveFill: '#ffffff',
+        gloveStroke: '#0f172a',
+        specularHighlight: 'rgba(255,255,255,0.85)',
+      }, state);
+    }
+
+    // Model 2: Altın Hat Sanatı & Zümrüt (Calligraphic Emerald & Gold)
+    function renderModel2(state) {
+      return buildVavMascotSVG({
+        primaryStroke: '#14654f',
+        secondaryStroke: '#d97706',
+        coreFill: '#064e3b',
+        gloveFill: '#fef3c7',
+        gloveStroke: '#92400e',
+        specularHighlight: '#fde047',
+      }, state);
+    }
+
+    // Model 3: 3D Duolingo Tarzı Hacimli Polimer (Modern Duolingo/Apple Glossy)
+    function renderModel3(state) {
+      return buildVavMascotSVG({
+        primaryStroke: '#ea580c',
+        secondaryStroke: '#fb923c',
+        coreFill: '#c2410c',
+        gloveFill: '#ffffff',
+        gloveStroke: '#431407',
+        specularHighlight: '#fed7aa',
+      }, state);
+    }
+
+    // Model 4: Zıpzıp Yay Vav (Spring Coiled Helper)
+    function renderModel4(state) {
+      const springLines = `
+        <g class="anim-spring" transform="translate(68, 102)">
+          <path d="M 0,0 Q 14,-6 28,0 Q 14,6 0,12 Q 14,18 28,24" fill="none" stroke="#a855f7" stroke-width="4.5" stroke-linecap="round"/>
+        </g>
+      `;
+      return buildVavMascotSVG({
+        primaryStroke: '#9333ea',
+        secondaryStroke: '#c084fc',
+        coreFill: '#581c87',
+        gloveFill: '#ffffff',
+        gloveStroke: '#3b0764',
+        specularHighlight: '#f3e8ff',
+        springDetails: springLines
+      }, state);
+    }
+
+    // Model 5: Neomorfik Cam / Gruvbox Vav (Frosted Glass & Warm Terracotta)
+    function renderModel5(state) {
+      return buildVavMascotSVG({
+        primaryStroke: '#e78a4e',
+        secondaryStroke: '#d4be98',
+        coreFill: '#282828',
+        gloveFill: '#d4be98',
+        gloveStroke: '#3c3836',
+        specularHighlight: 'rgba(212,190,152,0.6)',
+      }, state);
+    }
+
+    // Master Updater
+    function updateAll() {
+      document.getElementById('m1-container').innerHTML = renderModel1(currentState);
+      document.getElementById('m2-container').innerHTML = renderModel2(currentState);
+      document.getElementById('m3-container').innerHTML = renderModel3(currentState);
+      document.getElementById('m4-container').innerHTML = renderModel4(currentState);
+      document.getElementById('m5-container').innerHTML = renderModel5(currentState);
+
+      updatePreviewSlot();
+    }
+
+    function updatePreviewSlot() {
+      const slot = document.getElementById('mockup-mascot-slot');
+      if (currentSelectedMascot === 1) slot.innerHTML = renderModel1(currentState);
+      else if (currentSelectedMascot === 2) slot.innerHTML = renderModel2(currentState);
+      else if (currentSelectedMascot === 3) slot.innerHTML = renderModel3(currentState);
+      else if (currentSelectedMascot === 4) slot.innerHTML = renderModel4(currentState);
+      else if (currentSelectedMascot === 5) slot.innerHTML = renderModel5(currentState);
+
+      const names = {
+        1: 'Model 1: Klasik Metalik Çelik Vav (Orijinal Clippy Ruhu)',
+        2: 'Model 2: Altın Hat Sanatı & Zümrüt Vav',
+        3: 'Model 3: 3D Duolingo Hacimli Turuncu Vav',
+        4: 'Model 4: Zıpzıp Yaylı Akordeon Vav',
+        5: 'Model 5: Neomorfik Cam & Gruvbox Vav'
+      };
+      document.getElementById('preview-mascot-name').innerText = names[currentSelectedMascot];
+      document.getElementById('speech-text').innerText = speechTexts[currentState];
+    }
+
+    function setState(st) {
+      currentState = st;
+      if (st === 'tap') {
+        playTapSound();
+      }
+      ['tap', 'success', 'fail', 'think', 'idle'].forEach(s => {
+        const btn = document.getElementById(`btn-${s}`);
+        if (s === st) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+      updateAll();
+    }
+
+    function selectMascot(id) {
+      currentSelectedMascot = id;
+      updatePreviewSlot();
+      document.getElementById('mockup-mascot-slot').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function setTheme(mode) {
+      document.body.classList.remove('theme-dark', 'theme-sepia');
+      ['light', 'sepia', 'dark'].forEach(m => {
+        const b = document.getElementById(`theme-${m}-btn`);
+        b.classList.remove('bg-[var(--accent)]', 'text-white');
+      });
+      if (mode === 'dark') {
+        document.body.classList.add('theme-dark');
+        document.getElementById('theme-dark-btn').classList.add('bg-[var(--accent)]', 'text-white');
+      } else if (mode === 'sepia') {
+        document.body.classList.add('theme-sepia');
+        document.getElementById('theme-sepia-btn').classList.add('bg-[var(--accent)]', 'text-white');
+      } else {
+        document.getElementById('theme-light-btn').classList.add('bg-[var(--accent)]', 'text-white');
+      }
+    }
+
+    // Initialize
+    updateAll();
+  </script>
+</body>
+</html>
