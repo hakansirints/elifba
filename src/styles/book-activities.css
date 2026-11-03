@@ -2679,30 +2679,37 @@
 
 /* ==========================================================================
    PAGE 14 LEFT-EDGE 3D FOLD-OVER RIBBON LAUNCHERS
-   (Sayfanın altından/arkasından çıkıp sol orta kenar üzerine katlanan 3D kurdeleler)
+   (Sayfa ile tam orantılı ölçeklenen, Görsel 2 sade kıvrımlı kurdeleler)
    ========================================================================== */
 .page-edge-ribbon-launchers {
   position: absolute;
   left: 0;
-  top: 42%;
+  top: 41.5%;
   transform: translateY(-50%);
   z-index: 25;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 14px;
-  pointer-events: auto;
+  gap: 2.5%;
+  width: 100%;
+  pointer-events: none;
 }
 
 .ribbon-fold-tab-item {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
+  pointer-events: auto;
 }
 
 .ribbon-fold-btn {
   position: relative;
-  left: -14px; /* Hugs the left sheet edge where the 3D curl wraps around */
+  /* Sayfa genişliğiyle tam orantılı boyut (~18.8%) */
+  width: 18.8%;
+  aspect-ratio: 135 / 62;
+  /* Sol kenardan dışarı taşma payı da sayfa genişliğiyle orantılı (~-3.5%) */
+  left: -3.5%;
   border: 0;
   background: transparent;
   padding: 0;
@@ -2711,10 +2718,7 @@
   align-items: center;
   outline: none;
   touch-action: manipulation;
-  filter: drop-shadow(2px 5px 8px rgba(0, 0, 0, 0.28));
-  transition: transform 0.26s cubic-bezier(0.2, 0.9, 0.3, 1.25), filter 0.22s ease;
-  width: 84px;
-  height: 48px;
+  transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.25);
 }
 
 .ribbon-fold-svg {
@@ -2728,23 +2732,24 @@
   .ribbon-fold-btn:hover,
   .ribbon-fold-btn.is-hovered,
   .ribbon-fold-btn:focus-visible {
-    transform: translateX(8px) scale(1.05);
-    filter: drop-shadow(4px 8px 16px rgba(0, 0, 0, 0.38));
+    transform: translateX(5px) scale(1.02);
   }
   .ribbon-fold-btn:active {
-    transform: translateX(4px) scale(0.98);
+    transform: translateX(2px) scale(0.98);
   }
 }
 
 /* Tooltip Badge popping into the page margin to the right */
 .ribbon-edge-badge {
   position: absolute;
-  left: calc(100% + 6px);
+  left: 17%;
   top: 50%;
   transform: translateY(-50%) translateX(-6px);
-  background: #0f172a;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #ffffff;
-  padding: 6px 12px;
+  padding: 5px 11px;
   border-radius: 8px;
   font-family: 'Fredoka', 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 11px;
@@ -2754,7 +2759,7 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.15);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.14);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -2769,7 +2774,7 @@
   transform: translateY(-50%);
   border-width: 5px;
   border-style: solid;
-  border-color: transparent #0f172a transparent transparent;
+  border-color: transparent rgba(15, 23, 42, 0.94) transparent transparent;
 }
 
 .ribbon-edge-badge-red {
@@ -2790,23 +2795,6 @@
   font-size: 11px;
   font-weight: 800;
   color: #f87171;
-}
-
-/* Mobile responsive sizing */
-@media (max-width: 640px) {
-  .page-edge-ribbon-launchers {
-    top: 40%;
-    gap: 10px;
-  }
-  .ribbon-fold-btn {
-    left: -10px;
-    width: 66px;
-    height: 38px;
-  }
-  .ribbon-edge-badge {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
 }
 
 /* ==========================================================================

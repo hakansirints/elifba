@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { sfx } from '../../utils/audioPlayer';
 
 /**
- * 3D Curled Fold-Over Ribbon Tab for Balloon Game
- * Sayfanın altından/arkasından çıkıp sol orta kenar üzerine katlanan kırmızı 3D kurdele
+ * Modern Minimalist 3D Fold-Over Ribbon Tab for Balloon Game
+ * (2. Görsel referansı: Sayfa kenarını saran pürüzsüz saten kurdele)
  */
 export function PageBalloonLauncher({ lang = 'tr', disabled = false, onLaunch }) {
   const de = lang === 'de';
@@ -40,108 +40,99 @@ export function PageBalloonLauncher({ lang = 'tr', disabled = false, onLaunch })
         title={de ? 'Fliegende Ballons' : 'Balon Patlat'}
       >
         <svg
-          viewBox="0 0 84 48"
+          viewBox="0 0 135 62"
           className="ribbon-fold-svg"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
           <defs>
-            {/* 3D Crimson Gradient matching user's folded ribbon */}
-            <linearGradient id="foldCrimsonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#7f1d1d" />
-              <stop offset="12%" stopColor="#991b1b" />
-              <stop offset="35%" stopColor="#dc2626" />
-              <stop offset="85%" stopColor="#ef4444" />
-              <stop offset="100%" stopColor="#b91c1c" />
+            {/* Drop shadow for the ribbon flap onto the page */}
+            <filter id="ribbonRedShadow" x="-10%" y="-10%" width="130%" height="150%">
+              <feDropShadow dx="0" dy="3.5" stdDeviation="3" floodColor="#000000" floodOpacity="0.22" />
+            </filter>
+
+            {/* Smooth Red Ribbon Gradient (Image 2 style) */}
+            <linearGradient id="ribbonRedMain" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#ef3e36" />
+              <stop offset="12%" stopColor="#ff5952" />
+              <stop offset="28%" stopColor="#f8433a" />
+              <stop offset="80%" stopColor="#f03c35" />
+              <stop offset="100%" stopColor="#eb332b" />
             </linearGradient>
 
-            {/* Ambient Shadow inside the curls */}
-            <radialGradient id="foldCurlDarkRed" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#450a0a" />
-              <stop offset="85%" stopColor="#250303" />
-              <stop offset="100%" stopColor="#000000" />
-            </radialGradient>
-
-            {/* Gold Filigree Stroke */}
-            <linearGradient id="foldGoldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#fef08a" />
-              <stop offset="50%" stopColor="#f59e0b" />
-              <stop offset="100%" stopColor="#d97706" />
+            {/* Dark Underside shadow of the loop */}
+            <linearGradient id="ribbonRedDarkUnder" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#80100c" />
+              <stop offset="100%" stopColor="#b31e18" />
             </linearGradient>
 
-            {/* Specular Glare */}
-            <linearGradient id="foldRedGlare" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            {/* Cylinder Specular Highlight Strip */}
+            <linearGradient id="cylinderHighlightRed" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+              <stop offset="40%" stopColor="#ffffff" stopOpacity="0.32" />
+              <stop offset="70%" stopColor="#ffffff" stopOpacity="0" />
             </linearGradient>
           </defs>
 
-          {/* Top Curl Inner Hollow (emerging from behind the page sheet) */}
-          <path d="M 14 6 C 10 6 4 4 2 8 C 0 12 3 16 8 15 Z" fill="url(#foldCurlDarkRed)" />
-          {/* Bottom Curl Inner Hollow */}
-          <path d="M 14 42 C 10 42 4 44 2 40 C 0 36 3 32 8 33 Z" fill="url(#foldCurlDarkRed)" />
-
-          {/* Main Curled Fold-Over Ribbon Body: wraps at x=14 and extends to x=78 with rounded dome end */}
+          {/* 1. Underside Roll at bottom-left (emerging from behind the page sheet) */}
           <path
             d="
-              M 14 6
-              C 10 6 3 3 1 7
-              C -1 11 2 16 8 15
-              L 12 15
-              L 12 33
-              L 8 33
-              C 2 32 -1 37 1 41
-              C 3 45 10 42 14 42
-              L 68 42
-              C 76 42 82 36 82 28
-              L 82 20
-              C 82 12 76 6 68 6
+              M 24 51
+              C 24 51 16 58 8 56
+              C 2 54 0 47 0 47
+              L 0 50
+              C 0 55 6 59 14 59
+              C 20 59 24 53 24 51
               Z
             "
-            fill="url(#foldCrimsonGrad)"
-            stroke="url(#foldGoldBorder)"
-            strokeWidth="1.3"
-            strokeLinejoin="round"
+            fill="url(#ribbonRedDarkUnder)"
           />
 
-          {/* Specular Highlight along top fold surface */}
-          <path d="M 14 9 L 68 9 C 73 9 77 12 78 16 L 14 16 Z" fill="url(#foldRedGlare)" />
+          {/* 2. Main Ribbon Body (Cylinder Loop + Flat Flap with Semicircular Cap) */}
+          <g filter="url(#ribbonRedShadow)">
+            <path
+              d="
+                M 24 10
+                C 14 10 0 14 0 24
+                L 0 47
+                C 0 47 6 53 14 53
+                C 20 53 24 50 24 50
+                L 106 50
+                C 121 50 133 41 133 30
+                C 133 19 121 10 106 10
+                Z
+              "
+              fill="url(#ribbonRedMain)"
+            />
 
-          {/* Crease line where ribbon wraps over page edge at x=14 */}
-          <line x1="14" y1="6" x2="14" y2="42" stroke="#450a0a" strokeWidth="1.2" opacity="0.7" />
-          <line x1="15" y1="6" x2="15" y2="42" stroke="#fca5a5" strokeWidth="0.8" opacity="0.6" />
+            {/* Cylinder highlight band on the left fold */}
+            <path
+              d="
+                M 12 11
+                C 6 13 4 18 4 25
+                L 4 45
+                C 6 50 11 52 14 52
+                L 18 52
+                C 14 50 10 45 10 37
+                L 10 21
+                C 10 15 14 12 18 11
+                Z
+              "
+              fill="url(#cylinderHighlightRed)"
+            />
+          </g>
 
-          {/* High-Res 3D Balloon Icon inside the tab */}
-          <g transform="translate(36, 6) scale(0.68)">
-            {/* Strings */}
-            <path d="M15 28 Q 21 38 26 46" stroke="#fef08a" strokeWidth="1.4" strokeLinecap="round" />
-            <path d="M37 29 Q 31 39 26 46" stroke="#fef08a" strokeWidth="1.4" strokeLinecap="round" />
-            <path d="M26 35 L 26 46" stroke="#fef08a" strokeWidth="1.5" strokeLinecap="round" />
-            {/* Blue Balloon (left) */}
-            <ellipse cx="16" cy="19" rx="10" ry="12" fill="#0284c7" />
-            <ellipse cx="13" cy="15" rx="3" ry="4" fill="#ffffff" opacity="0.7" />
-            {/* Gold Balloon (right) */}
-            <ellipse cx="37" cy="20" rx="10" ry="12" fill="#d97706" />
-            <ellipse cx="34" cy="16" rx="3" ry="4" fill="#ffffff" opacity="0.7" />
-            {/* Center Red Balloon with Letter 'ب' */}
-            <ellipse cx="26" cy="21" rx="12.5" ry="15" fill="#ef4444" stroke="#ffffff" strokeWidth="1" />
-            <ellipse cx="22" cy="15.5" rx="4" ry="6" fill="#ffffff" opacity="0.8" />
-            <text
-              x="26.5"
-              y="26"
-              textAnchor="middle"
-              fill="#ffffff"
-              fontSize="12"
-              fontWeight="900"
-              fontFamily="'Amiri', serif"
-            >
-              ب
-            </text>
+          {/* Minimalist Clean White Balloon Icon in the visible flap */}
+          <g transform="translate(64, 18) scale(0.64)" opacity="0.95">
+            <ellipse cx="20" cy="18" rx="14" ry="17" fill="#ffffff" />
+            <polygon points="17,35 23,35 21,38 19,38" fill="#ffffff" />
+            <path d="M 11 12 C 13 8 18 7 21 8" stroke="#f03c35" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.35" />
+            <path d="M 20 38 Q 23 42 20 45 Q 17 48 20 51" stroke="#ffffff" strokeWidth="2.2" fill="none" strokeLinecap="round" />
           </g>
         </svg>
 
-        {/* Hover Label Badge extending into the right margin */}
+        {/* Hover Label Badge */}
         <span className={`ribbon-edge-badge ribbon-edge-badge-red ${isHovered ? 'is-visible' : ''}`} aria-hidden={!isHovered}>
           <span>🎈</span>
           <span>{de ? 'Fliegende Ballons' : 'Balon Patlat'}</span>
@@ -153,8 +144,8 @@ export function PageBalloonLauncher({ lang = 'tr', disabled = false, onLaunch })
 }
 
 /**
- * 3D Curled Fold-Over Ribbon Tab for Listen Activity
- * Sayfanın altından/arkasından çıkıp sol orta kenar üzerine katlanan zümrüt 3D kurdele
+ * Modern Minimalist 3D Fold-Over Ribbon Tab for Listen Activity
+ * (Site zümrüt yeşili temasıyla uyumlu sade kurdele)
  */
 export function PageListenLauncher({ lang = 'tr', disabled = false, onLaunch }) {
   const de = lang === 'de';
@@ -191,85 +182,96 @@ export function PageListenLauncher({ lang = 'tr', disabled = false, onLaunch }) 
         title={de ? 'Hören und finden' : 'Dinle ve bul'}
       >
         <svg
-          viewBox="0 0 84 48"
+          viewBox="0 0 135 62"
           className="ribbon-fold-svg"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
           <defs>
-            {/* 3D Emerald Gradient matching app brand */}
-            <linearGradient id="foldEmeraldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#064e3b" />
-              <stop offset="12%" stopColor="#065f46" />
-              <stop offset="35%" stopColor="#059669" />
-              <stop offset="85%" stopColor="#10b981" />
-              <stop offset="100%" stopColor="#047857" />
+            {/* Drop shadow */}
+            <filter id="ribbonGreenShadow" x="-10%" y="-10%" width="130%" height="150%">
+              <feDropShadow dx="0" dy="3.5" stdDeviation="3" floodColor="#000000" floodOpacity="0.22" />
+            </filter>
+
+            {/* Smooth Emerald Ribbon Gradient matching site theme */}
+            <linearGradient id="ribbonGreenMain" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#059669" />
+              <stop offset="12%" stopColor="#10b981" />
+              <stop offset="28%" stopColor="#059669" />
+              <stop offset="80%" stopColor="#047857" />
+              <stop offset="100%" stopColor="#065f46" />
             </linearGradient>
 
-            {/* Ambient Shadow inside green curls */}
-            <radialGradient id="foldCurlDarkGreen" cx="50%" cy="50%" r="50%">
+            {/* Underside shadow */}
+            <linearGradient id="ribbonGreenDarkUnder" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#022c22" />
-              <stop offset="85%" stopColor="#011812" />
-              <stop offset="100%" stopColor="#000000" />
-            </radialGradient>
+              <stop offset="100%" stopColor="#064e3b" />
+            </linearGradient>
 
-            {/* Specular Glare */}
-            <linearGradient id="foldGreenGlare" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            {/* Cylinder Specular Highlight Strip */}
+            <linearGradient id="cylinderHighlightGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+              <stop offset="40%" stopColor="#ffffff" stopOpacity="0.32" />
+              <stop offset="70%" stopColor="#ffffff" stopOpacity="0" />
             </linearGradient>
           </defs>
 
-          {/* Top Curl Inner Hollow */}
-          <path d="M 14 6 C 10 6 4 4 2 8 C 0 12 3 16 8 15 Z" fill="url(#foldCurlDarkGreen)" />
-          {/* Bottom Curl Inner Hollow */}
-          <path d="M 14 42 C 10 42 4 44 2 40 C 0 36 3 32 8 33 Z" fill="url(#foldCurlDarkGreen)" />
-
-          {/* Main Curled Fold-Over Ribbon Body */}
+          {/* 1. Underside Roll */}
           <path
             d="
-              M 14 6
-              C 10 6 3 3 1 7
-              C -1 11 2 16 8 15
-              L 12 15
-              L 12 33
-              L 8 33
-              C 2 32 -1 37 1 41
-              C 3 45 10 42 14 42
-              L 68 42
-              C 76 42 82 36 82 28
-              L 82 20
-              C 82 12 76 6 68 6
+              M 24 51
+              C 24 51 16 58 8 56
+              C 2 54 0 47 0 47
+              L 0 50
+              C 0 55 6 59 14 59
+              C 20 59 24 53 24 51
               Z
             "
-            fill="url(#foldEmeraldGrad)"
-            stroke="url(#foldGoldBorder)"
-            strokeWidth="1.3"
-            strokeLinejoin="round"
+            fill="url(#ribbonGreenDarkUnder)"
           />
 
-          {/* Specular Highlight along top fold surface */}
-          <path d="M 14 9 L 68 9 C 73 9 77 12 78 16 L 14 16 Z" fill="url(#foldGreenGlare)" />
+          {/* 2. Main Ribbon Body */}
+          <g filter="url(#ribbonGreenShadow)">
+            <path
+              d="
+                M 24 10
+                C 14 10 0 14 0 24
+                L 0 47
+                C 0 47 6 53 14 53
+                C 20 53 24 50 24 50
+                L 106 50
+                C 121 50 133 41 133 30
+                C 133 19 121 10 106 10
+                Z
+              "
+              fill="url(#ribbonGreenMain)"
+            />
 
-          {/* Crease line where ribbon wraps over page edge */}
-          <line x1="14" y1="6" x2="14" y2="42" stroke="#022c22" strokeWidth="1.2" opacity="0.7" />
-          <line x1="15" y1="6" x2="15" y2="42" stroke="#a7f3d0" strokeWidth="0.8" opacity="0.6" />
+            {/* Cylinder Highlight Strip */}
+            <path
+              d="
+                M 12 11
+                C 6 13 4 18 4 25
+                L 4 45
+                C 6 50 11 52 14 52
+                L 18 52
+                C 14 50 10 45 10 37
+                L 10 21
+                C 10 15 14 12 18 11
+                Z
+              "
+              fill="url(#cylinderHighlightGreen)"
+            />
+          </g>
 
-          {/* High-Res 3D Headphone Icon */}
-          <g transform="translate(37, 6) scale(0.68)">
-            {/* Sound waves */}
-            <path d="M7 23 C5.5 25.5 5.5 30.5 7 33" stroke="#fef08a" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M45 23 C46.5 25.5 46.5 30.5 45 33" stroke="#fef08a" strokeWidth="2.5" strokeLinecap="round" />
-            {/* Headband arch */}
-            <path d="M12 28 C12 15 20 9 26 9 C32 9 40 15 40 28" fill="none" stroke="#fef08a" strokeWidth="4.5" strokeLinecap="round" />
-            {/* Ear Cushions */}
-            <rect x="9.5" y="24" width="7" height="15" rx="3.5" fill="#042f2e" stroke="#fef08a" strokeWidth="1.2" />
-            <rect x="35.5" y="24" width="7" height="15" rx="3.5" fill="#042f2e" stroke="#fef08a" strokeWidth="1.2" />
-            {/* Golden Musical Note in Center */}
-            <path d="M26 21 L26 33" stroke="#fef08a" strokeWidth="2.8" strokeLinecap="round" />
-            <circle cx="23" cy="33.5" r="3.2" fill="#fef08a" />
-            <path d="M26 22 C29 22 31 24.5 31 27" fill="none" stroke="#fef08a" strokeWidth="2.4" strokeLinecap="round" />
+          {/* Minimalist Clean White Headphone Icon */}
+          <g transform="translate(63, 19) scale(0.61)" opacity="0.95">
+            <path d="M 7 24 C 7 13 15 6 24 6 C 33 6 41 13 41 24" fill="none" stroke="#ffffff" strokeWidth="4.5" strokeLinecap="round" />
+            <rect x="5" y="21" width="7" height="15" rx="3.5" fill="#ffffff" />
+            <rect x="36" y="21" width="7" height="15" rx="3.5" fill="#ffffff" />
+            <path d="M 23 20 L 23 28" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" />
+            <circle cx="21" cy="28.5" r="2.8" fill="#ffffff" />
           </g>
         </svg>
 
