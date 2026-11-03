@@ -60,7 +60,7 @@ export default function ActivityRound({page,mode,lang,speed,targetId,onFinish,on
   const detail=wrong?letter.shape[lang]:right?letter.char:requiresAudio&&!state.heard?(de?'Erst anhören, dann wählen.':'Önce kaydı dinle, sonra seç.'):(de?'Wähle den richtigen Buchstaben.':'Doğru harfe dokun.');
   return <div className="activity-round activity-game-frame">
     <div className="activity-round-meta"><span>{mini?(de?['Erkennen','Hören','Unterscheiden'][state.index]:['Tanı','Dinle','Ayırt et'][state.index]):(de?'Entdeckung':'Keşif')} · {state.index+1} / {questions.length}</span><progress value={state.index+(right?1:0)} max={questions.length} aria-label={de?'Fortschritt':'Etkinlik ilerlemesi'}/><span className="activity-stars"><Star size={15}/>{state.correct}</span></div>
-    <div className="activity-workspace"><section className="activity-prompt"><Buddy happy={right}/><h3 ref={headingRef} tabIndex={-1}>{title}</h3>
+    <div className="activity-workspace"><section className="activity-prompt"><Buddy happy={right} sad={wrong} state={right ? 'success' : wrong ? 'fail' : 'idle'} /><h3 ref={headingRef} tabIndex={-1}>{title}</h3>
       {['grid','shape'].includes(kind)?<div className="activity-target"><Glyph letter={letter}/></div>:kind==='listen'?<button className="activity-btn activity-primary" onClick={listen}><Volume2 size={20}/>{de?'Anhören':'Dinle'}</button>:<span className="activity-prompt-hint">{letter.shape[lang]}</span>}
       {audioError&&<p className="activity-audio-error" role="alert">{de?'Bitte erneut anhören.':'Ses açılamadı, yeniden dokun.'}</p>}
     </section><div className="activity-board">

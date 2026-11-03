@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kunut Duaları Ezber Atölyesi - 5 Farklı İçerik Modellemesi</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Gruvbox Material Renk Paleti */
+    :root {
+      --bg: #141617;
+      --card: #1d2021;
+      --card-sub: #282828;
+      --border: #3c3836;
+      --text: #d4be98;
+      --muted: #a89984;
+      --accent: #e78a4e;
+      --green: #a9b665;
+      --red: #ea6962;
+      --blue: #7daea3;
+      --gold: #d8a657;
+      --purple: #d3869b;
+    }
+    .theme-light {
+      --bg: #f7f5ee;
+      --card: #ffffff;
+      --card-sub: #f0ebe0;
+      --border: #d5c8b5;
+      --text: #282828;
+      --muted: #665c54;
+      --accent: #af3a03;
+      --green: #79740e;
+      --red: #9d0006;
+      --blue: #076678;
+      --gold: #b57614;
+      --purple: #8f3f71;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      transition: background-color 0.25s, color 0.25s;
+    }
+
+    .arabic-font {
+      font-family: 'Amiri', 'Traditional Arabic', serif;
+      direction: rtl;
+      line-height: 2.2;
+    }
+    .display-font {
+      font-family: 'Fredoka', system-ui, sans-serif;
+    }
+
+    /* Model Tab & Button Active States */
+    .model-tab.active {
+      background-color: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(231, 138, 78, 0.4);
+    }
+    .dua-tab.active {
+      background-color: var(--green);
+      color: #141617;
+      font-weight: 800;
+    }
+
+    /* Animations */
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 rgba(231, 138, 78, 0); }
+      50% { box-shadow: 0 0 20px rgba(231, 138, 78, 0.45); }
+    }
+    @keyframes bounceSoft {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .active-chunk {
+      animation: pulseGlow 2s infinite;
+      border-color: var(--accent) !important;
+      background-color: rgba(231, 138, 78, 0.08) !important;
+    }
+
+    /* Word Tile in Vanishing / Puzzle */
+    .word-tile {
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.4, 1);
+      user-select: none;
+    }
+    .word-tile:hover {
+      transform: translateY(-2px);
+    }
+    .blurred-word {
+      filter: blur(8px);
+      cursor: pointer;
+    }
+    .blurred-word:hover {
+      filter: blur(3px);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--card-sub); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  </style>
+</head>
+<body class="p-3 sm:p-6 md:p-8 min-h-screen">
+
+  <div class="max-w-6xl mx-auto">
+    <!-- Header Bar -->
+    <header class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[var(--border)] mb-6">
+      <div class="flex items-center gap-3">
+        <!-- Mini Rafi Mascot -->
+        <div class="w-14 h-14 flex-shrink-0">
+          <svg viewBox="0 0 160 160" class="w-full h-full overflow-visible" style="animation: bounceSoft 2.8s ease-in-out infinite;">
+            <rect x="36" y="40" width="88" height="90" rx="18" fill="#14654f" stroke="#22c55e" stroke-width="2.5" />
+            <path d="M 44,48 Q 80,54 116,48 L 116,118 Q 80,124 44,118 Z" fill="#fef3c7" />
+            <circle cx="62" cy="76" r="8.5" fill="#1c1917" />
+            <circle cx="64.5" cy="73.5" r="3" fill="#ffffff" />
+            <circle cx="98" cy="76" r="8.5" fill="#1c1917" />
+            <circle cx="100.5" cy="73.5" r="3" fill="#ffffff" />
+            <ellipse cx="53" cy="84" rx="6.5" ry="3.5" fill="#f43f5e" opacity="0.5" />
+            <ellipse cx="107" cy="84" rx="6.5" ry="3.5" fill="#f43f5e" opacity="0.5" />
+            <path d="M 72,85 Q 80,94 88,85" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round" />
+            <!-- Feet -->
+            <path d="M 55,122 L 55,148 L 62,142 L 69,148 L 69,122 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5" />
+            <path d="M 91,122 L 91,148 L 98,142 L 105,148 L 105,122 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5" />
+            <!-- Arms -->
+            <path d="M 38,76 Q 20,68 18,50" fill="none" stroke="#14654f" stroke-width="5.5" stroke-linecap="round" />
+            <circle cx="18" cy="48" r="7.5" fill="#ffffff" stroke="#14654f" stroke-width="2" />
+            <path d="M 122,76 Q 134,84 134,95" fill="none" stroke="#14654f" stroke-width="5.5" stroke-linecap="round" />
+            <circle cx="134" cy="98" r="7.5" fill="#ffffff" stroke="#14654f" stroke-width="2" />
+          </svg>
+        </div>
+        <div>
+          <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-400 mb-1">
+            🎯 Pedagojik Ezber Laboratuvarı
+          </span>
+          <h1 class="text-xl sm:text-2xl md:text-3xl font-black text-[var(--text)] tracking-tight">
+            Kunut Duaları İçin 5 Ezber Modeli
+          </h1>
+          <p class="text-xs sm:text-sm text-[var(--muted)]">
+            Öğrencilerin en çok zorlandığı Kunut 1 ve Kunut 2 dualarını kalıcı ve keyifle ezberleten interaktif tasarımlar.
+          </p>
+        </div>
+      </div>
+
+      <!-- Controls: Prayer Selector & Theme -->
+      <div class="flex items-center gap-3">
+        <!-- Dua Switcher -->
+        <div class="flex items-center p-1 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)]">
+          <button onclick="setDua(1)" id="dua-1-btn" class="dua-tab active px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all">
+            Kunut 1
+          </button>
+          <button onclick="setDua(2)" id="dua-2-btn" class="dua-tab px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all text-[var(--muted)]">
+            Kunut 2
+          </button>
+        </div>
+
+        <!-- Theme Switcher -->
+        <button onclick="toggleTheme()" id="theme-btn" class="px-3 py-1.5 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--card-sub)] transition-all">
+          🌓 Tema
+        </button>
+      </div>
+    </header>
+
+    <!-- Model Switcher Tabs (The 5 Models) -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-[var(--muted)]">
+          İçerik Geliştirme Modelini Seç:
+        </span>
+        <span class="text-xs text-emerald-400 font-semibold" id="model-tag">
+          Model 1: Bilişsel Yükü Düşüren Parçalı Öğrenme
+        </span>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-2.5">
+        <button onclick="selectModel(1)" id="tab-model-1" class="model-tab active p-3 rounded-2xl text-left border border-[var(--border)] bg-[var(--card)] transition-all">
+          <div class="text-base sm:text-lg mb-1">🪜</div>
+          <div class="text-xs sm:text-sm font-bold leading-snug">Basamaklı Zincir</div>
+          <div class="text-[10px] text-[var(--muted)] line-clamp-1 mt-0.5">Kümülatif parçalama</div>
+        </button>
+
+        <button onclick="selectModel(2)" id="tab-model-2" class="model-tab p-3 rounded-2xl text-left border border-[var(--border)] bg-[var(--card)] transition-all">
+          <div class="text-base sm:text-lg mb-1">🧽</div>
+          <div class="text-xs sm:text-sm font-bold leading-snug">Hafıza Silgisi</div>
+          <div class="text-[10px] text-[var(--muted)] line-clamp-1 mt-0.5">Kaybolan kelimeler</div>
+        </button>
+
+        <button onclick="selectModel(3)" id="tab-model-3" class="model-tab p-3 rounded-2xl text-left border border-[var(--border)] bg-[var(--card)] transition-all">
+          <div class="text-base sm:text-lg mb-1">🎵</div>
+          <div class="text-xs sm:text-sm font-bold leading-snug">Ritmik Karaoke</div>
+          <div class="text-[10px] text-[var(--muted)] line-clamp-1 mt-0.5">Heceleme & eko modu</div>
+        </button>
+
+        <button onclick="selectModel(4)" id="tab-model-4" class="model-tab p-3 rounded-2xl text-left border border-[var(--border)] bg-[var(--card)] transition-all">
+          <div class="text-base sm:text-lg mb-1">🚂</div>
+          <div class="text-xs sm:text-sm font-bold leading-snug">Dua Treni</div>
+          <div class="text-[10px] text-[var(--muted)] line-clamp-1 mt-0.5">Yapboz & sıralama</div>
+        </button>
+
+        <button onclick="selectModel(5)" id="tab-model-5" class="model-tab p-3 rounded-2xl text-left border border-[var(--border)] bg-[var(--card)] transition-all">
+          <div class="text-base sm:text-lg mb-1">🗺️</div>
+          <div class="text-xs sm:text-sm font-bold leading-snug">Zihin Haritası</div>
+          <div class="text-[10px] text-[var(--muted)] line-clamp-1 mt-0.5">Anlam çıpaları</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Model Interactive Canvas -->
+    <main id="model-canvas" class="p-4 sm:p-6 md:p-8 rounded-3xl bg-[var(--card)] border border-[var(--border)] shadow-xl relative min-h-[460px]">
+      <!-- Content rendered by JavaScript based on active model and active dua -->
+    </main>
+
+    <!-- Educational Rationale & Pedagogy Footer -->
+    <footer class="mt-6 p-4 sm:p-6 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)] text-xs text-[var(--muted)] leading-relaxed flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div>
+        <strong class="text-[var(--text)] block text-sm mb-1">Öğrenci Neden Kunut Dualarında Zorlanır?</strong>
+        <span>Kunut 1'deki benzer sesli kelimeler (<i>neste'înüke, nestağfirüke, nestehdîk</i>) birbirine karışır. Kunut 2'de ise ritim kaybolduğunda sıralama unutulur. Yukarıdaki 5 model, bilişsel psikolojinin <strong>parçalama (chunking)</strong>, <strong>aktif hatırlama (active recall)</strong> ve <strong>çoklu duyusal kodlama</strong> teknikleriyle bu zorlukları ortadan kaldırır.</span>
+      </div>
+      <div class="flex-shrink-0 flex items-center gap-2">
+        <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold text-[11px]">Sayfa 53 Uyumu</span>
+        <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-400 font-bold text-[11px]">Rafi Destekli</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // State
+    let currentDua = 1; // 1 | 2
+    let currentModel = 1; // 1 .. 5
+    let isDark = true;
+
+    // Kunut Data structured into natural rhythmic pedagogical chunks
+    const kunutData = {
+      1: {
+        title: "Kunut Duası 1",
+        titleDe: "Die Qunût-Gebet 1",
+        fullArabic: "اَللّٰهُمَّ اِنَّا نَسْتَعِينُكَ وَ نَسْتَغْفِرُكَ وَنَسْتَهْدِيكَ ۞ وَ نُؤْمِنُ بِكَ وَ نَتُوبُ اِلَيْكَ ۞ وَ نَتَوَكَّلُ عَلَيْكَ ۞ وَ نُثْنِي عَلَيْكَ الْخَيْرَ كُلَّهُ ۞ نَشْكُرُكَ وَلَا نَكْفُرُكَ ۞ وَ نَخْلَعُ وَ نَتْرُكُ مَنْ يَفْجُرُكَ",
+        chunks: [
+          {
+            id: 1,
+            ar: "اَللّٰهُمَّ اِنَّا نَسْتَعِينُكَ وَ نَسْتَغْفِرُكَ وَنَسْتَهْدِيكَ",
+            tr: "Allâhümme innâ neste'înüke ve nestağfiruke ve nestehdîk",
+            meaningTr: "Allah'ım! Ancak senden yardım dileriz, bağışlanmamızı ve doğru yolu gösterilmesini isteriz.",
+            anchor: "Yardım & Af",
+            icon: "🤲",
+            syllables: ["Al-lâ-hüm-me", "in-nâ", "nes-te-Î-nü-ke", "ve", "nes-tağ-Fİ-ru-ke", "ve", "nes-teh-DÎK"]
+          },
+          {
+            id: 2,
+            ar: "وَ نُؤْمِنُ بِكَ وَ نَتُوبُ اِلَيْكَ",
+            tr: "Ve nü'minü bike ve netûbü ileyk",
+            meaningTr: "Sana iman eder ve sana tövbe ederiz.",
+            anchor: "İman & Tövbe",
+            icon: "❤️",
+            syllables: ["Ve", "nü'-mi-nü", "bi-ke", "ve", "ne-tû-bü", "i-LEYK"]
+          },
+          {
+            id: 3,
+            ar: "وَ نَتَوَكَّلُ عَلَيْكَ",
+            tr: "Ve netevekkelü aleyk",
+            meaningTr: "Ve sana güvenir, sana dayanırız.",
+            anchor: "Tevekkül",
+            icon: "⚓",
+            syllables: ["Ve", "ne-te-vek-ke-lü", "a-LEYK"]
+          },
+          {
+            id: 4,
+            ar: "وَ نُثْنِي عَلَيْكَ الْخَيْرَ كُلَّهُ",
+            tr: "Ve nüsnî aleykel-hayra külleh",
+            meaningTr: "Ve bütün hayırlarla seni över, seni yüceltiriz.",
+            anchor: "Hayırla Övgü",
+            icon: "🌟",
+            syllables: ["Ve", "nüs-nî", "a-ley-kel-", "hay-ra", "kül-leh"]
+          },
+          {
+            id: 5,
+            ar: "نَشْكُرُكَ وَلَا نَكْفُرُكَ",
+            tr: "Neşkürüke velâ nekfüruk",
+            meaningTr: "Sana şükrederiz ve asla nankörlük etmeyiz.",
+            anchor: "Şükür & Vefa",
+            icon: "🛡️",
+            syllables: ["Neş-kü-rü-ke", "ve-lâ", "nek-fü-ruk"]
+          },
+          {
+            id: 6,
+            ar: "وَ نَخْلَعُ وَ نَتْرُكُ مَنْ يَفْجُرُكَ",
+            tr: "Ve nahle'u ve netrükü men yefcüruk",
+            meaningTr: "Sana karşı gelen, günaha sapanları terk eder ve onlardan ayrılırız.",
+            anchor: "Terk & İhlas",
+            icon: "🚪",
+            syllables: ["Ve", "nah-le-'u", "ve", "net-rü-kü", "men", "yef-cü-ruk"]
+          }
+        ]
+      },
+      2: {
+        title: "Kunut Duası 2",
+        titleDe: "Die Qunût-Gebet 2",
+        fullArabic: "اَللّٰهُمَّ اِيَّاكَ نَعْبُدُ وَ لَكَ نُصَلِّي وَ نَسْجُdُ ۞ وَ اِلَيْكَ نَسْعٰى وَ نَحْفِدُ ۞ نَرْجُو رَحْمَتَكَ وَ نَخْشٰى عَذَابَكَ ۞ اِنَّ عَذَابَكَ بِالْكُفَّارِ مُلْحِقٌ",
+        chunks: [
+          {
+            id: 1,
+            ar: "اَللّٰهُمَّ اِيَّاكَ نَعْبُدُ وَ لَكَ نُصَلِّي وَ نَسْجُدُ",
+            tr: "Allâhümme iyyâke na'büdü ve leke nusallî ve nescüd",
+            meaningTr: "Allah'ım! Ancak sana ibadet eder, yalnızca senin için namaz kılar ve secde ederiz.",
+            anchor: "İbadet & Secde",
+            icon: "🕌",
+            syllables: ["Al-lâ-hüm-me", "iy-yâ-ke", "na'-bü-dü", "ve", "le-ke", "nu-sal-lî", "ve", "nes-cüd"]
+          },
+          {
+            id: 2,
+            ar: "وَ اِلَيْكَ نَسْعٰى وَ نَحْفِدُ",
+            tr: "Ve ileyke nes'â ve nahfid",
+            meaningTr: "Yalnızca sana koşar ve senin rızana ermek için gayret ederiz.",
+            anchor: "Koşma & Hizmet",
+            icon: "🏃",
+            syllables: ["Ve", "i-ley-ke", "nes-'â", "ve", "nah-fid"]
+          },
+          {
+            id: 3,
+            ar: "نَرْجُو رَحْمَتَكَ وَ نَخْشٰى عَذَابَكَ",
+            tr: "Nercû rahmeteke ve nahşâ azâbek",
+            meaningTr: "Senin engin rahmetini umar, azabından ise korkarız.",
+            anchor: "Umut & Korku",
+            icon: "⚖️",
+            syllables: ["Ner-cû", "rah-me-te-ke", "ve", "nah-şâ", "a-zâ-bek"]
+          },
+          {
+            id: 4,
+            ar: "اِنَّ عَذَابَكَ بِالْكُفَّارِ مُلْحِقٌ",
+            tr: "İnne azâbeke bil-küffâri mülhık",
+            meaningTr: "Şüphe yok ki senin azabın kâfirlere mutlaka erişecektir.",
+            anchor: "İlahi Hüküm",
+            icon: "⚡",
+            syllables: ["İn-ne", "a-zâ-be-ke", "bil-küf-fâ-ri", "mül-hık"]
+          }
+        ]
+      }
+    };
+
+    // Synthesizer Web Audio API sound effects (Chimes, Clicks, Claves)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(type = 'click') {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+        if (type === 'click') {
+          osc.frequency.setValueAtTime(480, now);
+          osc.frequency.exponentialRampToValueAtTime(120, now + 0.05);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        } else if (type === 'success') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'beat') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, now);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        }
+      } catch (e) {
+        // Audio not allowed yet
+      }
+    }
+
+    // Audio speech reader fallback
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.85;
+        // Try Arabic or Turkish voice
+        const voices = window.speechSynthesis.getVoices();
+        const arVoice = voices.find(v => v.lang.startsWith('ar'));
+        if (arVoice) utterance.voice = arVoice;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // Navigation & Controllers
+    function setDua(num) {
+      currentDua = num;
+      document.getElementById('dua-1-btn').className = num === 1 ? 'dua-tab active px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all' : 'dua-tab px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all text-[var(--muted)]';
+      document.getElementById('dua-2-btn').className = num === 2 ? 'dua-tab active px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all' : 'dua-tab px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition-all text-[var(--muted)]';
+      renderCurrentModel();
+    }
+
+    function selectModel(m) {
+      currentModel = m;
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`tab-model-${i}`);
+        if (i === m) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      }
+
+      const tags = {
+        1: 'Model 1: Bilişsel Yükü Düşüren Kümülatif Basamaklama',
+        2: 'Model 2: Aktif Hatırlama (Active Recall) ve Hafıza Silgisi',
+        3: 'Model 3: Fonetik Çözümleme, Hece Vurgusu ve Eko Tekrarı',
+        4: 'Model 4: Kinestetik Sıralama, Tren Vagonu ve Oyunlaştırma',
+        5: 'Model 5: Anlamsal Kodlama, Zihin Haritası ve Çıpalama'
+      };
+      document.getElementById('model-tag').innerText = tags[m] || '';
+      renderCurrentModel();
+    }
+
+    function toggleTheme() {
+      isDark = !isDark;
+      if (isDark) {
+        document.body.classList.remove('theme-light');
+      } else {
+        document.body.classList.add('theme-light');
+      }
+    }
+
+    /* =========================================================================
+       MODEL 1: BASAMAKLI ZİNCİRLEME EZBER (Cumulative Chaining Accordion)
+       ========================================================================= */
+    let model1Step = 1;
+    let model1RepeatCounter = 0;
+
+    function renderModel1() {
+      const data = kunutData[currentDua];
+      const totalSteps = data.chunks.length;
+      if (model1Step > totalSteps) model1Step = totalSteps;
+
+      const activeChunk = data.chunks[model1Step - 1];
+
+      return `
+        <div class="space-y-6">
+          <!-- Model Header & Progress -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[var(--border)]">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">🪜 Basamaklı Ezber Metodu</span>
+              <h2 class="text-lg sm:text-xl font-black text-[var(--text)]">
+                ${data.title} - Adım ${model1Step} / ${totalSteps}
+              </h2>
+              <p class="text-xs text-[var(--muted)]">
+                Önce 1. parçayı ezberle. Ardından 2. parçayı 1. parçaya bağlayarak oku. Zincir asla kopmaz!
+              </p>
+            </div>
+
+            <!-- Repeat Counter Badge -->
+            <div class="flex items-center gap-2 bg-[var(--card-sub)] px-3 py-2 rounded-2xl border border-[var(--border)]">
+              <span class="text-xs text-[var(--muted)] font-semibold">Bu Adım Tekrarı:</span>
+              <span class="text-sm font-black text-amber-400 font-mono" id="m1-counter">${model1RepeatCounter} / 3</span>
+            </div>
+          </div>
+
+          <!-- Step Progression Dots -->
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            ${data.chunks.map((c, idx) => `
+              <button onclick="setM1Step(${idx + 1})" class="flex-1 py-1.5 rounded-xl text-[11px] font-bold border transition-all ${
+                idx + 1 === model1Step
+                  ? 'bg-[var(--accent)] text-white border-[var(--accent)] shadow-md'
+                  : idx + 1 < model1Step
+                    ? 'bg-emerald-600/30 text-emerald-400 border-emerald-500/40'
+                    : 'bg-[var(--card-sub)] text-[var(--muted)] border-[var(--border)]'
+              }">
+                ${idx + 1}. Blok ${idx + 1 < model1Step ? '✓' : ''}
+              </button>
+            `).join('')}
+          </div>
+
+          <!-- Current Active Target Chunk (Hero Card) -->
+          <div class="p-6 rounded-3xl bg-[var(--card-sub)] border-2 border-[var(--accent)] shadow-lg text-center relative overflow-hidden">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-amber-500/20 text-amber-400 mb-3">
+              Şu Anki Hedef Cümle (#${model1Step})
+            </span>
+            <div class="arabic-font text-2xl sm:text-3xl md:text-4xl text-[var(--text)] mb-3 leading-relaxed">
+              ${activeChunk.ar}
+            </div>
+            <div class="text-sm sm:text-base font-bold text-amber-400 mb-2">
+              ${activeChunk.tr}
+            </div>
+            <p class="text-xs sm:text-sm text-[var(--muted)] max-w-xl mx-auto italic">
+              "${activeChunk.meaningTr}"
+            </p>
+
+            <div class="flex items-center justify-center gap-3 mt-5">
+              <button onclick="playM1Audio()" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-[var(--accent)] text-white shadow-md flex items-center gap-2 hover:opacity-90 transition-opacity">
+                <span>🔊</span> <span>Dinle & Tekrar Et</span>
+              </button>
+              <button onclick="m1AddRepeat()" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 text-white shadow-md flex items-center gap-2 hover:bg-emerald-500 transition-colors">
+                <span>⭐</span> <span>Tekrar Ettim (+1)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Cumulative Full Chain (Zincirleme Bağlantı) -->
+          <div class="p-5 rounded-2xl bg-[var(--card)] border border-[var(--border)]">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-[var(--muted)]">
+                🔗 Birleşen Zincir (Baştan Buraya Kadar Tek Nefeste Oku):
+              </span>
+              <span class="text-xs font-bold text-emerald-400">1'den ${model1Step}'e kadar</span>
+            </div>
+            <div class="arabic-font text-xl sm:text-2xl text-[var(--text)] p-4 rounded-xl bg-[var(--card-sub)] leading-loose">
+              ${data.chunks.slice(0, model1Step).map(c => `
+                <span class="${c.id === model1Step ? 'text-amber-400 font-bold underline decoration-amber-400/40' : 'text-[var(--text)] opacity-90'}">
+                  ${c.ar} ۞
+                </span>
+              `).join(' ')}
+            </div>
+
+            <div class="flex items-center justify-between mt-4">
+              <button onclick="setM1Step(${Math.max(1, model1Step - 1)})" ${model1Step === 1 ? 'disabled class="opacity-40 text-xs px-4 py-2 border rounded-xl"' : 'class="text-xs px-4 py-2 border border-[var(--border)] rounded-xl font-bold hover:bg-[var(--card-sub)]"'}>
+                ← Önceki Adım
+              </button>
+              <button onclick="setM1Step(${Math.min(totalSteps, model1Step + 1)})" class="text-xs px-5 py-2.5 bg-[var(--green)] text-black rounded-xl font-extrabold shadow hover:opacity-90">
+                ${model1Step === totalSteps ? '🎉 Tüm Duayı Tamamladın!' : 'Sonraki Adımı Bağla →'}
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setM1Step(step) {
+      model1Step = step;
+      model1RepeatCounter = 0;
+      playBeep('click');
+      renderCurrentModel();
+    }
+
+    function m1AddRepeat() {
+      model1RepeatCounter++;
+      playBeep('success');
+      if (model1RepeatCounter === 3) {
+        // Auto trigger celebrate
+      }
+      renderCurrentModel();
+    }
+
+    function playM1Audio() {
+      playBeep('beat');
+      const chunk = kunutData[currentDua].chunks[model1Step - 1];
+      speakText(chunk.ar);
+    }
+
+    /* =========================================================================
+       MODEL 2: HAFIZA SİLGİSİ (Vanishing Recall Slider)
+       ========================================================================= */
+    let vanishLevel = 0; // 0: Açık | 1: %30 Gizli | 2: İlk Harfler | 3: Tamamen Kapalı
+    let revealedWords = {};
+
+    function renderModel2() {
+      const data = kunutData[currentDua];
+
+      return `
+        <div class="space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-sky-400">🧽 Hafıza Silgisi Modeli</span>
+              <h2 class="text-lg sm:text-xl font-black text-[var(--text)]">
+                Kelimeleri Kademeli Olarak Sil, Hafızanı Test Et!
+              </h2>
+              <p class="text-xs text-[var(--muted)]">
+                Kaydırıcıyı ilerleterek kelimeleri gizle. Kapalı kelimelerin üzerine tıklayarak kendini kontrol edebilirsin.
+              </p>
+            </div>
+
+            <!-- Difficulty Slider Controller -->
+            <div class="flex items-center gap-2 p-1.5 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)]">
+              <button onclick="setVanishLevel(0)" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${vanishLevel === 0 ? 'bg-sky-500 text-white' : 'text-[var(--muted)]'}">
+                Rehber (%100)
+              </button>
+              <button onclick="setVanishLevel(1)" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${vanishLevel === 1 ? 'bg-sky-500 text-white' : 'text-[var(--muted)]'}">
+                Hafif Silik
+              </button>
+              <button onclick="setVanishLevel(2)" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${vanishLevel === 2 ? 'bg-sky-500 text-white' : 'text-[var(--muted)]'}">
+                İlk Harfler
+              </button>
+              <button onclick="setVanishLevel(3)" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${vanishLevel === 3 ? 'bg-sky-500 text-white' : 'text-[var(--muted)]'}">
+                Kara Tahta
+              </button>
+            </div>
+          </div>
+
+          <!-- Interactive Vanishing Canvas -->
+          <div class="p-6 md:p-8 rounded-3xl bg-[var(--card-sub)] border border-[var(--border)] text-center">
+            <div class="text-xs font-extrabold uppercase tracking-widest text-[var(--muted)] mb-4">
+              ${vanishLevel === 0 ? '👀 0. Seviye: Tüm kelimeler açık, gözünle takip ederek oku' :
+                vanishLevel === 1 ? '🤔 1. Seviye: Bazı kilit kelimeler silindi. Takılırsan üzerine tıkla!' :
+                vanishLevel === 2 ? '⚡ 2. Seviye: Sadece baş harfler ipucu olarak kaldı!' :
+                '🧠 3. Seviye: Tam Ezber Modu! Zihninden oku, açmak istediğin yere dokun.'}
+            </div>
+
+            <!-- Arabic Blocks with Word-level click-to-reveal -->
+            <div class="space-y-4">
+              ${data.chunks.map((chunk, cIdx) => {
+                const words = chunk.ar.split(' ');
+                const trWords = chunk.tr.split(' ');
+                return `
+                  <div class="p-4 rounded-2xl bg-[var(--card)] border border-[var(--border)]">
+                    <div class="arabic-font text-2xl sm:text-3xl flex flex-wrap items-center justify-center gap-x-3 gap-y-2 mb-2">
+                      ${words.map((w, wIdx) => {
+                        const key = `${currentDua}-${cIdx}-${wIdx}`;
+                        const isRevealed = revealedWords[key];
+                        let display = w;
+                        let extraClass = '';
+
+                        if (!isRevealed) {
+                          if (vanishLevel === 1 && wIdx % 2 === 1) {
+                            extraClass = 'blurred-word bg-sky-500/20 px-2 py-0.5 rounded-lg border border-sky-400/30';
+                          } else if (vanishLevel === 2) {
+                            display = w.slice(0, 2) + '...';
+                            extraClass = 'text-amber-400 font-mono px-1.5 bg-amber-500/10 rounded border border-amber-400/30';
+                          } else if (vanishLevel === 3) {
+                            display = '••••••';
+                            extraClass = 'text-slate-500 tracking-widest px-2 py-0.5 bg-slate-800/40 rounded';
+                          }
+                        }
+
+                        return `
+                          <span onclick="toggleRevealWord('${key}')" class="word-tile cursor-pointer ${extraClass}" title="Açmak için dokun">
+                            ${display}
+                          </span>
+                        `;
+                      }).join(' ')}
+                      <span class="text-amber-400 text-lg opacity-70">۞</span>
+                    </div>
+
+                    ${vanishLevel <= 1 ? `
+                      <div class="text-xs sm:text-sm text-amber-400/90 font-medium">
+                        ${chunk.tr}
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <div class="mt-5 flex items-center justify-center gap-3">
+              <button onclick="revealAllWords()" class="px-4 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--card-sub)]">
+                Tümünü Göster
+              </button>
+              <button onclick="resetRevealedWords()" class="px-4 py-2 rounded-xl text-xs font-bold bg-sky-500 text-white hover:opacity-90">
+                Tekrar Kapat
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setVanishLevel(lvl) {
+      vanishLevel = lvl;
+      revealedWords = {};
+      playBeep('click');
+      renderCurrentModel();
+    }
+
+    function toggleRevealWord(key) {
+      revealedWords[key] = !revealedWords[key];
+      playBeep('click');
+      renderCurrentModel();
+    }
+    function revealAllWords() {
+      vanishLevel = 0;
+      revealedWords = {};
+      renderCurrentModel();
+    }
+    function resetRevealedWords() {
+      revealedWords = {};
+      renderCurrentModel();
+    }
+
+    /* =========================================================================
+       MODEL 3: RİTMİK KARAOKE & EKO MODU (Rhythm & Syllable Echo)
+       ========================================================================= */
+    let karaokeActiveChunk = 0;
+    let karaokeSpeed = 1.0;
+    let isEchoMode = false;
+
+    function renderModel3() {
+      const data = kunutData[currentDua];
+
+      return `
+        <div class="space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">🎵 Ritmik Heceleme & Eko Modu</span>
+              <h2 class="text-lg sm:text-xl font-black text-[var(--text)]">
+                Melodi ve Vurguyla Ses Karmaşasını Çöz
+              </h2>
+              <p class="text-xs text-[var(--muted)]">
+                <i>neste'înüke, nestağfirüke, nestehdîk</i> benzerliklerini hecelerin ritmik vurgusuyla ayır.
+              </p>
+            </div>
+
+            <!-- Tempo & Mode Controls -->
+            <div class="flex items-center gap-2">
+              <button onclick="toggleEchoMode()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${isEchoMode ? 'bg-emerald-500 text-black border-emerald-400' : 'bg-[var(--card-sub)] border-[var(--border)] text-[var(--muted)]'}">
+                ${isEchoMode ? '🗣️ Eko Modu Açık' : '🎙️ Eko Modu Kapalı'}
+              </button>
+              <select onchange="setKaraokeSpeed(this.value)" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-[var(--card-sub)] border border-[var(--border)] text-[var(--text)]">
+                <option value="0.75" ${karaokeSpeed === 0.75 ? 'selected' : ''}>0.75× (Yavaş/Hece)</option>
+                <option value="1.0" ${karaokeSpeed === 1.0 ? 'selected' : ''}>1.0× (Normal)</option>
+                <option value="1.25" ${karaokeSpeed === 1.25 ? 'selected' : ''}>1.25× (Akıcı)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Rhythmic Chunks Grid -->
+          <div class="space-y-4">
+            ${data.chunks.map((chunk, idx) => `
+              <div onclick="playKaraokeChunk(${idx})" class="p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer ${
+                karaokeActiveChunk === idx
+                  ? 'bg-emerald-500/10 border-emerald-500 shadow-md ring-2 ring-emerald-500/30'
+                  : 'bg-[var(--card-sub)] border-[var(--border)] hover:border-emerald-500/40'
+              }">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400">
+                    Öbek ${idx + 1}
+                  </span>
+                  <span class="text-xs text-[var(--muted)] flex items-center gap-1">
+                    <span>${karaokeActiveChunk === idx ? '▶ Çalıyor' : '▶ Dinle'}</span>
+                  </span>
+                </div>
+
+                <div class="arabic-font text-2xl sm:text-3xl text-[var(--text)] mb-3 leading-relaxed">
+                  ${chunk.ar}
+                </div>
+
+                <!-- Syllable Beat Blocks (Vurgulu heceler büyük ve renkli!) -->
+                <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                  ${chunk.syllables.map(s => {
+                    const isStressed = s === s.toUpperCase() && s.length > 2;
+                    return `
+                      <span class="px-2 py-1 rounded-lg text-xs sm:text-sm font-mono font-bold ${
+                        isStressed
+                          ? 'bg-amber-500 text-black shadow-sm font-black'
+                          : 'bg-[var(--card)] text-[var(--text)] border border-[var(--border)]'
+                      }">
+                        ${s}
+                      </span>
+                    `;
+                  }).join('')}
+                </div>
+
+                <div class="text-xs text-[var(--muted)]">
+                  ${chunk.meaningTr}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function playKaraokeChunk(idx) {
+      karaokeActiveChunk = idx;
+      playBeep('success');
+      const chunk = kunutData[currentDua].chunks[idx];
+      speakText(chunk.ar);
+      renderCurrentModel();
+    }
+
+    function toggleEchoMode() {
+      isEchoMode = !isEchoMode;
+      playBeep('click');
+      renderCurrentModel();
+    }
+
+    function setKaraokeSpeed(spd) {
+      karaokeSpeed = Number(spd);
+      playBeep('click');
+      renderCurrentModel();
+    }
+
+    /* =========================================================================
+       MODEL 4: DUA TRENİ / YAPBOZ SIRALAMA (Scramble / Sequence Puzzle)
+       ========================================================================= */
+    let puzzleSlots = [];
+    let puzzleAvailable = [];
+    let puzzleScore = 0;
+
+    function initPuzzle() {
+      const data = kunutData[currentDua];
+      puzzleSlots = new Array(data.chunks.length).fill(null);
+      // Shuffle chunks
+      puzzleAvailable = [...data.chunks].sort(() => Math.random() - 0.5);
+      puzzleScore = 0;
+    }
+
+    function renderModel4() {
+      const data = kunutData[currentDua];
+      if (puzzleSlots.length !== data.chunks.length) {
+        initPuzzle();
+      }
+
+      const isComplete = puzzleSlots.every((s, i) => s && s.id === i + 1);
+
+      return `
+        <div class="space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-purple-400">🚂 Dua Treni Yapboz Modeli</span>
+              <h2 class="text-lg sm:text-xl font-black text-[var(--text)]">
+                Vagonları Doğru Sıraya Göre Diz!
+              </h2>
+              <p class="text-xs text-[var(--muted)]">
+                Karışık verilen parçalara sırayla dokunarak treni baştan sona tamamla.
+              </p>
+            </div>
+
+            <button onclick="initPuzzle(); renderCurrentModel();" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[var(--card-sub)] border border-[var(--border)] hover:bg-[var(--card)]">
+              🔄 Yeniden Karıştır
+            </button>
+          </div>
+
+          <!-- Train Slots (The Target Vagon Sequence) -->
+          <div>
+            <div class="text-xs font-extrabold uppercase tracking-wider text-[var(--muted)] mb-3 flex items-center justify-between">
+              <span>Lokomotif & Tren Vagonları:</span>
+              <span class="text-purple-400 font-mono">${puzzleSlots.filter(Boolean).length} / ${data.chunks.length} Yerleştirildi</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              ${puzzleSlots.map((slot, idx) => `
+                <div onclick="removePuzzleSlot(${idx})" class="p-4 rounded-2xl border-2 transition-all min-h-[90px] flex flex-col justify-center ${
+                  slot
+                    ? slot.id === idx + 1
+                      ? 'bg-emerald-500/15 border-emerald-500/60 cursor-pointer shadow-sm'
+                      : 'bg-red-500/15 border-red-500/60 cursor-pointer'
+                    : 'bg-[var(--card-sub)] border-dashed border-[var(--border)]'
+                }">
+                  <div class="flex items-center justify-between text-[11px] mb-1 font-bold text-[var(--muted)]">
+                    <span>${idx + 1}. Vagon</span>
+                    ${slot ? (slot.id === idx + 1 ? '<span class="text-emerald-400">✓ Doğru</span>' : '<span class="text-red-400">✕ Yanlış Sıra</span>') : '<span class="opacity-50">Boş</span>'}
+                  </div>
+                  ${slot ? `
+                    <div class="arabic-font text-xl text-[var(--text)] truncate">${slot.ar}</div>
+                    <div class="text-[11px] text-amber-400/90 truncate">${slot.tr}</div>
+                  ` : `
+                    <div class="text-xs text-[var(--muted)] italic opacity-60 text-center py-2">
+                      Sıradaki parçayı seç...
+                    </div>
+                  `}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Available Loose Parts to Pick -->
+          ${!isComplete ? `
+            <div class="p-5 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)]">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-[var(--muted)] mb-3">
+                👇 Tıklayarak Sıradaki Vagona Ekle:
+              </div>
+              <div class="flex flex-wrap gap-2.5">
+                ${puzzleAvailable.map((chunk, aIdx) => `
+                  <button onclick="pickPuzzlePiece(${aIdx})" class="px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--card)] hover:border-purple-400 hover:bg-purple-500/10 text-left transition-all max-w-sm">
+                    <div class="arabic-font text-lg text-[var(--text)] mb-1">${chunk.ar}</div>
+                    <div class="text-xs text-amber-400">${chunk.tr}</div>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          ` : `
+            <!-- Completion Celebration Card -->
+            <div class="p-6 rounded-3xl bg-emerald-500/20 border-2 border-emerald-500 text-center">
+              <div class="text-3xl mb-2">🎉</div>
+              <h3 class="text-xl font-black text-emerald-400 mb-1">Tebrikler! Treni Eksiksiz Tamamladın!</h3>
+              <p class="text-xs sm:text-sm text-[var(--muted)] mb-4">
+                Kunut duasının tüm parçalarını doğru ezber sırasına göre dizdin.
+              </p>
+              <button onclick="initPuzzle(); renderCurrentModel();" class="px-5 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-500 text-black shadow-md">
+                Bir Kez Daha Pratik Yap
+              </button>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function pickPuzzlePiece(availIdx) {
+      const emptySlotIdx = puzzleSlots.findIndex(s => s === null);
+      if (emptySlotIdx === -1) return;
+
+      const piece = puzzleAvailable[availIdx];
+      puzzleSlots[emptySlotIdx] = piece;
+      puzzleAvailable.splice(availIdx, 1);
+
+      if (piece.id === emptySlotIdx + 1) {
+        playBeep('success');
+      } else {
+        playBeep('click');
+      }
+      renderCurrentModel();
+    }
+
+    function removePuzzleSlot(slotIdx) {
+      const piece = puzzleSlots[slotIdx];
+      if (!piece) return;
+
+      puzzleSlots[slotIdx] = null;
+      puzzleAvailable.push(piece);
+      playBeep('click');
+      renderCurrentModel();
+    }
+
+    /* =========================================================================
+       MODEL 5: GÖRSEL ANLAM ÇIPALARI & ZİHİN HARİTASI (Semantic Anchors)
+       ========================================================================= */
+    let selectedAnchorId = 1;
+
+    function renderModel5() {
+      const data = kunutData[currentDua];
+      const activeChunk = data.chunks.find(c => c.id === selectedAnchorId) || data.chunks[0];
+
+      return `
+        <div class="space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-400">🗺️ Anlam Çıpaları & Zihin Haritası</span>
+              <h2 class="text-lg sm:text-xl font-black text-[var(--text)]">
+                Anlamın Hafıza Gücüyle Ezberle!
+              </h2>
+              <p class="text-xs text-[var(--muted)]">
+                Duaları sadece harf olarak değil, zihninde canlanan 5 büyük manevi durak olarak kodla.
+              </p>
+            </div>
+          </div>
+
+          <!-- Mind Map Journey Stepper (Visual Anchor Nodes) -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            ${data.chunks.map((c, i) => `
+              <button onclick="selectAnchor(${c.id})" class="p-3.5 rounded-2xl border text-center transition-all ${
+                selectedAnchorId === c.id
+                  ? 'bg-amber-500/20 border-amber-500 ring-2 ring-amber-500/30'
+                  : 'bg-[var(--card-sub)] border-[var(--border)] hover:border-amber-400/40'
+              }">
+                <div class="text-2xl mb-1">${c.icon}</div>
+                <div class="text-xs font-bold text-[var(--text)] mb-0.5">${c.anchor}</div>
+                <div class="text-[10px] text-[var(--muted)] font-mono">Durak ${i + 1}</div>
+              </button>
+            `).join('')}
+          </div>
+
+          <!-- Focused Anchor Deep Dive (The Anchor Chamber) -->
+          <div class="p-6 md:p-8 rounded-3xl bg-[var(--card-sub)] border border-[var(--border)] relative overflow-hidden">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-4xl p-3 rounded-2xl bg-[var(--card)] border border-[var(--border)]">
+                ${activeChunk.icon}
+              </span>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-amber-400">
+                  Zihinsel Çıpa Durağı #${activeChunk.id}
+                </span>
+                <h3 class="text-xl font-black text-[var(--text)]">
+                  ${activeChunk.anchor}
+                </h3>
+              </div>
+            </div>
+
+            <!-- Big Arabic Calligraphy with Highlight -->
+            <div class="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] text-center mb-4">
+              <div class="arabic-font text-3xl sm:text-4xl text-[var(--text)] leading-relaxed mb-3">
+                ${activeChunk.ar}
+              </div>
+              <div class="text-base sm:text-lg font-bold text-amber-400 mb-2">
+                ${activeChunk.tr}
+              </div>
+              <p class="text-sm text-[var(--muted)] max-w-xl mx-auto italic border-t border-[var(--border)] pt-3">
+                "${activeChunk.meaningTr}"
+              </p>
+            </div>
+
+            <!-- How it anchors in mind explanation -->
+            <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs sm:text-sm text-amber-200/90 leading-relaxed">
+              💡 <strong>Hafıza İpucu:</strong> Bu aşamayı okurken zihninde <strong>"${activeChunk.anchor}"</strong> hissini canlandır. Beyin soyut sesleri unutsa bile görsel ve anlamsal durakları asla unutmaz.
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectAnchor(id) {
+      selectedAnchorId = id;
+      playBeep('click');
+      renderCurrentModel();
+    }
+
+    /* =========================================================================
+       MAIN RENDER DISPATCHER
+       ========================================================================= */
+    function renderCurrentModel() {
+      const canvas = document.getElementById('model-canvas');
+      if (!canvas) return;
+
+      if (currentModel === 1) canvas.innerHTML = renderModel1();
+      else if (currentModel === 2) canvas.innerHTML = renderModel2();
+      else if (currentModel === 3) canvas.innerHTML = renderModel3();
+      else if (currentModel === 4) canvas.innerHTML = renderModel4();
+      else if (currentModel === 5) canvas.innerHTML = renderModel5();
+    }
+
+    // Initial Mount
+    window.addEventListener('DOMContentLoaded', () => {
+      renderCurrentModel();
+    });
+  </script>
+</body>
+</html>

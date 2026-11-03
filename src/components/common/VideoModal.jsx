@@ -2,26 +2,352 @@ import React, { useEffect, useRef, useState } from 'react';
 import { X, Play, Pause, Volume2, VolumeX, Maximize2, PictureInPicture2, BookOpen, RotateCcw } from 'lucide-react';
 import { playAudioFile, stopCurrentAudio } from '../../utils/audioPlayer';
 import { assetUrl } from '../../utils/urls';
-const time=n=>Number.isFinite(n)?`${Math.floor(n/60)}:${String(Math.floor(n%60)).padStart(2,'0')}`:'0:00';
-export default function VideoModal({video,onClose,lang='tr',onJumpToPage}){
- const videoRef=useRef(null),dialogRef=useRef(null),closeRef=useRef(onClose);closeRef.current=onClose;
- const [failed,setFailed]=useState(false),[playing,setPlaying]=useState(false),[current,setCurrent]=useState(0),[duration,setDuration]=useState(0),[volume,setVolume]=useState(1),[speed,setSpeed]=useState(1),[notice,setNotice]=useState(''),[waiting,setWaiting]=useState(true);
- const de=lang==='de',title=de?(video.titleDe||video.caption||'Video'):(video.titleTr||video.caption||'Video');
- const play=()=>{const v=videoRef.current;if(!v)return;v.paused?v.play().catch(()=>setNotice(de?'Zum Starten erneut tippen.':'Başlatmak için yeniden dokun.')):v.pause();};
- useEffect(()=>{
-  const previous=document.activeElement,overflow=document.body.style.overflow,media=videoRef.current;document.body.style.overflow='hidden';stopCurrentAudio();[...dialogRef.current.querySelectorAll('button')].find(el=>el.getClientRects().length)?.focus();
-  const pause=()=>videoRef.current?.pause();window.addEventListener('elifba:audio-start',pause);
-  const key=e=>{
-   if(e.key==='Escape')closeRef.current();
-   if(e.key==='Tab'){const items=[...dialogRef.current.querySelectorAll('button,input,select,[href]')].filter(el=>!el.disabled&&el.getClientRects().length);const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}
-  };window.addEventListener('keydown',key);
-  return()=>{media?.pause();if(media){media.removeAttribute('src');media.load();}window.removeEventListener('keydown',key);window.removeEventListener('elifba:audio-start',pause);document.body.style.overflow=overflow;stopCurrentAudio();if(previous?.isConnected)previous.focus();};
- },[]);
- const fullscreen=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(dialogRef.current.requestFullscreen)await dialogRef.current.requestFullscreen();else if(videoRef.current.webkitEnterFullscreen)videoRef.current.webkitEnterFullscreen();else throw Error();}catch{setNotice(de?'Vollbild nicht verfügbar.':'Bu tarayıcıda tam ekran kullanılamıyor.');}};
- const pip=async()=>{try{if(document.pictureInPictureElement)await document.exitPictureInPicture();else await videoRef.current.requestPictureInPicture();}catch{setNotice(de?'Bild-in-Bild nicht verfügbar.':'Bu tarayıcıda resim içinde resim açılamadı.');}};
- return <div className="video-backdrop" onClick={onClose}><section className="glass-video" ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="video-dialog-title" onClick={e=>e.stopPropagation()}><header className="video-heading"><span className="video-badge"><Play size={19}/></span><div><p>ELİF-BA · {de?'ORIGINALAUFNAHME':'ORİJİNAL VİDEO'}</p><h2 id="video-dialog-title">{title}</h2></div>{video.pageNumber&&onJumpToPage&&<button className="refract-btn video-page-link" onClick={()=>onJumpToPage(video.pageNumber)}><BookOpen size={16}/><span>{de?'Seite':'Sayfa'} {video.pageNumber}</span></button>}<button className="refract-btn" aria-label={de?'Schließen':'Videoyu kapat'} onClick={onClose}><X size={21}/></button></header>
- <div className="video-screen"><video ref={videoRef} src={assetUrl(video.file||video.video_path)} autoPlay playsInline preload="metadata" onPlay={()=>{stopCurrentAudio();setPlaying(true);setNotice('');}} onPause={()=>setPlaying(false)} onEnded={()=>setPlaying(false)} onTimeUpdate={e=>setCurrent(e.currentTarget.currentTime)} onLoadedMetadata={e=>setDuration(e.currentTarget.duration)} onDurationChange={e=>setDuration(e.currentTarget.duration)} onWaiting={()=>setWaiting(true)} onCanPlay={()=>setWaiting(false)} onPlaying={()=>setWaiting(false)} onError={()=>{setFailed(true);setWaiting(false);}} onClick={play}/>{!playing&&!failed&&!waiting&&<button className="refract-btn video-center-play" onClick={play} aria-label={de?'Video abspielen':'Videoyu oynat'}><Play size={30} fill="currentColor"/></button>}{waiting&&!failed&&<span className="video-loading" role="status">{de?'Video wird geladen…':'Video yükleniyor…'}</span>}{failed&&<div className="video-error" role="alert"><p>{de?'Video konnte nicht geladen werden.':'Video yüklenemedi.'}</p><button className="refract-btn" onClick={()=>{setFailed(false);setWaiting(true);videoRef.current.load();videoRef.current.play().catch(()=>{});}}><RotateCcw size={16}/>{de?'Erneut versuchen':'Tekrar dene'}</button></div>}</div>
- <div className="video-transport"><label className="video-seek"><span className="sr-only">{de?'Videoposition':'Video konumu'}</span><input type="range" min="0" max={duration||1} step=".1" value={current} disabled={!duration||failed} onChange={e=>{videoRef.current.currentTime=Number(e.target.value);setCurrent(Number(e.target.value));}} aria-valuetext={`${time(current)} / ${time(duration)}`}/></label><div className="video-controls"><button className="refract-btn" onClick={play} disabled={failed} aria-label={playing?(de?'Pausieren':'Videoyu duraklat'):(de?'Abspielen':'Videoyu oynat')}>{playing?<Pause size={20}/>:<Play size={20}/>}</button><span className="video-time">{time(current)} <span>/ {time(duration)}</span></span><div className="video-volume"><button className="refract-btn" aria-label={volume?(de?'Stumm':'Sesi kapat'):(de?'Ton an':'Sesi aç')} onClick={()=>{const n=volume?0:1;videoRef.current.volume=n;setVolume(n);}}>{volume?<Volume2 size={19}/>:<VolumeX size={19}/>}</button><input type="range" min="0" max="1" step=".05" value={volume} aria-label={de?'Lautstärke':'Ses düzeyi'} onChange={e=>{setVolume(Number(e.target.value));videoRef.current.volume=Number(e.target.value);}}/></div><label className="video-speed"><span className="sr-only">{de?'Videotempo':'Video hızı'}</span><select value={speed} onChange={e=>{setSpeed(Number(e.target.value));videoRef.current.playbackRate=Number(e.target.value);}}>{[.5,.75,1,1.25,1.5,2].map(n=><option key={n} value={n}>{n}×</option>)}</select></label>{document.pictureInPictureEnabled&&<button className="refract-btn video-pip" onClick={pip} aria-label={de?'Bild-in-Bild':'Resim içinde resim'}><PictureInPicture2 size={19}/></button>}<button className="refract-btn" onClick={fullscreen} aria-label={de?'Vollbild':'Videoyu tam ekran yap'}><Maximize2 size={19}/></button></div>{notice&&<p role="status" className="video-notice">{notice}</p>}</div>
- {(video.audioTr||video.audioDe)&&<footer className="video-explanations"><span>{de?'Bedeutung anhören':'Anlamını dinle'}</span>{video.audioTr&&<button className="refract-btn" onClick={()=>playAudioFile(video.audioTr,{label:`${title} · Türkçe anlam`})}><Volume2 size={15}/>Türkçe</button>}{video.audioDe&&<button className="refract-btn" onClick={()=>playAudioFile(video.audioDe,{label:`${title} · Deutsche Bedeutung`})}><Volume2 size={15}/>Deutsch</button>}</footer>}
- </section></div>;
+
+const time = n => Number.isFinite(n) ? `${Math.floor(n / 60)}:${String(Math.floor(n % 60)).padStart(2, '0')}` : '0:00';
+
+export default function VideoModal({ video, onClose, lang = 'tr', onJumpToPage }) {
+  const videoRef = useRef(null);
+  const dialogRef = useRef(null);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+
+  const [failed, setFailed] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [speed, setSpeed] = useState(1);
+  const [notice, setNotice] = useState('');
+  const [waiting, setWaiting] = useState(false);
+
+  const de = lang === 'de';
+  const title = de ? (video.titleDe || video.caption || 'Video') : (video.titleTr || video.caption || 'Video');
+  const videoSrc = assetUrl(video.file || video.video_path || video.video_file || video.url);
+
+  const play = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      setNotice('');
+      v.play()
+        .then(() => {
+          setPlaying(true);
+          setWaiting(false);
+        })
+        .catch(() => {
+          setPlaying(false);
+          setWaiting(false);
+          setNotice(de ? 'Zum Starten erneut tippen.' : 'Başlatmak için yeniden dokun.');
+        });
+    } else {
+      v.pause();
+      setPlaying(false);
+      setWaiting(false);
+    }
+  };
+
+  useEffect(() => {
+    const previous = document.activeElement;
+    const overflow = document.body.style.overflow;
+    const media = videoRef.current;
+
+    document.body.style.overflow = 'hidden';
+    stopCurrentAudio();
+
+    // Dialog açıldığında ilk butona odaklan
+    [...dialogRef.current.querySelectorAll('button')].find(el => el.getClientRects().length)?.focus();
+
+    // Video oynatmaya çalış (kullanıcı zaten "videoyu izle" butonuna tıkladı)
+    if (media) {
+      const playPromise = media.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setPlaying(true);
+            setWaiting(false);
+          })
+          .catch(() => {
+            // Tarayıcı otomatik sesli oynatmayı engellediğinde video hazır durumda bekler,
+            // "yükleniyor" döngüsüne girmeden büyük oynat butonu gösterilir.
+            setPlaying(false);
+            setWaiting(false);
+          });
+      }
+    }
+
+    const pause = () => videoRef.current?.pause();
+    window.addEventListener('elifba:audio-start', pause);
+
+    const key = e => {
+      if (e.key === 'Escape') closeRef.current();
+      if (e.key === 'Tab') {
+        const items = [...dialogRef.current?.querySelectorAll('button,input,select,[href]') || []].filter(el => !el.disabled && el.getClientRects().length);
+        const first = items[0], last = items.at(-1);
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    window.addEventListener('keydown', key);
+
+    return () => {
+      media?.pause();
+      window.removeEventListener('keydown', key);
+      window.removeEventListener('elifba:audio-start', pause);
+      document.body.style.overflow = overflow;
+      stopCurrentAudio();
+      if (previous?.isConnected) previous.focus();
+    };
+  }, []);
+
+  const fullscreen = async () => {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (dialogRef.current.requestFullscreen) await dialogRef.current.requestFullscreen();
+      else if (videoRef.current.webkitEnterFullscreen) videoRef.current.webkitEnterFullscreen();
+      else throw Error();
+    } catch {
+      setNotice(de ? 'Vollbild nicht verfügbar.' : 'Bu tarayıcıda tam ekran kullanılamıyor.');
+    }
+  };
+
+  const pip = async () => {
+    try {
+      if (document.pictureInPictureElement) await document.exitPictureInPicture();
+      else await videoRef.current.requestPictureInPicture();
+    } catch {
+      setNotice(de ? 'Bild-in-Bild nicht verfügbar.' : 'Bu tarayıcıda resim içinde resim açılamadı.');
+    }
+  };
+
+  return (
+    <div className="video-backdrop" onClick={onClose}>
+      <section
+        className="glass-video"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="video-dialog-title"
+        onClick={e => e.stopPropagation()}
+      >
+        <header className="video-heading">
+          <span className="video-badge"><Play size={19} /></span>
+          <div>
+            <p>ELİF-BA · {de ? 'ORIGINALAUFNAHME' : 'ORİJİNAL VİDEO'}</p>
+            <h2 id="video-dialog-title">{title}</h2>
+          </div>
+          {video.pageNumber && onJumpToPage && (
+            <button className="refract-btn video-page-link" onClick={() => onJumpToPage(video.pageNumber)}>
+              <BookOpen size={16} />
+              <span>{de ? 'Seite' : 'Sayfa'} {video.pageNumber}</span>
+            </button>
+          )}
+          <button className="refract-btn" aria-label={de ? 'Schließen' : 'Videoyu kapat'} onClick={onClose}>
+            <X size={21} />
+          </button>
+        </header>
+
+        <div className="video-screen">
+          <video
+            ref={videoRef}
+            src={videoSrc}
+            playsInline
+            preload="auto"
+            onPlay={() => {
+              stopCurrentAudio();
+              setPlaying(true);
+              setWaiting(false);
+              setNotice('');
+            }}
+            onPause={() => {
+              setPlaying(false);
+              setWaiting(false);
+            }}
+            onEnded={() => {
+              setPlaying(false);
+              setWaiting(false);
+            }}
+            onTimeUpdate={e => setCurrent(e.currentTarget.currentTime)}
+            onLoadedMetadata={e => {
+              setDuration(e.currentTarget.duration);
+              setWaiting(false);
+            }}
+            onDurationChange={e => {
+              setDuration(e.currentTarget.duration);
+              setWaiting(false);
+            }}
+            onLoadedData={() => setWaiting(false)}
+            onCanPlay={() => setWaiting(false)}
+            onCanPlayThrough={() => setWaiting(false)}
+            onWaiting={() => {
+              if (playing) setWaiting(true);
+            }}
+            onPlaying={() => {
+              setPlaying(true);
+              setWaiting(false);
+            }}
+            onError={e => {
+              const err = videoRef.current?.error;
+              console.error('Video error:', err?.code, err?.message, e);
+              setFailed(true);
+              setWaiting(false);
+            }}
+            onClick={play}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+
+          {!playing && !failed && (
+            <button
+              className="refract-btn video-center-play"
+              onClick={play}
+              aria-label={de ? 'Video abspielen' : 'Videoyu oynat'}
+            >
+              <Play size={34} fill="currentColor" />
+            </button>
+          )}
+
+          {waiting && playing && !failed && (
+            <span className="video-loading" role="status">
+              {de ? 'Video wird geladen…' : 'Video yükleniyor…'}
+            </span>
+          )}
+
+          {failed && (
+            <div className="video-error" role="alert">
+              <p>{de ? 'Video konnte nicht geladen werden.' : 'Video yüklenemedi.'}</p>
+              <button
+                className="refract-btn"
+                onClick={() => {
+                  setFailed(false);
+                  setWaiting(true);
+                  if (videoRef.current) {
+                    videoRef.current.load();
+                    videoRef.current.play().catch(() => setWaiting(false));
+                  }
+                }}
+              >
+                <RotateCcw size={16} />
+                {de ? 'Erneut versuchen' : 'Tekrar dene'}
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="video-transport">
+          <label className="video-seek">
+            <span className="sr-only">{de ? 'Videoposition' : 'Video konumu'}</span>
+            <input
+              type="range"
+              min="0"
+              max={duration || 1}
+              step=".1"
+              value={current}
+              disabled={!duration || failed}
+              onChange={e => {
+                videoRef.current.currentTime = Number(e.target.value);
+                setCurrent(Number(e.target.value));
+              }}
+              aria-valuetext={`${time(current)} / ${time(duration)}`}
+            />
+          </label>
+          <div className="video-controls">
+            <button
+              className="refract-btn"
+              onClick={play}
+              disabled={failed}
+              aria-label={playing ? (de ? 'Pausieren' : 'Videoyu duraklat') : (de ? 'Abspielen' : 'Videoyu oynat')}
+            >
+              {playing ? <Pause size={20} /> : <Play size={20} />}
+            </button>
+            <span className="video-time">
+              {time(current)} <span>/ {time(duration)}</span>
+            </span>
+            <div className="video-volume">
+              <button
+                className="refract-btn"
+                aria-label={volume ? (de ? 'Stumm' : 'Sesi kapat') : (de ? 'Ton an' : 'Sesi aç')}
+                onClick={() => {
+                  const n = volume ? 0 : 1;
+                  videoRef.current.volume = n;
+                  setVolume(n);
+                }}
+              >
+                {volume ? <Volume2 size={19} /> : <VolumeX size={19} />}
+              </button>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step=".05"
+                value={volume}
+                aria-label={de ? 'Lautstärke' : 'Ses düzeyi'}
+                onChange={e => {
+                  setVolume(Number(e.target.value));
+                  videoRef.current.volume = Number(e.target.value);
+                }}
+              />
+            </div>
+            <label className="video-speed">
+              <span className="sr-only">{de ? 'Videotempo' : 'Video hızı'}</span>
+              <select
+                value={speed}
+                onChange={e => {
+                  setSpeed(Number(e.target.value));
+                  videoRef.current.playbackRate = Number(e.target.value);
+                }}
+              >
+                {[.5, .75, 1, 1.25, 1.5, 2].map(n => (
+                  <option key={n} value={n}>{n}×</option>
+                ))}
+              </select>
+            </label>
+            {document.pictureInPictureEnabled && (
+              <button
+                className="refract-btn video-pip"
+                onClick={pip}
+                aria-label={de ? 'Bild-in-Bild' : 'Resim içinde resim'}
+              >
+                <PictureInPicture2 size={19} />
+              </button>
+            )}
+            <button
+              className="refract-btn"
+              onClick={fullscreen}
+              aria-label={de ? 'Vollbild' : 'Videoyu tam ekran yap'}
+            >
+              <Maximize2 size={19} />
+            </button>
+          </div>
+          {notice && <p role="status" className="video-notice">{notice}</p>}
+        </div>
+
+        {(video.audioTr || video.audioDe) && (
+          <footer className="video-explanations">
+            <span>{de ? 'Bedeutung anhören' : 'Anlamını dinle'}</span>
+            {video.audioTr && (
+              <button
+                className="refract-btn"
+                onClick={() => playAudioFile(video.audioTr, { label: `${title} · Türkçe anlam` })}
+              >
+                <Volume2 size={15} />Türkçe
+              </button>
+            )}
+            {video.audioDe && (
+              <button
+                className="refract-btn"
+                onClick={() => playAudioFile(video.audioDe, { label: `${title} · Deutsche Bedeutung` })}
+              >
+                <Volume2 size={15} />Deutsch
+              </button>
+            )}
+          </footer>
+        )}
+      </section>
+    </div>
+  );
 }

@@ -14,6 +14,9 @@ Thumbs.db
 .agents/
 .openai/
 _publish/
+*.bak
+ModellemeyiAc.cmd
+YEDEK-DOGRULAMA.json
 
 /assets/book/pages/page-02.jpg
 /assets/book/pages/page-03.jpg

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cin Ali Elif-Ba Maskot Tasarımları</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-sub: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #e78a4e;
+      --cin-ink: #1e293b;
+      --cin-red: #ef4444;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+    .theme-dark {
+      --bg: #141617;
+      --card-bg: #1d2021;
+      --card-sub: #282828;
+      --border: #3c3836;
+      --text: #d4be98;
+      --muted: #a89984;
+      --accent: #e78a4e;
+      --cin-ink: #d4be98;
+      --cin-red: #ea6962;
+      --green: #a9b665;
+      --red: #ea6962;
+    }
+    .theme-sepia {
+      --bg: #f4ecd8;
+      --card-bg: #fdf6e7;
+      --card-sub: #eee4ce;
+      --border: #d7cbb1;
+      --text: #4e3613;
+      --muted: #7e6c52;
+      --accent: #b45309;
+      --cin-ink: #4e3613;
+      --cin-red: #b91c1c;
+      --green: #4d7c0f;
+      --red: #b91c1c;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 0.25s, color 0.25s;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* Cin Ali Stick Figure Keyframe Animations */
+    @keyframes cinIdle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(1deg); }
+    }
+    @keyframes cinBlink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.1); }
+    }
+    @keyframes cinJumpCelebration {
+      0%, 100% { transform: translateY(0) scale(1, 1); }
+      20% { transform: translateY(-32px) scale(0.92, 1.14) rotate(-5deg); }
+      45% { transform: translateY(-22px) scale(1.08, 0.95) rotate(5deg); }
+      70% { transform: translateY(0) scale(1.12, 0.9); }
+    }
+    @keyframes cinSadShrug {
+      0%, 100% { transform: translateY(3px) scale(0.97, 0.95) rotate(0deg); }
+      50% { transform: translateY(8px) scale(1.02, 0.9) rotate(-3deg); }
+    }
+    @keyframes cinThinkTilt {
+      0%, 100% { transform: rotate(-7deg) translateY(-2px); }
+      50% { transform: rotate(5deg) translateY(-4px); }
+    }
+    @keyframes cinWaveHand {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-35deg); }
+      75% { transform: rotate(25deg); }
+    }
+    @keyframes cinScratchHead {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-25deg); }
+    }
+    @keyframes balloonFloat {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-12px) rotate(4deg); }
+    }
+
+    .anim-cin-idle { animation: cinIdle 3s ease-in-out infinite; }
+    .anim-cin-blink { animation: cinBlink 4s infinite; transform-origin: center; }
+    .anim-cin-jump { animation: cinJumpCelebration 0.82s cubic-bezier(0.28, 0.84, 0.42, 1) infinite; }
+    .anim-cin-sad { animation: cinSadShrug 2.6s ease-in-out infinite; }
+    .anim-cin-think { animation: cinThinkTilt 2.8s ease-in-out infinite; }
+    .anim-cin-wave { animation: cinWaveHand 1.2s ease-in-out infinite; }
+    .anim-cin-scratch { animation: cinScratchHead 1.4s ease-in-out infinite; }
+    .anim-balloon-float { animation: balloonFloat 2.4s ease-in-out infinite; }
+
+    .state-btn.active {
+      background-color: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(231, 138, 78, 0.35);
+    }
+  </style>
+</head>
+<body class="theme-dark p-4 md:p-8 min-h-screen">
+
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <header class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[var(--border)] mb-8">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[var(--accent)] text-white mb-2">
+          ✏️ İnce Hatlı Çöp Adam · Cin Ali Maskot Atölyesi
+        </div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-[var(--text)]">
+          Cin Ali Elif-Ba Maskot Adayları
+        </h1>
+        <p class="text-sm text-[var(--muted)] mt-1">
+          Türkiye'nin okumayı sevdiren efsanevi çizgi karakteri <strong>Cin Ali</strong>'nin zarif, ince hatlı ve tepkisel 5 farklı Elif-Ba modeli.
+        </p>
+      </div>
+
+      <!-- Theme Controls -->
+      <div class="flex items-center gap-1.5 p-1.5 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)]">
+        <button onclick="setTheme('light')" id="theme-light-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all">
+          ☀️ Aydınlık
+        </button>
+        <button onclick="setTheme('sepia')" id="theme-sepia-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all">
+          📜 Sepya
+        </button>
+        <button onclick="setTheme('dark')" id="theme-dark-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all bg-[var(--accent)] text-white">
+          🌙 Gruvbox Koyu
+        </button>
+      </div>
+    </header>
+
+    <!-- Global State Controller -->
+    <div class="p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-md mb-8">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-[var(--muted)] block">Cin Ali Tepki & Hareket Durumu</span>
+          <span class="text-xs text-[var(--accent)] font-semibold">Tüm modeller seçilen duyguya aynı anda geçer:</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="setState('success')" id="btn-success" class="state-btn active px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>🎉</span> <span>Başarı (Havaya Zıplama)</span>
+          </button>
+          <button onclick="setState('fail')" id="btn-fail" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>💧</span> <span>Hata (Baş Kaşıma & Omuz Silkme)</span>
+          </button>
+          <button onclick="setState('think')" id="btn-think" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>🤔</span> <span>Düşünme (Çene Tutma)</span>
+          </button>
+          <button onclick="setState('idle')" id="btn-idle" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>👋</span> <span>Selam / Boşta (Kasket Çıkarma & El Sallama)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- The 5 Cin Ali Models Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+
+      <!-- MODEL 1: KLASİK ORİJİNAL CİN ALİ -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border-2 border-[var(--accent)] shadow-md flex flex-col relative overflow-hidden">
+        <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-[var(--accent)] text-white">
+          ⭐ Nostaljik Favori
+        </div>
+        <div class="mb-3">
+          <span class="text-xs font-bold text-red-500 uppercase tracking-wider">Model 1 · Orijinal 1968</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Klasik Kasketli Cin Ali</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Rasim Kaygusuz'un kitaplarındaki orijinal kasketli sevimli çöp adam! İnce siyah/kum hatları, kırmızı siperlikli kasketi ve tertemiz çocuksu ifadesi.
+        </p>
+
+        <!-- Canvas -->
+        <div class="h-64 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m1-container" class="w-48 h-56 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(1)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Önizle
+        </button>
+      </div>
+
+      <!-- MODEL 2: KÂŞİF CİN ALİ (ELİF ASASIYLA) -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-amber-500 uppercase tracking-wider">Model 2 · Elif-Ba Temalı</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Kâşif Cin Ali (Elif Asalı)</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Boynunda sıcak kâşif fuları, elinde altın uçlu bir <em>Elif (ا)</em> asası tutan maceracı Cin Ali. Asasıyla harfleri işaret eder ve öğrenciye kılavuzluk eder.
+        </p>
+
+        <div class="h-64 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m2-container" class="w-48 h-56 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(2)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Önizle
+        </button>
+      </div>
+
+      <!-- MODEL 3: KİTAP KURDU CİN ALİ (GÖZLÜKLÜ) -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-emerald-500 uppercase tracking-wider">Model 3 · Sevimli Bilgin</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Kitap Kurdu Cin Ali</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Burnunda yuvarlak sevimli gözlükleri, kolunun altında minik altın bir Elif-Ba kitabı olan bilge Cin Ali. Düşünürken gözlüğünü düzeltir.
+        </p>
+
+        <div class="h-64 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m3-container" class="w-48 h-56 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(3)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Önizle
+        </button>
+      </div>
+
+      <!-- MODEL 4: UÇAN BALONLU CİN ALİ -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-sky-500 uppercase tracking-wider">Model 4 · Sayfa 14 Oyununa Özel</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Uçan Balonlu Cin Ali</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Sitedeki "Uçan Balonlar" etkinliğiyle birebir bağ kuran model. Elinde parlak kırmızı bir harf balonu tutar, başarıda balonla birlikte havalanır!
+        </p>
+
+        <div class="h-64 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m4-container" class="w-48 h-56 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(4)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Önizle
+        </button>
+      </div>
+
+      <!-- MODEL 5: MODERN GRUVBOX ÇİZGİ CİN ALİ -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-orange-500 uppercase tracking-wider">Model 5 · Çağdaş Minimalist</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Modern Gruvbox Çizgi Ali</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Sitenin Gruvbox renk paletiyle tam uyumlu sıcak terakota ve fıstık yeşili detaylara sahip, yumuşak eklem yuvarlatmalı modern çöp adam.
+        </p>
+
+        <div class="h-64 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m5-container" class="w-48 h-56 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(5)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Önizle
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Live In-Situ Simulation (Finish Screen Integration) -->
+    <div class="p-6 md:p-8 rounded-3xl bg-[var(--card-bg)] border-2 border-[var(--accent)] shadow-xl relative overflow-hidden">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-6">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-[var(--accent)]">Uygulama İçi Canlı Entegrasyon</span>
+          <h2 class="text-xl font-bold text-[var(--text)]">Bitiş ve Tebrik Ekranında Cin Ali</h2>
+        </div>
+        <div class="text-xs text-[var(--muted)]">
+          Şu An Seçili: <strong id="preview-mascot-name" class="text-[var(--accent)]">Model 1: Klasik Kasketli Cin Ali</strong>
+        </div>
+      </div>
+
+      <!-- Dialog Card Mockup -->
+      <div class="max-w-xl mx-auto p-6 md:p-8 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)] text-center relative shadow-inner">
+        <!-- Cin Ali Mascot Slot -->
+        <div class="w-32 h-40 mx-auto mb-2 flex items-center justify-center relative">
+          <div id="mockup-mascot-slot" class="w-full h-full flex items-center justify-center">
+            <!-- Selected Mascot SVG cloned here -->
+          </div>
+        </div>
+
+        <!-- Cin Ali Konuşma Baloncuğu -->
+        <div id="clippy-speech" class="inline-block px-4 py-2 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] text-xs text-[var(--text)] mb-4 shadow-md relative font-medium max-w-sm">
+          <span id="speech-text">"Aferin sana harf kâşifi! Bütün adımları başarıyla tamamladın, çok gururlandım!"</span>
+          <div class="w-3 h-3 bg-[var(--card-bg)] border-b border-l border-[var(--border)] transform rotate-45 absolute -top-1.5 left-1/2 -translate-x-1/2"></div>
+        </div>
+
+        <!-- Star Rating -->
+        <div class="flex items-center justify-center gap-1.5 text-amber-400 text-2xl mb-2">
+          <span>★</span><span>★</span><span>★</span>
+        </div>
+
+        <h3 class="text-2xl font-black text-[var(--text)] mb-1">
+          Sen bir harf kâşifisin!
+        </h3>
+        <p class="text-sm text-[var(--muted)] mb-6 max-w-sm mx-auto">
+          20 adımı tamamladın, 19 tanesini ilk denemede buldun. Emeğine sağlık!
+        </p>
+
+        <!-- Buttons -->
+        <div class="flex items-center justify-center gap-3">
+          <button class="px-5 py-2.5 rounded-xl text-sm font-bold bg-[var(--green)] text-black shadow-md flex items-center gap-1.5 hover:opacity-90 transition-opacity">
+            <span>🔄</span> Bir tur daha
+          </button>
+          <button class="px-5 py-2.5 rounded-xl text-sm font-bold border border-[var(--border)] bg-[var(--card-bg)] text-[var(--text)]">
+            Etkinlikler
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentState = 'success'; // 'success' | 'fail' | 'think' | 'idle'
+    let currentSelectedMascot = 1;
+
+    const speechTexts = {
+      success: '"Aferin sana kâşif! Harika bir iş çıkardın, bütün harfleri doğru bildin! İşte bu!"',
+      fail: '"Olsun be kâşif! Yanılmadan öğrenilmez! Gel bir tur daha yapalım, bu sefer başaracaksın!"',
+      think: '"Hımm... Acaba bu harfin mahreci dudaktan mı yoksa boğazdan mı çıkıyordu? Biraz düşünelim!"',
+      idle: '"Selam kâşif! Ben Cin Ali! Bugün seninle Elif-Ba okumaya hazırım, hadi başlayalım!"'
+    };
+
+    // =========================================================================
+    // CIN ALI SVG GENERATOR
+    // Uses seamless stick figure geometry with exact joints:
+    // Head: (80, 42, r=16)
+    // Neck: (80, 58)
+    // Shoulders: (80, 68)
+    // Pelvis/Hips: (80, 102)
+    // Left Foot: (64, 144)
+    // Right Foot: (96, 144)
+    // =========================================================================
+
+    function buildCinAliSVG(modelConfig, state) {
+      const {
+        inkColor,
+        hatColor,
+        hatType, // 'classic_cap' | 'explorer' | 'glasses' | 'balloon' | 'modern'
+        accessory,
+        staffType
+      } = modelConfig;
+
+      let rootAnimClass = 'anim-cin-idle';
+      let leftArmClass = 'anim-cin-wave';
+      let rightArmClass = '';
+      let eyeType = 'normal';
+
+      if (state === 'success') {
+        rootAnimClass = 'anim-cin-jump';
+        leftArmClass = '';
+        rightArmClass = '';
+        eyeType = 'happy';
+      } else if (state === 'fail') {
+        rootAnimClass = 'anim-cin-sad';
+        leftArmClass = 'anim-cin-scratch';
+        rightArmClass = '';
+        eyeType = 'sad';
+      } else if (state === 'think') {
+        rootAnimClass = 'anim-cin-think';
+        leftArmClass = '';
+        rightArmClass = '';
+        eyeType = 'think';
+      }
+
+      // Dynamic Face
+      let faceSvg = '';
+      if (eyeType === 'happy') {
+        faceSvg = `
+          <!-- Happy Curved Eyes -->
+          <path d="M 72,40 Q 75,34 78,40" stroke="${inkColor}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M 82,40 Q 85,34 88,40" stroke="${inkColor}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Big Smile -->
+          <path d="M 72,46 Q 80,54 88,46 Z" fill="#b91c1c" stroke="${inkColor}" stroke-width="1.5"/>
+          <!-- Rosy Cheeks -->
+          <circle cx="69" cy="45" r="3" fill="#f43f5e" opacity="0.6"/>
+          <circle cx="91" cy="45" r="3" fill="#f43f5e" opacity="0.6"/>
+        `;
+      } else if (eyeType === 'sad') {
+        faceSvg = `
+          <!-- Sad Droop Eyes -->
+          <circle cx="74" cy="42" r="2.5" fill="${inkColor}"/>
+          <circle cx="86" cy="42" r="2.5" fill="${inkColor}"/>
+          <!-- Sad Mouth -->
+          <path d="M 74,49 Q 80,45 86,49" stroke="${inkColor}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Sweat Drop / Small Tear -->
+          <path d="M 92,38 C 92,38 95,44 95,46 C 95,48 93,49 92,49 C 91,49 89,48 89,46 Z" fill="#38bdf8"/>
+        `;
+      } else if (eyeType === 'think') {
+        faceSvg = `
+          <!-- Looking Up Eyes -->
+          <circle cx="75" cy="39" r="2.5" fill="${inkColor}"/>
+          <circle cx="87" cy="39" r="2.5" fill="${inkColor}"/>
+          <!-- O-Mouth -->
+          <circle cx="80" cy="48" r="3" fill="${inkColor}"/>
+        `;
+      } else {
+        // Normal Cin Ali Blinking Face
+        faceSvg = `
+          <g class="anim-cin-blink">
+            <circle cx="74" cy="41" r="2.5" fill="${inkColor}"/>
+            <circle cx="86" cy="41" r="2.5" fill="${inkColor}"/>
+          </g>
+          <!-- Classic Cin Ali Smile -->
+          <path d="M 73,46 Q 80,53 87,46" stroke="${inkColor}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="70" cy="46" r="2" fill="#f43f5e" opacity="0.5"/>
+          <circle cx="90" cy="46" r="2" fill="#f43f5e" opacity="0.5"/>
+        `;
+      }
+
+      // Dynamic Hat / Accessories
+      let hatSvg = '';
+      if (hatType === 'classic_cap') {
+        hatSvg = `
+          <!-- Classic Red Cin Ali Kasket / Beret -->
+          <path d="M 64,30 C 64,20 96,20 96,30 L 102,32 L 64,32 Z" fill="${hatColor}" stroke="${inkColor}" stroke-width="2"/>
+          <path d="M 62,32 Q 80,30 102,32" stroke="${inkColor}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="80" cy="21" r="3" fill="#ffffff" stroke="${inkColor}" stroke-width="1.5"/>
+        `;
+      } else if (hatType === 'explorer') {
+        hatSvg = `
+          <!-- Explorer Scout Hat & Scarf -->
+          <path d="M 60,30 C 60,18 100,18 100,30 L 104,32 L 56,32 Z" fill="#e78a4e" stroke="${inkColor}" stroke-width="2"/>
+          <!-- Orange Scarf around neck (80, 58) -->
+          <polygon points="74,58 86,58 80,66" fill="#f59e0b" stroke="${inkColor}" stroke-width="1.5"/>
+        `;
+      } else if (hatType === 'glasses') {
+        hatSvg = `
+          <!-- Round Glasses on Face -->
+          <circle cx="74" cy="41" r="6" fill="none" stroke="#e78a4e" stroke-width="2"/>
+          <circle cx="86" cy="41" r="6" fill="none" stroke="#e78a4e" stroke-width="2"/>
+          <line x1="80" y1="41" x2="80" y2="41" stroke="#e78a4e" stroke-width="2"/>
+          <!-- Cute Bow Tie at neck -->
+          <polygon points="74,60 86,60 80,64" fill="#10b981" stroke="${inkColor}" stroke-width="1.5"/>
+          <polygon points="74,68 86,68 80,64" fill="#10b981" stroke="${inkColor}" stroke-width="1.5"/>
+        `;
+      } else if (hatType === 'balloon') {
+        hatSvg = `
+          <path d="M 64,30 C 64,20 96,20 96,30 L 102,32 L 64,32 Z" fill="#38bdf8" stroke="${inkColor}" stroke-width="2"/>
+        `;
+      } else {
+        // Modern Style
+        hatSvg = `
+          <path d="M 65,30 C 65,22 95,22 95,30 Z" fill="#e78a4e" stroke="${inkColor}" stroke-width="2"/>
+        `;
+      }
+
+      // Dynamic Limbs Positioning based on State
+      let leftArmPath = `M 80,68 L 56,80 L 46,64`; // Waving
+      let rightArmPath = `M 80,68 L 98,82 L 106,96`; // Relaxed down
+      let leftLegPath = `M 80,104 L 70,122 L 64,142`;
+      let rightLegPath = `M 80,104 L 90,122 L 96,142`;
+
+      if (state === 'success') {
+        // Cheering Arms in Air (V for victory!)
+        leftArmPath = `M 80,68 L 56,48 L 44,32`;
+        rightArmPath = `M 80,68 L 104,48 L 116,32`;
+        // Heel-Click Jump Legs
+        leftLegPath = `M 80,104 L 64,116 L 76,134`;
+        rightLegPath = `M 80,104 L 96,116 L 84,134`;
+      } else if (state === 'fail') {
+        // Left arm scratching head, right arm shrugging
+        leftArmPath = `M 80,68 L 62,56 L 68,36`;
+        rightArmPath = `M 80,68 L 104,74 L 116,66`;
+        leftLegPath = `M 80,104 L 72,124 L 66,144`;
+        rightLegPath = `M 80,104 L 88,124 L 94,144`;
+      } else if (state === 'think') {
+        // Left hand on chin, right hand on hip
+        leftArmPath = `M 80,68 L 74,62 L 78,52`;
+        rightArmPath = `M 80,68 L 96,80 L 88,96`;
+        leftLegPath = `M 80,104 L 76,122 L 72,144`;
+        rightLegPath = `M 80,104 L 86,120 L 98,142`;
+      }
+
+      // Optional Staff (Elif) or Balloon
+      let propSvg = '';
+      if (staffType === 'elif_staff') {
+        propSvg = `
+          <!-- Golden Elif Staff (ا) held in hand -->
+          <g transform="translate(108, 40)">
+            <line x1="0" y1="0" x2="0" y2="104" stroke="#d97706" stroke-width="5" stroke-linecap="round"/>
+            <polygon points="-6,4 6,4 0,-10" fill="#facc15" stroke="#d97706" stroke-width="1.5"/>
+            <!-- Floating soft Arabic Alef letter glow -->
+            <text x="14" y="24" font-size="20" font-weight="bold" fill="#e78a4e">ا</text>
+          </g>
+        `;
+      } else if (staffType === 'balloon') {
+        propSvg = `
+          <!-- Floating Letter Balloon attached to Cin Ali's hand -->
+          <g class="anim-balloon-float" transform="translate(110, 10)">
+            <!-- Red 3D Balloon with Arabic Nun -->
+            <ellipse cx="14" cy="18" rx="20" ry="24" fill="url(#balloonGrad)"/>
+            <text x="14" y="26" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">ن</text>
+            <polygon points="12,42 16,42 14,46" fill="#b91c1c"/>
+            <!-- Ribbon String reaching Cin Ali's hand -->
+            <path d="M 14,46 Q 8,62 18,74 L -4,86" fill="none" stroke="#cbd5e1" stroke-width="1.8"/>
+          </g>
+        `;
+      } else if (staffType === 'book') {
+        propSvg = `
+          <!-- Mini Elif-Ba Book tucked under arm -->
+          <g transform="translate(42, 68) rotate(-15)">
+            <rect x="0" y="0" width="22" height="28" rx="4" fill="#14654f" stroke="#d97706" stroke-width="1.5"/>
+            <rect x="3" y="3" width="16" height="22" rx="2" fill="#fef3c7"/>
+            <text x="11" y="18" font-size="12" font-weight="bold" fill="#14654f" text-anchor="middle">ب</text>
+          </g>
+        `;
+      }
+
+      return `
+        <svg viewBox="0 0 160 160" width="150" height="150" class="overflow-visible select-none">
+          <defs>
+            <radialGradient id="balloonGrad" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#ff7b7b"/>
+              <stop offset="35%" stop-color="#ef4444"/>
+              <stop offset="100%" stop-color="#991b1b"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Confetti in celebration -->
+          ${state === 'success' ? `
+            <g>
+              <circle cx="35" cy="25" r="3" fill="#facc15"/>
+              <circle cx="125" cy="22" r="3.5" fill="#e78a4e"/>
+              <circle cx="25" cy="55" r="2.5" fill="#38bdf8"/>
+              <circle cx="135" cy="52" r="3" fill="#a855f7"/>
+            </g>
+          ` : ''}
+
+          <!-- Floor Shadow -->
+          <ellipse cx="80" cy="150" rx="36" ry="5" fill="#000000" opacity="0.2"/>
+
+          <!-- ROOT CIN ALI CHARACTER GROUP -->
+          <g class="${rootAnimClass}" style="transform-origin: 80px 145px;">
+
+            ${propSvg}
+
+            <!-- 1. HEAD (Circle) -->
+            <circle cx="80" cy="42" r="16" fill="var(--card-bg)" stroke="${inkColor}" stroke-width="3.5"/>
+
+            <!-- 2. HAT / ACCESSORY -->
+            ${hatSvg}
+
+            <!-- 3. FACE EXPRESSION -->
+            ${faceSvg}
+
+            <!-- 4. TORSO / SPINE (Single clean stick stroke) -->
+            <line x1="80" y1="58" x2="80" y2="104" stroke="${inkColor}" stroke-width="3.8" stroke-linecap="round"/>
+
+            <!-- 5. LEGS (Seamlessly joined at pelvis 80, 104) -->
+            <path d="${leftLegPath}" fill="none" stroke="${inkColor}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="${rightLegPath}" fill="none" stroke="${inkColor}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <!-- Shoes / Feet -->
+            <ellipse cx="${state === 'success' ? '76' : '62'}" cy="${state === 'success' ? '136' : '144'}" rx="5.5" ry="3.5" fill="${inkColor}"/>
+            <ellipse cx="${state === 'success' ? '84' : '98'}" cy="${state === 'success' ? '136' : '144'}" rx="5.5" ry="3.5" fill="${inkColor}"/>
+
+            <!-- 6. ARMS (Seamlessly joined at shoulders 80, 68) -->
+            <g class="${leftArmClass}" style="transform-origin: 80px 68px;">
+              <path d="${leftArmPath}" fill="none" stroke="${inkColor}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Hand dot -->
+              <circle cx="${leftArmPath.split('L')[2] ? leftArmPath.split('L')[2].split(',')[0].trim() : '46'}" cy="${leftArmPath.split('L')[2] ? leftArmPath.split('L')[2].split(',')[1].trim() : '64'}" r="3" fill="${inkColor}"/>
+            </g>
+
+            <g class="${rightArmClass}" style="transform-origin: 80px 68px;">
+              <path d="${rightArmPath}" fill="none" stroke="${inkColor}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="${rightArmPath.split('L')[2] ? rightArmPath.split('L')[2].split(',')[0].trim() : '106'}" cy="${rightArmPath.split('L')[2] ? rightArmPath.split('L')[2].split(',')[1].trim() : '96'}" r="3" fill="${inkColor}"/>
+            </g>
+
+          </g>
+        </svg>
+      `;
+    }
+
+    // =========================================================================
+    // 5 DISTINCT MODELS
+    // =========================================================================
+
+    // Model 1: Klasik Kasketli Cin Ali (1968 Original Nostalgia)
+    function renderModel1(state) {
+      return buildCinAliSVG({
+        inkColor: 'var(--cin-ink)',
+        hatColor: 'var(--cin-red)',
+        hatType: 'classic_cap',
+        staffType: null
+      }, state);
+    }
+
+    // Model 2: Kâşif Cin Ali (Elif Asası & İzcilik Fuları)
+    function renderModel2(state) {
+      return buildCinAliSVG({
+        inkColor: 'var(--cin-ink)',
+        hatColor: '#e78a4e',
+        hatType: 'explorer',
+        staffType: 'elif_staff'
+      }, state);
+    }
+
+    // Model 3: Kitap Kurdu Cin Ali (Gözlüklü & Kitap Taşıyan)
+    function renderModel3(state) {
+      return buildCinAliSVG({
+        inkColor: 'var(--cin-ink)',
+        hatColor: '#10b981',
+        hatType: 'glasses',
+        staffType: 'book'
+      }, state);
+    }
+
+    // Model 4: Uçan Balonlu Cin Ali (Sayfa 14 Oyununa Özel)
+    function renderModel4(state) {
+      return buildCinAliSVG({
+        inkColor: 'var(--cin-ink)',
+        hatColor: '#38bdf8',
+        hatType: 'balloon',
+        staffType: 'balloon'
+      }, state);
+    }
+
+    // Model 5: Modern Gruvbox Çizgi Cin Ali (Sitenin Renklerinde)
+    function renderModel5(state) {
+      return buildCinAliSVG({
+        inkColor: 'var(--cin-ink)',
+        hatColor: '#e78a4e',
+        hatType: 'modern',
+        staffType: null
+      }, state);
+    }
+
+    // Master Updater
+    function updateAll() {
+      document.getElementById('m1-container').innerHTML = renderModel1(currentState);
+      document.getElementById('m2-container').innerHTML = renderModel2(currentState);
+      document.getElementById('m3-container').innerHTML = renderModel3(currentState);
+      document.getElementById('m4-container').innerHTML = renderModel4(currentState);
+      document.getElementById('m5-container').innerHTML = renderModel5(currentState);
+
+      updatePreviewSlot();
+    }
+
+    function updatePreviewSlot() {
+      const slot = document.getElementById('mockup-mascot-slot');
+      if (currentSelectedMascot === 1) slot.innerHTML = renderModel1(currentState);
+      else if (currentSelectedMascot === 2) slot.innerHTML = renderModel2(currentState);
+      else if (currentSelectedMascot === 3) slot.innerHTML = renderModel3(currentState);
+      else if (currentSelectedMascot === 4) slot.innerHTML = renderModel4(currentState);
+      else if (currentSelectedMascot === 5) slot.innerHTML = renderModel5(currentState);
+
+      const names = {
+        1: 'Model 1: Klasik Kasketli Cin Ali (1968 Orijinal)',
+        2: 'Model 2: Kâşif Cin Ali (Elif Asası & Fular)',
+        3: 'Model 3: Kitap Kurdu Cin Ali (Gözlüklü & Kitap Taşıyan)',
+        4: 'Model 4: Uçan Balonlu Cin Ali (Balon Oyunu Temalı)',
+        5: 'Model 5: Modern Gruvbox Çizgi Cin Ali'
+      };
+      document.getElementById('preview-mascot-name').innerText = names[currentSelectedMascot];
+      document.getElementById('speech-text').innerText = speechTexts[currentState];
+    }
+
+    function setState(st) {
+      currentState = st;
+      ['success', 'fail', 'think', 'idle'].forEach(s => {
+        const btn = document.getElementById(`btn-${s}`);
+        if (s === st) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+      updateAll();
+    }
+
+    function selectMascot(id) {
+      currentSelectedMascot = id;
+      updatePreviewSlot();
+      document.getElementById('mockup-mascot-slot').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function setTheme(mode) {
+      document.body.classList.remove('theme-dark', 'theme-sepia');
+      ['light', 'sepia', 'dark'].forEach(m => {
+        const b = document.getElementById(`theme-${m}-btn`);
+        b.classList.remove('bg-[var(--accent)]', 'text-white');
+      });
+      if (mode === 'dark') {
+        document.body.classList.add('theme-dark');
+        document.getElementById('theme-dark-btn').classList.add('bg-[var(--accent)]', 'text-white');
+      } else if (mode === 'sepia') {
+        document.body.classList.add('theme-sepia');
+        document.getElementById('theme-sepia-btn').classList.add('bg-[var(--accent)]', 'text-white');
+      } else {
+        document.getElementById('theme-light-btn').classList.add('bg-[var(--accent)]', 'text-white');
+      }
+      updateAll();
+    }
+
+    // Initialize
+    updateAll();
+  </script>
+</body>
+</html>

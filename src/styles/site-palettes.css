@@ -25,15 +25,15 @@
   --site-thick:#9c2633;
 }
 :root[data-theme="dark"] {
-  --site-bg:#0f172a;
-  --site-ink:#ecfdf5;
-  --site-muted:#c0d2d3;
-  --site-surface:rgba(26,46,57,.85);
-  --site-tint:#294d50;
-  --site-line:rgba(148,221,201,.3);
-  --site-edge:rgba(211,255,243,.32);
-  --site-shadow:rgba(0,0,0,.35);
-  --site-accent:#9de8d0;
-  --site-thick:#ffb0bf;
+  --site-bg:#141617;
+  --site-ink:#d4be98;
+  --site-muted:#a89984;
+  --site-surface:rgba(29,32,33,.88);
+  --site-tint:#282828;
+  --site-line:rgba(212,190,152,.16);
+  --site-edge:rgba(212,190,152,.22);
+  --site-shadow:rgba(0,0,0,.5);
+  --site-accent:#e78a4e;
+  --site-thick:#ea6962;
   color-scheme:dark;
 }

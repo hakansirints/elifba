@@ -18,10 +18,10 @@
   --glass-depth:rgba(84,58,20,.18);
 }
 :root[data-theme=dark] {
-  --glass-fill:rgba(23,43,58,.72);
-  --glass-fallback:#172b3a;
-  --glass-edge:rgba(211,247,239,.5);
-  --glass-depth:rgba(0,0,0,.38);
+  --glass-fill:rgba(40,40,40,.75);
+  --glass-fallback:#1d2021;
+  --glass-edge:rgba(212,190,152,.22);
+  --glass-depth:rgba(0,0,0,.5);
 }
 .glass-filter-defs { position:absolute; width:0; height:0; overflow:hidden; pointer-events:none; }
 :where(.refract-card,.refract-btn) { position:relative; isolation:isolate; }
@@ -71,6 +71,7 @@
 .refract-btn:not(:disabled):active { transform:translateY(1px); }
 .platform .refract-btn.button-primary { --glass-fill:rgba(18,91,67,.94); --glass-fallback:#125b43; color:white; }
 [data-theme=sepia] .platform .refract-btn.button-primary { --glass-fill:rgba(112,74,26,.94); --glass-fallback:#704a1a; }
+[data-theme=dark] .platform .refract-btn.button-primary { --glass-fill:rgba(231,138,78,.94); --glass-fallback:#e78a4e; color:#141617; }
 .alphabet-glyph { text-shadow:none; }
 .alphabet-glyph.tone-thick { color:var(--site-thick); }.alphabet-glyph.tone-variable { color:var(--site-accent); }
 .alphabet-letter-grid,.alphabet-book-scroll { padding:3px; }

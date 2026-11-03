@@ -1,7 +1,9 @@
 import { LETTERS, SHAPE_GROUPS, BOOK_ROWS, shuffle } from './alphabetData.js';
 
 export const PAGE_ACTIVITIES = {
-  14: [{ id:'recognize', tr:'Mini Ders', de:'Mini-Lektion', hint:{tr:'Üç küçük adım: tanı, dinle, ayırt et.',de:'Drei kleine Schritte: erkennen, hören, unterscheiden.'} },
+  14: [{ id:'balloon', tr:'Uçan Balonlar', de:'Fliegende Ballons', hint:{tr:'Yükselen balonlar kaybolmadan hedef harfi patlat!',de:'Lasse die Ballons platzen, bevor sie aufsteigen!'} },
+    { id:'makhraj', tr:'Mahreç & Telaffuz', de:'Aussprache & Mahradsch', hint:{tr:'Ağız ve boğaz kesitinde harfin çıkış yerini keşfet.',de:'Entdecke die Artikulationsstelle im Mund- und Rachenraum.'} },
+    { id:'recognize', tr:'Mini Ders', de:'Mini-Lektion', hint:{tr:'Üç küçük adım: tanı, dinle, ayırt et.',de:'Drei kleine Schritte: erkennen, hören, unterscheiden.'} },
     {id:'listen',tr:'Dinle ve bul',de:'Hören und finden',hint:{tr:'Kaydı dinle, harfi seç.',de:'Die Aufnahme hören und den Buchstaben wählen.'}},
     {id:'pairs',tr:'Eşini bul',de:'Paare finden',hint:{tr:'Kartları çevir, harf çiftlerini keşfet!',de:'Karten umdrehen und Buchstabenpaare finden!'}},
     {id:'trace',tr:'Bütün Harfler',de:'Alle Buchstaben',hint:{tr:'Sıralı ve karışık harfleri dinle, patlatarak bul!',de:'Höre die Buchstaben und lasse sie aufploppen!'}}],
@@ -32,7 +34,7 @@ export function finishActivity(progress, page, id, result) {
   return restoreActivityProgress({completed:[...prior.completed,key],attempts:[...prior.attempts,{id:key,...result,at:Date.now()}]});
 }
 export function createQuestions(page, mode, random=Math.random) {
-  if (!activitiesForPage(page).some(a=>a.id===mode) || ['pairs','trace'].includes(mode)) return [];
+  if (!activitiesForPage(page).some(a=>a.id===mode) || ['pairs','trace','balloon','makhraj'].includes(mode)) return [];
   const candidates=mode==='similar' ? LETTERS.filter(l=>SHAPE_GROUPS.some(g=>g.ids.length>1&&g.ids.length<6&&g.ids.includes(l.id))) : LETTERS;
   return shuffle(candidates,random).slice(0,6).map(letter=>{
     const group=SHAPE_GROUPS.find(g=>g.ids.includes(letter.id));

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sayfa 53 - Kunût Duâları (Birebir Vektörel HTML)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cinzel:wght@600;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Variables & Themes */
+    :root {
+      --site-bg: #e8ede6;
+      --site-surface: #ffffff;
+      --site-card: #fdfbf7;
+      --page-border: #4a4537;
+      --page-inner-border: #8c8266;
+      --title-red: #a62424;
+      --title-sub: #262421;
+      --arabic-text: #171513;
+      --meaning-label: #a62424;
+      --meaning-text: #242220;
+      --rosette-color: #8c2020;
+      --rosette-gold: #c9933b;
+      --accent: #2e7d4d;
+      --accent-glow: rgba(46, 125, 77, 0.35);
+      --highlight-bg: rgba(201, 147, 59, 0.18);
+      --highlight-border: #c9933b;
+      --girih-bg: #ede7d8;
+      --girih-line: #d3cbb6;
+    }
+
+    /* Gruvbox Material Dark Theme */
+    .theme-gruvbox {
+      --site-bg: #141617;
+      --site-surface: #1d2021;
+      --site-card: #282828;
+      --page-border: #504945;
+      --page-inner-border: #7c6f64;
+      --title-red: #ea6962;
+      --title-sub: #d4be98;
+      --arabic-text: #ebdbb2;
+      --meaning-label: #e78a4e;
+      --meaning-text: #d4be98;
+      --rosette-color: #ea6962;
+      --rosette-gold: #d8a657;
+      --accent: #e78a4e;
+      --accent-glow: rgba(231, 138, 78, 0.35);
+      --highlight-bg: rgba(231, 138, 78, 0.22);
+      --highlight-border: #e78a4e;
+      --girih-bg: #1d2021;
+      --girih-line: #32302f;
+    }
+
+    /* Emerald Night Theme */
+    .theme-emerald {
+      --site-bg: #0d1a14;
+      --site-surface: #14251e;
+      --site-card: #182e25;
+      --page-border: #2e4d3e;
+      --page-inner-border: #3d6854;
+      --title-red: #e07a5f;
+      --title-sub: #e2e8f0;
+      --arabic-text: #f0fdf4;
+      --meaning-label: #86efac;
+      --meaning-text: #cbd5e1;
+      --rosette-color: #f43f5e;
+      --rosette-gold: #fbbf24;
+      --accent: #22c55e;
+      --accent-glow: rgba(34, 197, 94, 0.35);
+      --highlight-bg: rgba(34, 197, 94, 0.22);
+      --highlight-border: #22c55e;
+      --girih-bg: #0f231b;
+      --girih-line: #1b382c;
+    }
+
+    body {
+      background-color: var(--site-bg);
+      color: var(--meaning-text);
+      font-family: 'EB Garamond', Georgia, serif;
+      transition: background-color 0.25s, color 0.25s;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Arabic Naskh Typography */
+    .arabic-script {
+      font-family: 'Amiri', 'Traditional Arabic', 'Scheherazade New', serif;
+      direction: rtl;
+      unicode-bidi: isolate;
+      text-align: justify;
+      text-align-last: center;
+      line-height: 2.25;
+      color: var(--arabic-text);
+      font-feature-settings: "cv01", "cv02", "liga", "calt", "kern";
+      letter-spacing: 0;
+    }
+
+    /* Ayah Rosette Divider */
+    .rosette-divider {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      margin: 0 4px;
+      line-height: 1;
+      color: var(--rosette-color);
+      transition: transform 0.2s ease;
+      cursor: default;
+    }
+    .rosette-divider:hover {
+      transform: scale(1.15) rotate(22.5deg);
+    }
+
+    /* Clause Hotspot highlight */
+    .clause-span {
+      padding: 2px 4px;
+      border-radius: 6px;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.4, 1);
+      cursor: pointer;
+      display: inline;
+    }
+    .clause-span:hover {
+      background-color: var(--highlight-bg);
+      box-shadow: 0 0 0 1px var(--highlight-border);
+    }
+    .clause-span.active {
+      background-color: var(--highlight-bg);
+      box-shadow: 0 0 0 2px var(--highlight-border);
+      color: var(--rosette-gold) !important;
+    }
+
+    /* Girih Tessellation Background (Islamic 8-star pattern) */
+    .girih-background {
+      background-color: var(--girih-bg);
+      background-image:
+        radial-gradient(var(--girih-line) 1px, transparent 1px),
+        radial-gradient(var(--girih-line) 1px, transparent 1px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+    }
+
+    /* Ornate Page Inner Shadow & Texture */
+    .page-surface {
+      background-color: var(--site-card);
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.06),
+        0 18px 48px -10px rgba(0,0,0,0.22),
+        0 0 0 1px rgba(0,0,0,0.08);
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      background: rgba(14, 23, 18, 0.82);
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
+    }
+
+    /* Active Tooltip / Pill */
+    .active-pill {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 2px 10px var(--accent-glow);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: var(--site-surface); }
+    ::-webkit-scrollbar-thumb { background: var(--page-inner-border); border-radius: 4px; }
+  </style>
+</head>
+<body class="p-2 sm:p-4 md:p-6 flex flex-col items-center">
+
+  <!-- Top Controls & Toolbar -->
+  <header class="w-full max-w-5xl mb-4 sm:mb-6 flex flex-wrap items-center justify-between gap-3 p-3 sm:p-4 rounded-2xl bg-[var(--site-surface)] border border-[var(--page-inner-border)] shadow-md">
+    <!-- Title & Status -->
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-600 font-bold text-lg">
+        📖
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-sm sm:text-base font-bold text-[var(--arabic-text)] leading-tight">
+            Sayfa 53: Kunût Duâları
+          </h1>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500/20 text-emerald-600">
+            %100 Vektörel HTML
+          </span>
+        </div>
+        <p class="text-xs text-[var(--meaning-text)] opacity-75">
+          Orijinal kitap tasarımıyla birebir eşleşen, sıfır pikselleşme ve kristal netlikte metin modeli.
+        </p>
+      </div>
+    </div>
+
+    <!-- Toolbar Actions -->
+    <div class="flex flex-wrap items-center gap-2">
+      <!-- View Modes -->
+      <div class="flex items-center p-0.5 rounded-xl bg-[var(--site-bg)] border border-[var(--page-inner-border)] text-xs font-semibold">
+        <button id="view-vector-btn" onclick="setViewMode('vector')" class="active-pill px-2.5 py-1 rounded-lg transition-all">
+          ✨ Vektör HTML
+        </button>
+        <button id="view-split-btn" onclick="setViewMode('split')" class="px-2.5 py-1 rounded-lg hover:text-[var(--title-red)] transition-all">
+          ⚖️ Yan Yana
+        </button>
+        <button id="view-original-btn" onclick="setViewMode('original')" class="px-2.5 py-1 rounded-lg hover:text-[var(--title-red)] transition-all">
+          🖼️ Orijinal JPEG
+        </button>
+      </div>
+
+      <!-- Zoom Controls -->
+      <div class="flex items-center p-0.5 rounded-xl bg-[var(--site-bg)] border border-[var(--page-inner-border)] text-xs font-semibold">
+        <button onclick="changeZoom(-0.15)" title="Uzaklaştır" class="px-2 py-1 rounded-lg hover:bg-[var(--site-surface)] transition-all">
+          🔍−
+        </button>
+        <span id="zoom-readout" class="px-2 font-mono text-[11px] min-w-[42px] text-center">100%</span>
+        <button onclick="changeZoom(0.15)" title="Yakınlaştır" class="px-2 py-1 rounded-lg hover:bg-[var(--site-surface)] transition-all">
+          🔍+
+        </button>
+        <button onclick="resetZoom()" title="Sıfırla" class="px-2 py-1 rounded-lg hover:bg-[var(--site-surface)] text-[11px] transition-all">
+          1:1
+        </button>
+      </div>
+
+      <!-- Theme Switcher -->
+      <div class="flex items-center p-0.5 rounded-xl bg-[var(--site-bg)] border border-[var(--page-inner-border)] text-xs font-semibold">
+        <button onclick="setTheme('parchment')" title="Orijinal Parşömen" class="px-2 py-1 rounded-lg hover:bg-[var(--site-surface)]">
+          📜 Kitap
+        </button>
+        <button onclick="setTheme('gruvbox')" title="Gruvbox Material" class="px-2 py-1 rounded-lg hover:bg-[var(--site-surface)]">
+          🍂 Gruvbox
+        </button>
+        <button onclick="setTheme('emerald')" title="Gece Zümrütü" class="px-2 py-1 rounded-lg hover:bg-[var(--site-surface)]">
+          🌙 Gece
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Area (Single or Split) -->
+  <main class="w-full flex justify-center items-start gap-6 overflow-auto py-2">
+
+    <!-- Container for Zoom Scaling -->
+    <div id="canvas-wrapper" class="transition-transform duration-200 origin-top flex flex-col md:flex-row items-start justify-center gap-6">
+
+      <!-- ======================================================== -->
+      <!-- 1. PURE VECTOR HTML RECONSTRUCTION (PAGE 53)            -->
+      <!-- ======================================================== -->
+      <div id="vector-page" class="w-[562px] min-h-[788px] relative girih-background p-4 sm:p-5 rounded-sm shadow-2xl flex-shrink-0 select-text">
+        
+        <!-- Inner Parchment Page Sheet with double borders -->
+        <article class="page-surface w-full h-full relative p-5 sm:p-7 border border-[var(--page-border)] rounded-sm flex flex-col justify-between" style="min-height: 746px;">
+
+          <!-- Inner Fine Line Border -->
+          <div class="absolute inset-1.5 border border-[var(--page-inner-border)] opacity-60 pointer-events-none"></div>
+
+          <!-- Page Content Wrapper -->
+          <div class="relative z-10 flex flex-col h-full">
+
+            <!-- ---------------------------------------------------- -->
+            <!-- HEADER BLOCK (KUNÛT DUÂLARI & Die Qunût-Gebete)       -->
+            <!-- ---------------------------------------------------- -->
+            <header class="text-center pt-1 pb-3 mb-2 border-b border-dashed border-[var(--page-inner-border)]/40 relative">
+              <div class="flex items-center justify-center gap-2 sm:gap-3">
+                
+                <!-- Left Calligraphic Flourish -->
+                <svg width="48" height="16" viewBox="0 0 60 20" class="text-[var(--title-red)] opacity-85 overflow-visible">
+                  <path d="M5 10 C 20 4, 35 16, 55 10 M55 10 C 45 4, 25 16, 15 10" fill="none" stroke="currentColor" stroke-width="1.2" />
+                  <polygon points="55,10 50,7 45,10 50,13" fill="currentColor" />
+                  <circle cx="8" cy="10" r="2.5" fill="var(--rosette-gold)" />
+                </svg>
+
+                <!-- Arabic Red Title -->
+                <h2 class="text-xl sm:text-2xl font-bold tracking-wider uppercase font-['Cinzel',serif] text-[var(--title-red)]" style="letter-spacing: 2px;">
+                  KUNÛT DUÂLARI
+                </h2>
+
+                <!-- Right Calligraphic Flourish -->
+                <svg width="48" height="16" viewBox="0 0 60 20" class="text-[var(--title-red)] opacity-85 overflow-visible scale-x-[-1]">
+                  <path d="M5 10 C 20 4, 35 16, 55 10 M55 10 C 45 4, 25 16, 15 10" fill="none" stroke="currentColor" stroke-width="1.2" />
+                  <polygon points="55,10 50,7 45,10 50,13" fill="currentColor" />
+                  <circle cx="8" cy="10" r="2.5" fill="var(--rosette-gold)" />
+                </svg>
+              </div>
+
+              <!-- German Subtitle -->
+              <p class="text-xs sm:text-sm font-serif italic text-[var(--title-sub)] mt-0.5 tracking-wide">
+                Die Qunût-Gebete
+              </p>
+            </header>
+
+            <!-- ---------------------------------------------------- -->
+            <!-- KUNUT 1 SECTION                                      -->
+            <!-- ---------------------------------------------------- -->
+            <section class="group relative rounded-xl transition-all duration-200 hover:bg-[var(--site-bg)]/30 p-2 -mx-2 mb-2">
+              
+              <!-- Quick Action Floating Buttons for Kunut 1 -->
+              <div class="absolute -top-3 left-2 z-20 flex items-center gap-1.5 opacity-90 hover:opacity-100 transition-opacity">
+                <button onclick="openVideoModal('Kunut_1_1.mp4', 'Kunut Duası 1', 1)" class="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-700 hover:bg-emerald-600 text-white shadow-sm transition-transform active:scale-95">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  <span>Video 1</span>
+                </button>
+                <button onclick="playAudio('turkish/kunut1tr.mp3', 'Kunut 1 Türkçe Anlam')" class="px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--site-surface)] border border-[var(--page-inner-border)] hover:border-emerald-500 shadow-sm transition-all" title="Türkçe Ses">
+                  🇹🇷 TR
+                </button>
+                <button onclick="playAudio('german/kunut1de.mp3', 'Kunut 1 Deutsche Bedeutung')" class="px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--site-surface)] border border-[var(--page-inner-border)] hover:border-emerald-500 shadow-sm transition-all" title="Almanca Ses">
+                  🇩🇪 DE
+                </button>
+              </div>
+
+              <!-- Kunut 1 Arabic Text with Tashkeel & Waqf Rosettes -->
+              <div class="arabic-script text-[23px] sm:text-[25px] pt-2 pb-2 leading-[2.35] select-text">
+                <span class="clause-span" onclick="speakClause('Allâhümme innâ nesteînüke ve nestağfirüke ve nestehdîk')">اَللّٰهُمَّ اِنَّا نَسْتَعِينُكَ وَ نَسْتَغْفِرُكَ وَنَسْتَهْدِيكَ</span>
+                <span class="rosette-divider" title="Ayet / Durak Bölümü">
+                  <svg width="16" height="16" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" />
+                    <polygon points="16,3 20,12 29,16 20,20 16,29 12,20 3,16 12,12" fill="currentColor" opacity="0.85" />
+                    <circle cx="16" cy="16" r="4.5" fill="var(--rosette-gold)" />
+                  </svg>
+                </span>
+                <span class="clause-span" onclick="speakClause('ve nüminü bike ve netûbü ileyk')">وَ نُؤْمِنُ بِكَ وَ نَتُوبُ اِلَيْكَ</span>
+                <span class="rosette-divider">
+                  <svg width="16" height="16" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" />
+                    <polygon points="16,3 20,12 29,16 20,20 16,29 12,20 3,16 12,12" fill="currentColor" opacity="0.85" />
+                    <circle cx="16" cy="16" r="4.5" fill="var(--rosette-gold)" />
+                  </svg>
+                </span>
+                <span class="clause-span" onclick="speakClause('ve netevekkelü aleyk')">وَ نَتَوَكَّلُ عَلَيْكَ</span>
+                <span class="rosette-divider">
+                  <svg width="16" height="16" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" />
+                    <polygon points="16,3 20,12 29,16 20,20 16,29 12,20 3,16 12,12" fill="currentColor" opacity="0.85" />
+                    <circle cx="16" cy="16" r="4.5" fill="var(--rosette-gold)" />
+                  </svg>
+                </span>
+                <span class="clause-span" onclick="speakClause('ve nüsnî aleykel-hayra külleh')">وَ نُثْنِي عَلَيْكَ الْخَيْرَ كُلَّهُ</span>
+                <span class="rosette-divider">
+                  <svg width="16" height="16" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" />
+                    <polygon points="16,3 20,12 29,16 20,20 16,29 12,20 3,16 12,12" fill="currentColor" opacity="0.85" />
+                    <circle cx="16" cy="16" r="4.5" fill="var(--rosette-gold)" />
+                  </svg>
+                </span>
+                <span class="clause-span" onclick="speakClause('neşkürük ve lâ nekfürük')">نَشْكُرُكَ وَلَا نَكْفُرُكَ</span>
+                <span class="rosette-divider">
+                  <svg width="16" height="16" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" />
+                    <polygon points="16,3 20,12 29,16 20,20 16,29 12,20 3,16 12,12" fill="currentColor" opacity="0.85" />
+                    <circle cx="16" cy="16" r="4.5" fill="var(--rosette-gold)" />
+                  </svg>
+                </span>
+                <span class="clause-span" onclick="speakClause('ve nahleu ve netrükü men yefcürük')">وَ نَخْلَعُ وَ نَتْرُكُ مَنْ يَفْجُرُكَ</span>
+              </div>
+
+              <!-- Kunut 1 Meaning (Turkish) -->
+              <div class="mt-2 text-[11px] sm:text-[12px] leading-relaxed text-justify">
+                <span class="font-bold text-[var(--meaning-label)] font-serif mr-1">Anlamı:</span>
+                Allah’ım! Ancak senden yardım dileriz, senden bağışlanmamızı ve bizi doğru yola iletmeni isteriz. Sana inanır ve sana tövbe ederiz. Sana güvenir ve seni överiz. Bütün hayırları senden bilir ve sana şükrederiz. Nankörlük etmeyiz. Sana karşı gelenlerle ilişkimizi keser ve onları terk ederiz.
+              </div>
+
+              <!-- Kunut 1 Meaning (German) -->
+              <div class="mt-2 text-[11px] sm:text-[12px] leading-relaxed text-justify opacity-90">
+                <span class="font-bold text-[var(--title-sub)] font-serif mr-1">Bedeutung:</span>
+                O Allah! Dich ersuchen wir um Hilfe, Dich bitten wir um Vergebung und um Rechtleitung. An Dich glauben wir und Dir wenden wir uns in reumütiger Abkehr zu. Und Dir vertrauen wir. Dich preisen wir und auf Dich führen wir alles Gute zurück. Dir danken wir wegen all Deiner Gaben und leugnen Dich nicht. Wir wenden uns ab und verlassen denjenigen, der sich gegen Dich versündigt.
+              </div>
+            </section>
+
+            <!-- ---------------------------------------------------- -->
+            <!-- ORNAMENTAL CENTER DIVIDER                            -->
+            <!-- ---------------------------------------------------- -->
+            <div class="my-3 flex items-center justify-center gap-3">
+              <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[var(--page-inner-border)] to-transparent opacity-40"></div>
+              <svg width="24" height="12" viewBox="0 0 40 20" class="text-[var(--rosette-gold)] opacity-70">
+                <polygon points="20,2 26,10 20,18 14,10" fill="currentColor" />
+                <circle cx="6" cy="10" r="2" fill="var(--rosette-color)" />
+                <circle cx="34" cy="10" r="2" fill="var(--rosette-color)" />
+              </svg>
+              <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-[var(--page-inner-border)] to-transparent opacity-40"></div>
+            </div>
+
+            <!-- ---------------------------------------------------- -->
+            <!-- KUNUT 2 SECTION                                      -->
+            <!-- ---------------------------------------------------- -->
+            <section class="group relative rounded-xl transition-all duration-200 hover:bg-[var(--site-bg)]/30 p-2 -mx-2">
+              
+              <!-- Quick Action Floating Buttons for Kunut 2 -->
+              <div class="absolute -top-3 left-2 z-20 flex items-center gap-1.5 opacity-90 hover:opacity-100 transition-opacity">
+                <button onclick="openVideoModal('kunut2.mp4', 'Kunut Duası 2', 2)" class="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-700 hover:bg-emerald-600 text-white shadow-sm transition-transform active:scale-95">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  <span>Video 2</span>
+                </button>
+                <button onclick="playAudio('turkish/kunut2tr.mp3', 'Kunut 2 Türkçe Anlam')" class="px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--site-surface)] border border-[var(--page-inner-border)] hover:border-emerald-500 shadow-sm transition-all" title="Türkçe Ses">
+                  🇹🇷 TR
+                </button>
+                <button onclick="playAudio('german/kunut2de.mp3', 'Kunut 2 Deutsche Bedeutung')" class="px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--site-surface)] border border-[var(--page-inner-border)] hover:border-emerald-500 shadow-sm transition-all" title="Almanca Ses">
+                  🇩🇪 DE
+                </button>
+              </div>
+
+              <!-- Kunut 2 Arabic Text with Tashkeel & Waqf Rosettes -->
+              <div class="arabic-script text-[23px] sm:text-[25px] pt-2 pb-2 leading-[2.35] select-text">
+                <span class="clause-span" onclick="speakClause('Allâhümme iyyâke nabüdü ve leke nusallî ve nescüd')">اَللّٰهُمَّ اِيَّاكَ نَعْبُدُ وَ لَكَ نُصَلِّي وَ نَسْجُدُ</span>
+                <span class="rosette-divider">
+                  <svg width="16" height="16" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" />
+                    <polygon points="16,3 20,12 29,16 20,20 16,29 12,20 3,16 12,12" fill="currentColor" opacity="0.85" />
+                    <circle cx="16" cy="16" r="4.5" fill="var(--rosette-gold)" />
+                  </svg>
+                </span>
+                <span class="clause-span" onclick="speakClause('ve ileyke nesâ ve nahfid')">وَ اِلَيْكَ نَسْعٰى وَ نَحْفِدُ</span>
+                <span class="rosette-divider">
+                  <svg width="16" height="16" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" />
+                    <polygon points="16,3 20,12 29,16 20,20 16,29 12,20 3,16 12,12" fill="currentColor" opacity="0.85" />
+                    <circle cx="16" cy="16" r="4.5" fill="var(--rosette-gold)" />
+                  </svg>
+                </span>
+                <span class="clause-span" onclick="speakClause('nercû rahmeteke ve nahşâ azâbek')">نَرْجُو رَحْمَتَكَ وَ نَخْشٰى عَذَابَكَ</span>
+                <span class="rosette-divider">
+                  <svg width="16" height="16" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2" />
+                    <polygon points="16,3 20,12 29,16 20,20 16,29 12,20 3,16 12,12" fill="currentColor" opacity="0.85" />
+                    <circle cx="16" cy="16" r="4.5" fill="var(--rosette-gold)" />
+                  </svg>
+                </span>
+                <span class="clause-span" onclick="speakClause('inne azâbeke bil-küffâri mülhık')">اِنَّ عَذَابَكَ بِالْكُفَّارِ مُلْحِقٌ</span>
+              </div>
+
+              <!-- Kunut 2 Meaning (Turkish) -->
+              <div class="mt-2 text-[11px] sm:text-[12px] leading-relaxed text-justify">
+                <span class="font-bold text-[var(--meaning-label)] font-serif mr-1">Anlamı:</span>
+                Allah’ım! Ancak sana ibadet ederiz. Yalnız senin için namaz kılar ve sana secde ederiz. Yalnız sana (senin rızana ulaştıracak işlere) koşar ve senin hizmetinde oluruz. Rahmetini umar, azabından korkarız. Şüphe yok ki senin azabın kâfirlere ulaşır.
+              </div>
+
+              <!-- Kunut 2 Meaning (German) -->
+              <div class="mt-2 text-[11px] sm:text-[12px] leading-relaxed text-justify opacity-90">
+                <span class="font-bold text-[var(--title-sub)] font-serif mr-1">Bedeutung:</span>
+                O Allah! Nur Dich beten wir an, nur für Dich verrichten wir das Ritualgebet und werfen uns dabei vor Dir nieder. Dein Wohlgefallen wollen wir erlangen. Mit Freude erfüllen wir unsere Gottesdienste. Wir bitten Dich um Deine Barmherzigkeit, und fürchten uns vor Deiner Strafe. Wahrlich, Du bestrafst diejenigen, die leugnen.
+              </div>
+            </section>
+
+          </div>
+
+          <!-- ---------------------------------------------------- -->
+          <!-- BOTTOM PAGE BADGE (RIBBON SHIELD "53")               -->
+          <!-- ---------------------------------------------------- -->
+          <footer class="relative z-10 flex justify-center mt-3 pt-1">
+            <div class="relative w-11 h-12 flex items-center justify-center">
+              <!-- Custom Swallowtail Ribbon SVG -->
+              <svg viewBox="0 0 44 48" class="absolute inset-0 w-full h-full filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.12)]">
+                <path d="M 4,2 L 40,2 L 40,36 L 22,46 L 4,36 Z" fill="var(--site-card)" stroke="var(--page-border)" stroke-width="1.4" />
+                <path d="M 7,4 L 37,4 L 37,34 L 22,42 L 7,34 Z" fill="none" stroke="var(--rosette-gold)" stroke-width="0.8" opacity="0.6" />
+              </svg>
+              <span class="relative z-10 font-serif font-bold text-sm sm:text-base text-[var(--title-sub)] -mt-1 tracking-wider">
+                53
+              </span>
+            </div>
+          </footer>
+
+        </article>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- 2. ORIGINAL SCANNED JPEG (FOR COMPARISON MODE)           -->
+      <!-- ======================================================== -->
+      <div id="original-page" class="w-[562px] min-h-[788px] relative bg-white p-2 rounded-sm shadow-2xl flex-shrink-0 hidden">
+        <div class="relative border border-slate-300 rounded overflow-hidden">
+          <div class="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full text-xs font-bold bg-black/75 text-white backdrop-blur-sm">
+            Orijinal Scanned JPEG
+          </div>
+          <img src="/assets/book/pages/page-53.jpg" alt="Orijinal Kitap Sayfa 53" class="w-full h-auto block select-none" />
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Video Modal Popup (Plays Kunut 1 & Kunut 2 directly with HTTP 206 streaming) -->
+  <div id="video-modal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="bg-[var(--site-surface)] border border-[var(--page-inner-border)] w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Video Modal Header -->
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-[var(--page-inner-border)]/40 bg-[var(--site-bg)]">
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-500 font-bold text-lg">▶</span>
+          <h3 id="modal-video-title" class="font-bold text-sm sm:text-base text-[var(--arabic-text)]">
+            Kunut Duası 1
+          </h3>
+        </div>
+        <button onclick="closeVideoModal()" class="w-8 h-8 rounded-full bg-slate-500/10 hover:bg-slate-500/20 flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Video Player Viewport -->
+      <div class="relative aspect-video bg-black flex items-center justify-center">
+        <video id="native-video" playsinline controls class="w-full h-full max-h-[70vh] object-contain">
+          <source id="video-source" src="" type="video/mp4">
+          Tarayıcınız HTML5 video etiketini desteklemiyor.
+        </video>
+      </div>
+
+      <!-- Video Footer -->
+      <div class="px-5 py-3 flex items-center justify-between text-xs text-[var(--meaning-text)] bg-[var(--site-card)]">
+        <span>Kunut duası okunuş ve takip videosu</span>
+        <button onclick="closeVideoModal()" class="px-3 py-1.5 rounded-lg bg-[var(--site-surface)] border border-[var(--page-inner-border)] font-semibold hover:border-emerald-600 transition-all">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Player (Hidden Audio Element for Real Recordings) -->
+  <audio id="audio-player" class="hidden" preload="auto"></audio>
+
+  <!-- JavaScript Implementation -->
+  <script>
+    // State
+    let currentZoom = 1.0;
+    let viewMode = 'vector'; // 'vector' | 'split' | 'original'
+    const audioPlayer = document.getElementById('audio-player');
+    const videoModal = document.getElementById('video-modal');
+    const nativeVideo = document.getElementById('native-video');
+    const videoSource = document.getElementById('video-source');
+    const modalTitle = document.getElementById('modal-video-title');
+    const zoomReadout = document.getElementById('zoom-readout');
+    const canvasWrapper = document.getElementById('canvas-wrapper');
+    const vectorPage = document.getElementById('vector-page');
+    const originalPage = document.getElementById('original-page');
+
+    // 1. Zoom Management
+    function changeZoom(delta) {
+      currentZoom = Math.min(Math.max(currentZoom + delta, 0.5), 3.0);
+      applyZoom();
+    }
+    function resetZoom() {
+      currentZoom = 1.0;
+      applyZoom();
+    }
+    function applyZoom() {
+      canvasWrapper.style.transform = `scale(${currentZoom})`;
+      zoomReadout.textContent = `${Math.round(currentZoom * 100)}%`;
+    }
+
+    // 2. View Mode Switcher (Vector, Split, Original)
+    function setViewMode(mode) {
+      viewMode = mode;
+      
+      // Update Tab Styles
+      ['vector', 'split', 'original'].forEach(m => {
+        const btn = document.getElementById(`view-${m}-btn`);
+        if (btn) {
+          if (m === mode) {
+            btn.className = 'active-pill px-2.5 py-1 rounded-lg transition-all';
+          } else {
+            btn.className = 'px-2.5 py-1 rounded-lg hover:text-[var(--title-red)] transition-all';
+          }
+        }
+      });
+
+      if (mode === 'vector') {
+        vectorPage.classList.remove('hidden');
+        originalPage.classList.add('hidden');
+      } else if (mode === 'original') {
+        vectorPage.classList.add('hidden');
+        originalPage.classList.remove('hidden');
+      } else if (mode === 'split') {
+        vectorPage.classList.remove('hidden');
+        originalPage.classList.remove('hidden');
+      }
+    }
+
+    // 3. Theme Switcher
+    function setTheme(theme) {
+      document.body.classList.remove('theme-gruvbox', 'theme-emerald');
+      if (theme === 'gruvbox') {
+        document.body.classList.add('theme-gruvbox');
+      } else if (theme === 'emerald') {
+        document.body.classList.add('theme-emerald');
+      }
+    }
+
+    // 4. Video Modal Handler
+    function openVideoModal(fileName, title, prayerNum) {
+      stopAudio();
+      modalTitle.textContent = title;
+      const videoPath = `/assets/videos/${fileName}`;
+      videoSource.src = videoPath;
+      nativeVideo.load();
+      videoModal.classList.remove('hidden');
+      videoModal.classList.add('flex');
+      
+      // Attempt play with user action
+      nativeVideo.play().catch(e => {
+        console.log('Video autoplay deferred to manual play:', e);
+      });
+    }
+
+    function closeVideoModal() {
+      nativeVideo.pause();
+      nativeVideo.removeAttribute('src');
+      videoModal.classList.add('hidden');
+      videoModal.classList.remove('flex');
+    }
+
+    videoModal.addEventListener('click', (e) => {
+      if (e.target === videoModal) closeVideoModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeVideoModal();
+    });
+
+    // 5. Audio Playback
+    function playAudio(path, label) {
+      stopAudio();
+      audioPlayer.src = `/assets/audio/${path}`;
+      audioPlayer.play().then(() => {
+        showToast(`🔊 Çalınıyor: ${label}`);
+      }).catch(err => {
+        console.warn('Audio asset error, fallback to speech synthesis:', err);
+      });
+    }
+
+    function stopAudio() {
+      if (!audioPlayer.paused) {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+      }
+    }
+
+    // 6. Speech / Clause Pronunciation on Tap
+    function speakClause(text) {
+      // Highlight clicked clause briefly
+      event.target.classList.add('active');
+      setTimeout(() => {
+        event.target.classList.remove('active');
+      }, 1400);
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'ar-SA';
+        utter.rate = 0.85;
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    // 7. Toast Message
+    function showToast(msg) {
+      const existing = document.getElementById('toast-msg');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.id = 'toast-msg';
+      toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-slate-900/90 text-white text-xs font-semibold shadow-xl z-50 animate-bounce';
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2600);
+    }
+  </script>
+</body>
+</html>

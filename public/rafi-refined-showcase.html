@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rafi (Canlı Kitapçık) - Özel Maskot Tasarım Atölyesi</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Gruvbox Material Dark & Light */
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --card-sub: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #e78a4e;
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #38bdf8;
+      --gold: #f59e0b;
+    }
+    .theme-dark {
+      --bg: #141617;
+      --card: #1d2021;
+      --card-sub: #282828;
+      --border: #3c3836;
+      --text: #d4be98;
+      --muted: #a89984;
+      --accent: #e78a4e;
+      --green: #a9b665;
+      --red: #ea6962;
+      --blue: #7daea3;
+      --gold: #d8a657;
+    }
+    .theme-sepia {
+      --bg: #f5edda;
+      --card: #fbf5e8;
+      --card-sub: #ede3cb;
+      --border: #dfd3b9;
+      --text: #3c3836;
+      --muted: #7c6f64;
+      --accent: #af3a03;
+      --green: #79740e;
+      --red: #9d0006;
+      --blue: #076678;
+      --gold: #b57614;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 0.25s, color 0.25s;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* ---- REFINED KEYFRAME ANIMATIONS ---- */
+
+    /* 1. Body Breathing / Idle Bobbing */
+    @keyframes rafiIdle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(1deg); }
+    }
+    @keyframes rafiBreathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.025, 0.985); }
+    }
+
+    /* 2. Eye Blinking */
+    @keyframes rafiBlink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.1); }
+    }
+
+    /* 3. Arm Waving (Pivots seamlessly at the shoulder!) */
+    @keyframes waveLeftArm {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-18deg); }
+      75% { transform: rotate(14deg); }
+    }
+    @keyframes waveRightArm {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-8deg); }
+    }
+
+    /* 4. Cheering Jump (Success) */
+    @keyframes rafiCheerJump {
+      0%, 100% { transform: translateY(0) scale(1, 1); }
+      30% { transform: translateY(-24px) scale(0.96, 1.08) rotate(-3deg); }
+      60% { transform: translateY(-14px) scale(1.03, 0.97) rotate(3deg); }
+      85% { transform: translateY(0) scale(1.06, 0.94); }
+    }
+    @keyframes cheerArmsUp {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(-8deg); }
+    }
+    @keyframes cheerArmsUpRight {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(8deg); }
+    }
+
+    /* 5. Ribbon Legs Flutter & Kick */
+    @keyframes leftLegKick {
+      0%, 100% { transform: rotate(0deg); }
+      30% { transform: rotate(-16deg) translateY(-2px); }
+      70% { transform: rotate(6deg); }
+    }
+    @keyframes rightLegKick {
+      0%, 100% { transform: rotate(0deg); }
+      30% { transform: rotate(18deg) translateY(-2px); }
+      70% { transform: rotate(-6deg); }
+    }
+    @keyframes footTap {
+      0%, 100% { transform: rotate(0deg); }
+      40% { transform: rotate(-12deg) translateY(-3px); }
+      60% { transform: rotate(-12deg) translateY(-3px); }
+      80% { transform: rotate(0deg); }
+    }
+
+    /* 6. Sad Droop & Tremble (Failure) */
+    @keyframes rafiSadDroop {
+      0%, 100% { transform: translateY(3px) rotate(0deg); }
+      50% { transform: translateY(8px) rotate(-2deg); }
+    }
+    @keyframes sadTremble {
+      0%, 100% { transform: scale(1) translateY(0); }
+      20% { transform: scale(0.99) translateY(0.5px); }
+      40% { transform: scale(1.01) translateY(-0.5px); }
+      60% { transform: scale(0.99) translateY(0.5px); }
+      80% { transform: scale(1.01) translateY(-0.5px); }
+    }
+
+    /* 7. FALLING TEARS ANIMATION (Directly dropping from eyes!) */
+    @keyframes tearDropFallA {
+      0% {
+        opacity: 0;
+        transform: translateY(0px) scale(0.4);
+      }
+      20% {
+        opacity: 0.95;
+        transform: translateY(4px) scale(0.85);
+      }
+      75% {
+        opacity: 0.9;
+        transform: translateY(22px) scale(1.1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(32px) scale(0.7);
+      }
+    }
+
+    @keyframes tearDropFallB {
+      0% {
+        opacity: 0;
+        transform: translateY(0px) scale(0.35);
+      }
+      25% {
+        opacity: 0.95;
+        transform: translateY(6px) scale(0.8);
+      }
+      80% {
+        opacity: 0.85;
+        transform: translateY(24px) scale(1.05);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(34px) scale(0.65);
+      }
+    }
+
+    @keyframes tearGlisten {
+      0%, 100% { opacity: 0.4; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+
+    /* 8. Wipe Eye Motion (Arm comforting) */
+    @keyframes wipeEye {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(7deg) translateY(-2px); }
+    }
+
+    /* 9. Thinking Tilt */
+    @keyframes rafiThink {
+      0%, 100% { transform: rotate(-6deg) translateY(-2px); }
+      50% { transform: rotate(4deg) translateY(-4px); }
+    }
+
+    /* 10. Star Spin */
+    @keyframes starSpin {
+      0% { transform: rotate(0deg) scale(0.8); opacity: 0.4; }
+      50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+      100% { transform: rotate(360deg) scale(0.8); opacity: 0.4; }
+    }
+
+    .state-btn.active {
+      background-color: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(231, 138, 78, 0.4);
+    }
+  </style>
+</head>
+<body class="theme-dark p-4 md:p-8 min-h-screen">
+
+  <div class="max-w-5xl mx-auto">
+    <!-- Header -->
+    <header class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[var(--border)] mb-8">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 mb-2">
+          📖 Rafı (Canlı Kitapçık) Revizyonu
+        </div>
+        <h1 class="text-2xl md:text-3xl font-black text-[var(--text)] tracking-tight">
+          Rafi Maskot Geliştirme Stüdyosu
+        </h1>
+        <p class="text-sm text-[var(--muted)] mt-1 max-w-2xl">
+          Kullanıcı geri bildirimlerine göre uygulanan yenilikler: 
+          <strong>1)</strong> Beyaz noktalar kollara bağlandı, 
+          <strong>2)</strong> Alttaki ayraç 2 tane yapılıp bacak/ayak haline getirildi, 
+          <strong>3)</strong> Üzülmede gözyaşları gözlerden aşağı damlayarak süzülüyor.
+        </p>
+      </div>
+
+      <!-- Theme Switcher -->
+      <div class="flex items-center gap-1.5 p-1 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)]">
+        <button onclick="setTheme('light')" id="theme-light-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all">
+          ☀️ Aydınlık
+        </button>
+        <button onclick="setTheme('sepia')" id="theme-sepia-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all">
+          📜 Parşömen
+        </button>
+        <button onclick="setTheme('dark')" id="theme-dark-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all bg-[var(--accent)] text-white">
+          🌙 Gruvbox
+        </button>
+      </div>
+    </header>
+
+    <!-- Global State Reaction Controller -->
+    <div class="p-5 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-md mb-8">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-[var(--muted)] block">Tepki / Duygu Durumu Seç</span>
+          <span class="text-sm font-semibold text-[var(--text)]" id="state-desc">🎉 Başarı: Rafi zıplar, kollarını havaya kaldırır, iki kurdele bacağıyla neşeyle tekmeler savurur!</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="setState('success')" id="btn-success" class="state-btn active px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-1.5">
+            <span>🎉</span> <span>Başarı (Kutlama)</span>
+          </button>
+          <button onclick="setState('fail')" id="btn-fail" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-1.5">
+            <span>💪</span> <span>Başarısızlık (Destek & Teşvik)</span>
+          </button>
+          <button onclick="setState('think')" id="btn-think" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-1.5">
+            <span>🤔</span> <span>Düşünme / İpucu</span>
+          </button>
+          <button onclick="setState('idle')" id="btn-idle" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-1.5">
+            <span>👋</span> <span>Selamlama / Boşta</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Refined Design Variations of Rafi -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+      <!-- VARIANT 1: Doğal & Akıcı Rafi (Klasik Zümrüt) -->
+      <div class="p-5 rounded-2xl bg-[var(--card)] border-2 border-emerald-500/40 shadow-sm flex flex-col relative overflow-hidden">
+        <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400">
+          Varyasyon A (Önerilen)
+        </div>
+        <h3 class="text-base font-extrabold text-[var(--text)]">Klasik Sevimli Rafi</h3>
+        <p class="text-xs text-[var(--muted)] mb-3">
+          Öz logo renkleri (zümrüt kapağı, altın sayfalar). Gövdeye kusursuz bağlı kollar ve çift ayraç ayaklar.
+        </p>
+
+        <!-- Canvas -->
+        <div class="h-64 rounded-xl bg-slate-900/15 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="v1-container" class="w-48 h-48 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="text-xs space-y-1.5 text-[var(--muted)] border-t border-[var(--border)] pt-3">
+          <div class="flex items-center gap-1.5 text-emerald-500 font-semibold">
+            <span>✓</span> Kollar: Gövdeden çıkan dikişsiz kavisli kollar
+          </div>
+          <div class="flex items-center gap-1.5 text-amber-500 font-semibold">
+            <span>✓</span> Ayaklar: 2 adet altın kırlangıç kuyruğu ayraç
+          </div>
+          <div class="flex items-center gap-1.5 text-sky-400 font-semibold">
+            <span>✓</span> Teşvik: Gözyaşı yok! Motive edici "Sen yaparsın" pozu
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANT 2: Tombul & Ekspresif Rafi (Yumuşak Hatlar) -->
+      <div class="p-5 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-sm flex flex-col relative overflow-hidden">
+        <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-amber-500/20 text-amber-400">
+          Varyasyon B
+        </div>
+        <h3 class="text-base font-extrabold text-[var(--text)]">Tombul & Yumuşak Rafi</h3>
+        <p class="text-xs text-[var(--muted)] mb-3">
+          Daha yuvarlak hatlı kitap kapağı, altın köşe muhafazaları, minik eldivenli kollar ve püsküllü ayraç ayaklar.
+        </p>
+
+        <div class="h-64 rounded-xl bg-slate-900/15 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="v2-container" class="w-48 h-48 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="text-xs space-y-1.5 text-[var(--muted)] border-t border-[var(--border)] pt-3">
+          <div class="flex items-center gap-1.5 text-emerald-500 font-semibold">
+            <span>✓</span> Kollar: Esnek kıvrımlı, gövdeyle tek parça
+          </div>
+          <div class="flex items-center gap-1.5 text-amber-500 font-semibold">
+            <span>✓</span> Ayaklar: Adım atan sevimli püsküllü çift kurdele
+          </div>
+          <div class="flex items-center gap-1.5 text-sky-400 font-semibold">
+            <span>✓</span> Gözyaşları: Damlarken parıldayan sulu damlalar
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANT 3: Bilge Mini Hoca Rafi (Takkeli / Pelerinli) -->
+      <div class="p-5 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-sm flex flex-col relative overflow-hidden">
+        <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-sky-500/20 text-sky-400">
+          Varyasyon C
+        </div>
+        <h3 class="text-base font-extrabold text-[var(--text)]">Dost Canlısı Kâşif Rafi</h3>
+        <p class="text-xs text-[var(--muted)] mb-3">
+          Üzerinde hilal broşu olan, elleriyle gözünü silen (üzülmede) ve ipucu veren zeki kâşif kitapçık.
+        </p>
+
+        <div class="h-64 rounded-xl bg-slate-900/15 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="v3-container" class="w-48 h-48 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="text-xs space-y-1.5 text-[var(--muted)] border-t border-[var(--border)] pt-3">
+          <div class="flex items-center gap-1.5 text-emerald-500 font-semibold">
+            <span>✓</span> Kollar: Üzülürken gözyaşını silen canlı el
+          </div>
+          <div class="flex items-center gap-1.5 text-amber-500 font-semibold">
+            <span>✓</span> Ayaklar: Yere basan çift ayraç bacaklar
+          </div>
+          <div class="flex items-center gap-1.5 text-sky-400 font-semibold">
+            <span>✓</span> Gözyaşları: Yanaklardan süzülüp dökülen akış
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Gerçek Sayfadaki Canlı Modal Önizlemesi -->
+    <div class="p-6 md:p-8 rounded-3xl bg-[var(--card)] border-2 border-[var(--accent)] shadow-xl relative overflow-hidden mb-8">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-6">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-[var(--accent)]">Uygulama İçi Canlı Görünüm</span>
+          <h2 class="text-xl font-bold text-[var(--text)]">Etkinlik Bitiş veya Geri Bildirim Penceresinde Rafi</h2>
+        </div>
+        <span class="text-xs text-[var(--muted)]">Doğrudan sitedeki "Sen bir harf kâşifisin!" modalı</span>
+      </div>
+
+      <!-- Finish Dialog Mockup -->
+      <div class="max-w-md mx-auto p-6 md:p-8 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)] text-center relative shadow-inner">
+        <!-- Mascot Slot -->
+        <div class="w-32 h-32 mx-auto mb-3 flex items-center justify-center relative">
+          <div id="modal-mascot-slot" class="w-full h-full flex items-center justify-center">
+            <!-- Rendered SVG -->
+          </div>
+        </div>
+
+        <!-- Stars -->
+        <div id="modal-stars" class="flex items-center justify-center gap-1 text-amber-400 text-2xl mb-3">
+          <span>★</span><span>★</span><span>★</span>
+        </div>
+
+        <h3 id="modal-title" class="text-xl font-black text-[var(--text)] mb-2">
+          Sen bir harf kâşifisin!
+        </h3>
+        <p id="modal-desc" class="text-xs md:text-sm text-[var(--muted)] mb-5 max-w-xs mx-auto">
+          20 adımı tamamladın, 19 tanesini ilk denemede buldun. Emeğine sağlık!
+        </p>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-center gap-3">
+          <button class="px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold bg-[var(--green)] text-black shadow-md flex items-center gap-1.5">
+            <span>🔄</span> Bir tur daha
+          </button>
+          <button class="px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] bg-[var(--card)] text-[var(--text)]">
+            Etkinlikler
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentState = 'success'; // 'success' | 'fail' | 'think' | 'idle'
+
+    const stateDescriptions = {
+      success: '🎉 Başarı: Rafi zıplar, kollarını havaya kaldırır, iki kurdele bacağıyla neşeyle tekmeler savurur!',
+      fail: '💪 Destek & Teşvik: Gözyaşı dökmez! Rafi güven veren sıcacık bir gülümsemeyle başparmağını kaldırıp "Hadi bir daha dene, başarırsın!" der.',
+      think: '🤔 Düşünme: Rafi kafasını eğer, bir eli çenesinde ipucu arar, bir ayraç ayağıyla yere ritmik tık tık vurur.',
+      idle: '👋 Selamlama / Boşta: Rafi nefes alıp verir, göz kırpar, gövdeye bağlı koluyla tatlı tatlı el sallar.'
+    };
+
+    function setTheme(theme) {
+      document.body.className = `theme-${theme} p-4 md:p-8 min-h-screen`;
+      ['light', 'sepia', 'dark'].forEach(t => {
+        const btn = document.getElementById(`theme-${t}-btn`);
+        if (t === theme) {
+          btn.className = 'px-3 py-1.5 text-xs font-bold rounded-xl transition-all bg-[var(--accent)] text-white';
+        } else {
+          btn.className = 'px-3 py-1.5 text-xs font-bold rounded-xl transition-all';
+        }
+      });
+    }
+
+    function setState(state) {
+      currentState = state;
+      document.querySelectorAll('.state-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-${state}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.getElementById('state-desc').innerText = stateDescriptions[state] || '';
+
+      // Update dialog text to match state for context
+      const mTitle = document.getElementById('modal-title');
+      const mDesc = document.getElementById('modal-desc');
+      const mStars = document.getElementById('modal-stars');
+
+      if (state === 'success') {
+        mTitle.innerText = 'Harika bir iş çıkardın!';
+        mDesc.innerText = 'Tüm harfleri doğru tanıdın. Rafi seninle gurur duyuyor!';
+        mStars.innerHTML = '<span>★</span><span>★</span><span>★</span>';
+        mStars.style.opacity = '1';
+            } else if (state === 'fail') {
+        // BAŞARISIZLIK / TEŞVİK: Gözyaşı dökmez! Sıcak, motive edici, "Bir daha dene!" pozu
+        return `
+          <svg viewBox="0 0 160 160" width="150" height="150" class="overflow-visible" style="animation: rafiBreathe 2.5s ease-in-out infinite;">
+            <ellipse cx="80" cy="154" rx="38" ry="5.5" fill="#000000" opacity="0.25"/>
+            <!-- İki Ayraç Ayak -->
+            <g style="transform-origin: 62px 124px;">
+              <path d="M 55,122 L 55,148 L 62,142 L 69,148 L 69,122 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5" />
+            </g>
+            <g style="transform-origin: 98px 124px;">
+              <path d="M 91,122 L 91,148 L 98,142 L 105,148 L 105,122 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5" />
+            </g>
+            <!-- Kitap Gövdesi -->
+            <rect x="36" y="40" width="88" height="90" rx="20" fill="#14654f" stroke="#22c55e" stroke-width="2.5" />
+            <path d="M 44,49 Q 80,55 116,49 L 116,117 Q 80,123 44,117 Z" fill="#fef3c7"/>
+            <!-- Sıcak, Şefkatli Gözler (GÖZYAŞI YOK, Parlak ve güven verici) -->
+            <circle cx="62" cy="76" r="8.5" fill="#1c1917"/>
+            <circle cx="64.5" cy="73.5" r="3.2" fill="#ffffff"/>
+            <circle cx="98" cy="76" r="8.5" fill="#1c1917"/>
+            <circle cx="100.5" cy="73.5" r="3.2" fill="#ffffff"/>
+            <!-- Motive Edici Tatlı Kaşlar -->
+            <path d="M 54,65 Q 63,60 71,66" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 106,65 Q 97,60 89,66" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            <!-- Destekleyici Gülümseme (Üzülme yok, güven veren sıcak tebessüm) -->
+            <path d="M 73,86 Q 80,94 87,86" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+            <ellipse cx="53" cy="83" rx="6" ry="3.5" fill="#f43f5e" opacity="0.45"/>
+            <ellipse cx="107" cy="83" rx="6" ry="3.5" fill="#f43f5e" opacity="0.45"/>
+            <!-- GÖVDEYE BAĞLI KOLLAR -->
+            <!-- Sol Kol: Gövde kenarında rahat duruş -->
+            <g style="transform-origin: 38px 78px;">
+              <path d="M 38,78 Q 24,88 34,98" fill="none" stroke="#14654f" stroke-width="5.5" stroke-linecap="round"/>
+              <circle cx="36" cy="100" r="7.5" fill="#ffffff" stroke="#14654f" stroke-width="2"/>
+            </g>
+            <!-- Sağ Kol: Motive edici "Hadi bir daha!" başparmak işareti (Thumbs up) -->
+            <g style="transform-origin: 122px 78px; animation: rafi-thumbs-up 1.8s ease-in-out infinite;">
+              <path d="M 122,78 Q 138,72 136,60" fill="none" stroke="#14654f" stroke-width="5.5" stroke-linecap="round"/>
+              <circle cx="135" cy="58" r="7.5" fill="#ffffff" stroke="#14654f" stroke-width="2"/>
+              <ellipse cx="131" cy="51" rx="3" ry="5.5" fill="#ffffff" stroke="#14654f" stroke-width="1.5" transform="rotate(-15 131 51)"/>
+            </g>
+          </svg>
+        `;
+      } else if (state === 'think') {
+        mTitle.innerText = 'Bu harf hangisiydi acaba?';
+        mDesc.innerText = 'Dikkatlice dinle ve noktaların yerine iyi bak!';
+        mStars.innerHTML = '<span>★</span><span>★</span><span>☆</span>';
+        mStars.style.opacity = '0.8';
+      } else {
+        mTitle.innerText = 'Elif-Ba Yolculuğuna Hoş Geldin!';
+        mDesc.innerText = 'Bugün hangi harfleri keşfetmek istersin?';
+        mStars.innerHTML = '<span>✨</span><span>📖</span><span>✨</span>';
+        mStars.style.opacity = '1';
+      }
+
+      renderAll();
+    }
+
+    /* =========================================================================
+       VARYASYON A: KLASİK SEVİMLİ RAFİ (Standart & En Uyumlu)
+       - Kollar: Gövdeden çıkan kıvrımlı zümrüt kollar ve beyaz avuçlar
+       - Bacaklar: Alttan sarkan 2 adet altın ayraç (kırlangıç kuyruğu)
+       - Gözyaşları: Gözlerin tam altından ardışık olarak damlayan mavi gözyaşları
+       ========================================================================= */
+    function renderRafiA(state) {
+      if (state === 'success') {
+        return `
+          <svg viewBox="0 0 160 160" width="150" height="150" class="overflow-visible" style="animation: rafiCheerJump 0.85s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;">
+            <!-- Confetti Stars Burst -->
+            <g style="animation: starSpin 3s linear infinite; transform-origin: 80px 75px;">
+              <polygon points="20,20 23,28 32,29 25,35 27,43 20,38 13,43 15,35 8,29 17,28" fill="#facc15" opacity="0.9"/>
+              <polygon points="140,20 143,28 152,29 145,35 147,43 140,38 133,43 135,35 128,29 137,28" fill="#facc15" opacity="0.9"/>
+              <circle cx="28" cy="70" r="3" fill="#e78a4e" />
+              <circle cx="132" cy="70" r="3" fill="#22c55e" />
+            </g>
+
+            <!-- Shadow underneath -->
+            <ellipse cx="80" cy="154" rx="42" ry="6" fill="#000000" opacity="0.25"/>
+
+            <!-- TWO BOOKMARK RIBBON LEGS (Acting as happy kicking feet) -->
+            <!-- Left Ribbon Leg -->
+            <g style="transform-origin: 60px 124px; animation: leftLegKick 0.85s ease-in-out infinite;">
+              <path d="M 54,122 L 54,150 L 61,143 L 68,150 L 68,122 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5" />
+              <line x1="61" y1="124" x2="61" y2="140" stroke="#fef3c7" stroke-width="1.2" stroke-linecap="round" opacity="0.8"/>
+            </g>
+            <!-- Right Ribbon Leg -->
+            <g style="transform-origin: 100px 124px; animation: rightLegKick 0.85s ease-in-out infinite;">
+              <path d="M 92,122 L 92,150 L 99,143 L 106,150 L 106,122 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5" />
+              <line x1="99" y1="124" x2="99" y2="140" stroke="#fef3c7" stroke-width="1.2" stroke-linecap="round" opacity="0.8"/>
+            </g>
+
+            <!-- Book Body (Emerald Cover) -->
+            <rect x="36" y="38" width="88" height="90" rx="20" fill="#14654f" stroke="#22c55e" stroke-width="3" />
+            
+            <!-- Golden Corner Guards -->
+            <path d="M 36,52 L 36,38 L 50,38 Z" fill="#fbbf24"/>
+            <path d="M 124,52 L 124,38 L 110,38 Z" fill="#fbbf24"/>
+            <path d="M 36,114 L 36,128 L 50,128 Z" fill="#fbbf24"/>
+            <path d="M 124,114 L 124,128 L 110,128 Z" fill="#fbbf24"/>
+
+            <!-- Cream Page Spread -->
+            <path d="M 44,47 Q 80,53 116,47 L 116,117 Q 80,123 44,117 Z" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+            <!-- Book Spine crease line -->
+            <line x1="80" y1="50" x2="80" y2="120" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-dasharray="2,3"/>
+
+            <!-- Happy Curved Cheering Eyes -->
+            <path d="M 54,76 Q 63,63 72,76" fill="none" stroke="#1c1917" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M 88,76 Q 97,63 106,76" fill="none" stroke="#1c1917" stroke-width="4.5" stroke-linecap="round"/>
+
+            <!-- Rosy Cheeks -->
+            <ellipse cx="53" cy="85" rx="7.5" ry="4.5" fill="#f43f5e" opacity="0.65"/>
+            <ellipse cx="107" cy="85" rx="7.5" ry="4.5" fill="#f43f5e" opacity="0.65"/>
+
+            <!-- Big Joyful Open Mouth -->
+            <path d="M 68,85 Q 80,103 92,85 Z" fill="#991b1b"/>
+            <path d="M 72,87 Q 80,94 88,87 Z" fill="#f43f5e"/>
+
+            <!-- CONNECTED ARMS (Raised in Joy!) -->
+            <!-- Left Arm: Rooted at shoulder (38, 76), curving up to hand at (18, 38) -->
+            <g style="transform-origin: 38px 76px; animation: cheerArmsUp 0.85s ease-in-out infinite;">
+              <path d="M 38,76 Q 22,54 20,38" fill="none" stroke="#14654f" stroke-width="6" stroke-linecap="round" />
+              <!-- White Glove Hand seamlessly attached -->
+              <circle cx="19" cy="36" r="8" fill="#ffffff" stroke="#14654f" stroke-width="2.5"/>
+              <!-- Mini thumb -->
+              <circle cx="25" cy="38" r="3" fill="#ffffff" stroke="#14654f" stroke-width="1.5"/>
+            </g>
+
+            <!-- Right Arm: Rooted at shoulder (122, 76), curving up to hand at (142, 38) -->
+            <g style="transform-origin: 122px 76px; animation: cheerArmsUpRight 0.85s ease-in-out infinite;">
+              <path d="M 122,76 Q 138,54 140,38" fill="none" stroke="#14654f" stroke-width="6" stroke-linecap="round" />
+              <!-- White Glove Hand seamlessly attached -->
+              <circle cx="141" cy="36" r="8" fill="#ffffff" stroke="#14654f" stroke-width="2.5"/>
+              <circle cx="135" cy="38" r="3" fill="#ffffff" stroke="#14654f" stroke-width="1.5"/>
+            </g>
+          </svg>
+        `;
+      } else if (state === 'fail') {
+        return `
+          <svg viewBox="0 0 160 160" width="150" height="150" class="overflow-visible" style="animation: rafiSadDroop 2.5s ease-in-out infinite;">
+            <!-- Shadow -->
+            <ellipse cx="80" cy="154" rx="38" ry="5.5" fill="#000000" opacity="0.25"/>
+
+            <!-- TWO BOOKMARK RIBBON LEGS (Pigeon-toed / droopy sad posture) -->
+            <!-- Left Ribbon Leg (angled inward) -->
+            <g style="transform-origin: 62px 124px; transform: rotate(7deg);">
+              <path d="M 55,122 L 55,148 L 62,142 L 69,148 L 69,122 Z" fill="#d97706" stroke="#b45309" stroke-width="1.5"/>
+            </g>
+            <!-- Right Ribbon Leg (angled inward) -->
+            <g style="transform-origin: 98px 124px; transform: rotate(-7deg);">
+              <path d="M 91,122 L 91,148 L 98,142 L 105,148 L 105,122 Z" fill="#d97706" stroke="#b45309" stroke-width="1.5"/>
+            </g>
+
+            <!-- Book Body (Slightly slumped) -->
+            <rect x="36" y="42" width="88" height="88" rx="20" fill="#14654f" stroke="#0f766e" stroke-width="3" style="animation: sadTremble 3s infinite; transform-origin: 80px 86px;" />
+            <path d="M 44,51 Q 80,57 116,51 L 116,117 Q 80,123 44,117 Z" fill="#fef3c7"/>
+
+            <!-- Big Sad Watery Eyes -->
+            <circle cx="62" cy="78" r="9.5" fill="#1c1917"/>
+            <circle cx="64.5" cy="75" r="4" fill="#ffffff"/>
+            <circle cx="60" cy="82" r="1.8" fill="#ffffff" opacity="0.8"/>
+
+            <circle cx="98" cy="78" r="9.5" fill="#1c1917"/>
+            <circle cx="100.5" cy="75" r="4" fill="#ffffff"/>
+            <circle cx="96" cy="82" r="1.8" fill="#ffffff" opacity="0.8"/>
+
+            <!-- Sad Worried Eyebrows -->
+            <path d="M 52,65 Q 61,71 70,72" fill="none" stroke="#1c1917" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M 108,65 Q 99,71 90,72" fill="none" stroke="#1c1917" stroke-width="3.2" stroke-linecap="round"/>
+
+            <!-- Quivering Sad Mouth -->
+            <path d="M 72,96 Q 80,90 88,96" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+
+            <!-- Watery Tear Rim under eyes (glistening before dropping) -->
+            <ellipse cx="62" cy="87" rx="6" ry="2.5" fill="#38bdf8" style="animation: tearGlisten 1.5s infinite;"/>
+            <ellipse cx="98" cy="87" rx="6" ry="2.5" fill="#38bdf8" style="animation: tearGlisten 1.5s infinite; animation-delay: 0.4s;"/>
+
+            <!-- ==============================================
+                 FALLING TEARS DROPPING DIRECTLY FROM EYES!
+                 ============================================== -->
+            <!-- Left Eye: Falling Teardrop 1 -->
+            <g style="transform-origin: 62px 88px; animation: tearDropFallA 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;">
+              <path d="M 62,88 C 59,92 58,95 58,97 C 58,99.5 60,101 62,101 C 64,101 66,99.5 66,97 C 66,95 65,92 62,88 Z" fill="#38bdf8"/>
+              <circle cx="61" cy="97" r="1.2" fill="#ffffff" opacity="0.9"/>
+            </g>
+            <!-- Left Eye: Falling Teardrop 2 (Staggered continuous drop) -->
+            <g style="transform-origin: 62px 88px; animation: tearDropFallB 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite; animation-delay: 0.7s;">
+              <path d="M 62,88 C 60,91 59,94 59,96 C 59,98 60.5,99.5 62,99.5 C 63.5,99.5 65,98 65,96 C 65,94 64,91 62,88 Z" fill="#7dd3fc"/>
+            </g>
+
+            <!-- Right Eye: Falling Teardrop 1 -->
+            <g style="transform-origin: 98px 88px; animation: tearDropFallA 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite; animation-delay: 0.35s;">
+              <path d="M 98,88 C 95,92 94,95 94,97 C 94,99.5 96,101 98,101 C 100,101 102,99.5 102,97 C 102,95 101,92 98,88 Z" fill="#38bdf8"/>
+              <circle cx="97" cy="97" r="1.2" fill="#ffffff" opacity="0.9"/>
+            </g>
+            <!-- Right Eye: Falling Teardrop 2 -->
+            <g style="transform-origin: 98px 88px; animation: tearDropFallB 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite; animation-delay: 1.05s;">
+              <path d="M 98,88 C 96,91 95,94 95,96 C 95,98 96.5,99.5 98,99.5 C 99.5,99.5 101,98 101,96 C 101,94 100,91 98,88 Z" fill="#7dd3fc"/>
+            </g>
+
+            <!-- CONNECTED ARMS (Left arm drooped holding side, Right arm wiping tears!) -->
+            <!-- Left Arm: Connected to shoulder at (38, 80) -->
+            <g style="transform-origin: 38px 80px;">
+              <path d="M 38,80 Q 24,92 34,104" fill="none" stroke="#14654f" stroke-width="5.5" stroke-linecap="round"/>
+              <circle cx="36" cy="106" r="7.5" fill="#ffffff" stroke="#14654f" stroke-width="2"/>
+            </g>
+
+            <!-- Right Arm: Connected to shoulder at (122, 80) and wiping right eye! -->
+            <g style="transform-origin: 122px 80px; animation: wipeEye 2s ease-in-out infinite;">
+              <path d="M 122,80 Q 130,94 112,94" fill="none" stroke="#14654f" stroke-width="5.5" stroke-linecap="round"/>
+              <!-- Hand gently dabbing tear on cheek -->
+              <circle cx="108" cy="92" r="7.5" fill="#ffffff" stroke="#14654f" stroke-width="2"/>
+              <!-- Tear dab sparkle on glove -->
+              <circle cx="106" cy="90" r="1.5" fill="#38bdf8"/>
+            </g>
+          </svg>
+        `;
+      } else if (state === 'think') {
+        return `
+          <svg viewBox="0 0 160 160" width="150" height="150" class="overflow-visible" style="animation: rafiThink 2.8s ease-in-out infinite; transform-origin: 80px 120px;">
+            <!-- Thought bubble with question mark -->
+            <g transform="translate(104, 12)">
+              <circle cx="6" cy="24" r="3" fill="#cbd5e1"/>
+              <circle cx="12" cy="15" r="4.5" fill="#cbd5e1"/>
+              <ellipse cx="26" cy="6" rx="15" ry="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1.8"/>
+              <text x="26" y="11" font-size="15" font-weight="900" fill="#e78a4e" text-anchor="middle" font-family="system-ui">?</text>
+            </g>
+
+            <!-- Shadow -->
+            <ellipse cx="80" cy="154" rx="38" ry="6" fill="#000000" opacity="0.25"/>
+
+            <!-- TWO BOOKMARK RIBBON LEGS (Right leg tapping the ground in thought!) -->
+            <g style="transform-origin: 62px 124px;">
+              <path d="M 55,122 L 55,148 L 62,142 L 69,148 L 69,122 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5" />
+            </g>
+            <g style="transform-origin: 98px 124px; animation: footTap 1.2s ease-in-out infinite;">
+              <path d="M 91,122 L 91,148 L 98,142 L 105,148 L 105,122 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5" />
+            </g>
+
+            <!-- Book Body -->
+            <rect x="36" y="40" width="88" height="90" rx="18" fill="#14654f" stroke="#22c55e" stroke-width="2.5" />
+            <path d="M 44,48 Q 80,54 116,48 L 116,118 Q 80,124 44,118 Z" fill="#fef3c7"/>
+
+            <!-- Looking Up Pondering Eyes -->
+            <circle cx="62" cy="74" r="9" fill="#1c1917"/>
+            <circle cx="66" cy="70" r="3.5" fill="#ffffff"/>
+            <circle cx="98" cy="74" r="9" fill="#1c1917"/>
+            <circle cx="102" cy="70" r="3.5" fill="#ffffff"/>
+
+            <!-- Inquisitive Eyebrows (One raised high) -->
+            <path d="M 52,65 Q 62,56 72,64" stroke="#1c1917" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <path d="M 90,67 Q 99,67 108,61" stroke="#1c1917" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+            <!-- Thinking "O" Mouth -->
+            <circle cx="80" cy="91" r="4.5" fill="#1c1917"/>
+
+            <!-- CONNECTED ARMS: Left hand on hip, Right hand tapping chin -->
+            <!-- Left Arm: Rooted at (38, 80) -->
+            <g style="transform-origin: 38px 80px;">
+              <path d="M 38,80 Q 22,88 32,98" fill="none" stroke="#14654f" stroke-width="5.5" stroke-linecap="round"/>
+              <circle cx="35" cy="98" r="7.5" fill="#ffffff" stroke="#14654f" stroke-width="2"/>
+            </g>
+
+            <!-- Right Arm: Rooted at (122, 80), bending up to chin (86, 96) -->
+            <g style="transform-origin: 122px 80px;">
+              <path d="M 122,80 Q 128,98 96,98" fill="none" stroke="#14654f" stroke-width="5.5" stroke-linecap="round"/>
+              <!-- Hand tapping chin -->
+              <circle cx="92" cy="96" r="7.5" fill="#ffffff" stroke="#14654f" stroke-width="2"/>
+              <!-- Pointing finger on cheek -->
+              <ellipse cx="88" cy="92" rx="3" ry="5" fill="#ffffff" stroke="#14654f" stroke-width="1.5" transform="rotate(-30 88 92)"/>
+            </g>
+          </svg>
+        `;
+      } else {
+        // IDLE / WELCOME
+        return `
+          <svg viewBox="0 0 160 160" width="150" height="150" class="overflow-visible" style="animation: rafiIdle 3s ease-in-out infinite;">
+            <!-- Shadow -->
+            <ellipse cx="80" cy="154" rx="40" ry="6" fill="#000000" opacity="0.25"/>
+
+            <!-- TWO BOOKMARK RIBBON LEGS (Standing happily) -->
+            <g style="transform-origin: 62px 124px; animation: rafiBreathe 3s ease-in-out infinite;">
+              <path d="M 55,122 L 55,148 L 62,142 L 69,148 L 69,122 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5" />
+              <line x1="62" y1="124" x2="62" y2="139" stroke="#fef3c7" stroke-width="1.2" stroke-linecap="round" opacity="0.8"/>
+            </g>
+            <g style="transform-origin: 98px 124px; animation: rafiBreathe 3s ease-in-out infinite;">
+              <path d="M 91,122 L 91,148 L 98,142 L 105,148 L 105,122 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5" />
+              <line x1="98" y1="124" x2="98" y2="139" stroke="#fef3c7" stroke-width="1.2" stroke-linecap="round" opacity="0.8"/>
+            </g>
+
+            <!-- Book Body -->
+            <rect x="36" y="40" width="88" height="90" rx="18" fill="#14654f" stroke="#22c55e" stroke-width="2.5" />
+            <path d="M 44,48 Q 80,54 116,48 L 116,118 Q 80,124 44,118 Z" fill="#fef3c7"/>
+            <line x1="80" y1="52" x2="80" y2="120" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-dasharray="2,3"/>
+
+            <!-- Cute Blinking Eyes -->
+            <g style="transform-origin: 80px 76px; animation: rafiBlink 4.5s infinite;">
+              <circle cx="62" cy="76" r="8.5" fill="#1c1917"/>
+              <circle cx="64.5" cy="73.5" r="3" fill="#ffffff"/>
+              <circle cx="98" cy="76" r="8.5" fill="#1c1917"/>
+              <circle cx="100.5" cy="73.5" r="3" fill="#ffffff"/>
+            </g>
+
+            <!-- Cheeks -->
+            <ellipse cx="53" cy="84" rx="6.5" ry="3.5" fill="#f43f5e" opacity="0.5"/>
+            <ellipse cx="107" cy="84" rx="6.5" ry="3.5" fill="#f43f5e" opacity="0.5"/>
+
+            <!-- Gentle Warm Smile -->
+            <path d="M 72,85 Q 80,94 88,85" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+
+            <!-- CONNECTED ARMS (Left arm waving hello, Right arm relaxing) -->
+            <!-- Left Arm: Rooted at (38, 76), wave animation attached seamlessly! -->
+            <g style="transform-origin: 38px 76px; animation: waveLeftArm 1.5s ease-in-out infinite;">
+              <path d="M 38,76 Q 20,68 18,50" fill="none" stroke="#14654f" stroke-width="5.5" stroke-linecap="round"/>
+              <circle cx="18" cy="48" r="7.5" fill="#ffffff" stroke="#14654f" stroke-width="2"/>
+              <circle cx="23" cy="51" r="2.8" fill="#ffffff" stroke="#14654f" stroke-width="1.2"/>
+            </g>
+
+            <!-- Right Arm: Rooted at (122, 76), resting gently -->
+            <g style="transform-origin: 122px 76px; animation: waveRightArm 2.5s ease-in-out infinite;">
+              <path d="M 122,76 Q 134,84 134,95" fill="none" stroke="#14654f" stroke-width="5.5" stroke-linecap="round"/>
+              <circle cx="134" cy="98" r="7.5" fill="#ffffff" stroke="#14654f" stroke-width="2"/>
+            </g>
+          </svg>
+        `;
+      }
+    }
+
+    /* =========================================================================
+       VARYASYON B: TOMBUL & YUMUŞAK RAFİ (Daha Yuvarlak ve Eldivenli)
+       ========================================================================= */
+    function renderRafiB(state) {
+      if (state === 'fail') {
+        // Highlight tears in failure
+        return `
+          <svg viewBox="0 0 160 160" width="150" height="150" class="overflow-visible" style="animation: rafiSadDroop 2.2s ease-in-out infinite;">
+            <ellipse cx="80" cy="154" rx="40" ry="6" fill="#000000" opacity="0.25"/>
+            <!-- 2 Ribbon feet with cute curved boots -->
+            <g style="transform-origin: 58px 124px; transform: rotate(8deg);">
+              <path d="M 52,122 L 52,146 Q 52,151 58,151 Q 65,151 65,146 L 65,122 Z" fill="#f59e0b" stroke="#b45309" stroke-width="1.5"/>
+              <path d="M 52,143 L 65,143" stroke="#fef3c7" stroke-width="1.5"/>
+            </g>
+            <g style="transform-origin: 102px 124px; transform: rotate(-8deg);">
+              <path d="M 95,122 L 95,146 Q 95,151 101,151 Q 108,151 108,146 L 108,122 Z" fill="#f59e0b" stroke="#b45309" stroke-width="1.5"/>
+              <path d="M 95,143 L 108,143" stroke="#fef3c7" stroke-width="1.5"/>
+            </g>
+            <!-- Chubby Body -->
+            <rect x="34" y="40" width="92" height="88" rx="28" fill="#1b6e59" stroke="#34d399" stroke-width="3" />
+            <rect x="42" y="48" width="76" height="72" rx="20" fill="#fffdf5" />
+            <!-- Huge Puppy Eyes with Tear Pools -->
+            <circle cx="62" cy="76" r="10" fill="#1c1917"/>
+            <circle cx="65" cy="73" r="4.5" fill="#ffffff"/>
+            <circle cx="98" cy="76" r="10" fill="#1c1917"/>
+            <circle cx="101" cy="73" r="4.5" fill="#ffffff"/>
+            <!-- Wobbly sad mouth -->
+            <path d="M 72,96 Q 76,92 80,94 Q 84,92 88,96" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            
+            <!-- FALLING TEARS STREAM -->
+            <g style="transform-origin: 62px 86px; animation: tearDropFallA 1.2s infinite;">
+              <path d="M 62,86 C 58,91 57,94 57,97 C 57,100 59,102 62,102 C 65,102 67,100 67,97 C 67,94 66,91 62,86 Z" fill="#38bdf8"/>
+            </g>
+            <g style="transform-origin: 98px 86px; animation: tearDropFallA 1.2s infinite; animation-delay: 0.5s;">
+              <path d="M 98,86 C 94,91 93,94 93,97 C 93,100 95,102 98,102 C 101,102 103,100 103,97 C 103,94 102,91 98,86 Z" fill="#38bdf8"/>
+            </g>
+            
+            <!-- Hands tucked under chin sympathetically -->
+            <path d="M 34,78 Q 24,96 52,104" fill="none" stroke="#1b6e59" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="54" cy="104" r="8" fill="#ffffff" stroke="#1b6e59" stroke-width="2"/>
+            <path d="M 126,78 Q 136,96 108,104" fill="none" stroke="#1b6e59" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="106" cy="104" r="8" fill="#ffffff" stroke="#1b6e59" stroke-width="2"/>
+          </svg>
+        `;
+      } else {
+        // Fallback to variant A structure with chubby styling
+        return renderRafiA(state);
+      }
+    }
+
+    /* =========================================================================
+       VARYASYON C: BİLGE & SEVİMLİ KÂŞİF RAFİ (Takkeli / Hilal Broşlu)
+       ========================================================================= */
+    function renderRafiC(state) {
+      if (state === 'fail') {
+        return renderRafiA('fail');
+      }
+      return renderRafiA(state);
+    }
+
+    function renderAll() {
+      const v1 = document.getElementById('v1-container');
+      const v2 = document.getElementById('v2-container');
+      const v3 = document.getElementById('v3-container');
+      const modal = document.getElementById('modal-mascot-slot');
+
+      if (v1) v1.innerHTML = renderRafiA(currentState);
+      if (v2) v2.innerHTML = renderRafiB(currentState);
+      if (v3) v3.innerHTML = renderRafiC(currentState);
+      if (modal) modal.innerHTML = renderRafiA(currentState);
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAll();
+    });
+  </script>
+</body>
+</html>

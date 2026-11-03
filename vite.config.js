@@ -20,6 +20,29 @@ function workspaceAssets() {
     name:'workspace-learning-assets',
     configResolved(config){outDir=path.resolve(config.root,config.build.outDir);},
     configureServer(server){
+      const serve=(req,res,next)=>{
+        let url;
+        try{url=decodeURIComponent(req.url.split('?')[0]);}catch{return next();}
+        const folder=url.startsWith('/assets/')?'assets':url.startsWith('/data/')?'data':null;
+        if(!folder)return next();
+        const base=path.resolve(workspace,folder);
+        const file=path.resolve(workspace,'.'+url);
+        if(!file.startsWith(base+path.sep))return next();
+        let stat;try{stat=fs.statSync(file);}catch{return next();}
+        if(!stat.isFile())return next();
+        res.setHeader('Content-Type',mime[path.extname(file).toLowerCase()]||'application/octet-stream');
+        res.setHeader('Accept-Ranges','bytes');
+        const range=req.headers.range?rangeFor(req.headers.range,stat.size):null;
+        if(req.headers.range&&!range){res.writeHead(416,{'Content-Range':`bytes */${stat.size}`});return res.end();}
+        const length=range?range.end-range.start+1:stat.size;
+        res.setHeader('Content-Length',length);
+        if(range)res.writeHead(206,{'Content-Range':`bytes ${range.start}-${range.end}/${stat.size}`});
+        if(req.method==='HEAD')return res.end();
+        const stream=fs.createReadStream(file,range||{});stream.on('error',()=>res.destroy());res.on('close',()=>stream.destroy());stream.pipe(res);
+      };
+      server.middlewares.use(serve);
+    },
+    configurePreviewServer(server){
       server.middlewares.use((req,res,next)=>{
         let url;
         try{url=decodeURIComponent(req.url.split('?')[0]);}catch{return next();}

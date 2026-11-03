@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arapça Harf Maskotları (Clippy / Ataç Stili)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-sub: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #e78a4e;
+      --clippy-gold: #f59e0b;
+      --clippy-metal: #78716c;
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+    .theme-dark {
+      --bg: #141617;
+      --card-bg: #1d2021;
+      --card-sub: #282828;
+      --border: #3c3836;
+      --text: #d4be98;
+      --muted: #a89984;
+      --accent: #e78a4e;
+      --clippy-gold: #d8a657;
+      --clippy-metal: #928374;
+      --green: #a9b665;
+      --red: #ea6962;
+    }
+    .theme-sepia {
+      --bg: #f5eddb;
+      --card-bg: #fcf6ea;
+      --card-sub: #eee4cf;
+      --border: #d5c8ad;
+      --text: #4e3613;
+      --muted: #7e6c52;
+      --accent: #b45309;
+      --clippy-gold: #d97706;
+      --clippy-metal: #8c713b;
+      --green: #4d7c0f;
+      --red: #b91c1c;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 0.25s, color 0.25s;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* ==========================================================================
+       CLIPPY-STYLE ANIMATIONS (Bending, Screen-Tapping, Eyebrow twitches, Jumps)
+       ========================================================================== */
+    @keyframes clippyIdle {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      30% { transform: translateY(-4px) rotate(1.5deg); }
+      70% { transform: translateY(2px) rotate(-1.5deg); }
+    }
+    @keyframes clippyBlink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.08); }
+    }
+    @keyframes clippyEyebrows {
+      0%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-3px); }
+      70% { transform: translateY(1.5px); }
+    }
+    @keyframes clippyWave {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-32deg); }
+      75% { transform: rotate(24deg); }
+    }
+    @keyframes clippyTapScreen {
+      0%, 100% { transform: scale(1) translateZ(0); }
+      20% { transform: scale(1.12) translate(-6px, -8px); }
+      35% { transform: scale(1.18) translate(0px, -12px); }
+      45% { transform: scale(1.12) translate(-2px, -8px); }
+      60% { transform: scale(1.18) translate(0px, -12px); }
+      75% { transform: scale(1) translate(0, 0); }
+    }
+    @keyframes clippyCelebrate {
+      0%, 100% { transform: translateY(0) scale(1, 1); }
+      25% { transform: translateY(-30px) scale(0.92, 1.12) rotate(-8deg); }
+      50% { transform: translateY(-20px) scale(1.08, 0.95) rotate(8deg); }
+      75% { transform: translateY(0) scale(1.12, 0.9); }
+    }
+    @keyframes clippySadSlouch {
+      0%, 100% { transform: translateY(6px) scale(0.96, 0.94) rotate(0deg); }
+      50% { transform: translateY(12px) scale(1.02, 0.9) rotate(-3deg); }
+    }
+    @keyframes clippySpringCoil {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.78); }
+    }
+    @keyframes starPulse {
+      0%, 100% { transform: scale(0.8) rotate(0deg); opacity: 0.4; }
+      50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+    }
+    @keyframes dotBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-16px); }
+    }
+
+    .anim-idle { animation: clippyIdle 3.2s ease-in-out infinite; }
+    .anim-blink { animation: clippyBlink 4.4s infinite; transform-origin: center; }
+    .anim-brows { animation: clippyEyebrows 2.8s ease-in-out infinite; }
+    .anim-wave { animation: clippyWave 1.2s ease-in-out infinite; transform-origin: bottom center; }
+    .anim-tap { animation: clippyTapScreen 1.8s ease-in-out infinite; }
+    .anim-celebrate { animation: clippyCelebrate 0.8s cubic-bezier(0.28, 0.84, 0.42, 1) infinite; }
+    .anim-sad { animation: clippySadSlouch 2.6s ease-in-out infinite; }
+    .anim-coil { animation: clippySpringCoil 1.2s ease-in-out infinite; transform-origin: bottom; }
+    .anim-star { animation: starPulse 1.8s linear infinite; transform-origin: center; }
+    .anim-dot { animation: dotBounce 1s ease-in-out infinite; }
+
+    .state-btn.active {
+      background-color: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(231, 138, 78, 0.35);
+    }
+  </style>
+</head>
+<body class="theme-dark p-4 md:p-8 min-h-screen">
+
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <header class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[var(--border)] mb-8">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[var(--accent)] text-white mb-2">
+          📎 Microsoft Clippy Stili Arapça Harf Maskotları
+        </div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-[var(--text)]">
+          Harf Kâşifleri Canlı Maskot Seçici
+        </h1>
+        <p class="text-sm text-[var(--muted)] mt-1">
+          Microsoft Office'in efsanevi <em>Ataç (Clippy)</em> karakteri gibi canlı gözlü, bükülebilen, ekranı tıklatan ve öğrenciye yol gösteren 5 farklı Arapça harf modeli.
+        </p>
+      </div>
+
+      <!-- Theme Switcher -->
+      <div class="flex items-center gap-1.5 p-1.5 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)]">
+        <button onclick="setTheme('light')" id="theme-light-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all">
+          ☀️ Aydınlık
+        </button>
+        <button onclick="setTheme('sepia')" id="theme-sepia-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all">
+          📜 Sepya
+        </button>
+        <button onclick="setTheme('dark')" id="theme-dark-btn" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all bg-[var(--accent)] text-white">
+          🌙 Gruvbox Koyu
+        </button>
+      </div>
+    </header>
+
+    <!-- Global Clippy State Reaction Controller -->
+    <div class="p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-md mb-8">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase text-[var(--muted)] block">Maskot Davranış & Duygu Durumu</span>
+          <span class="text-xs text-[var(--accent)] font-semibold">Tüm karakterlerin tepkisini aynı anda test et:</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="setState('success')" id="btn-success" class="state-btn active px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>🎉</span> <span>Başarı (Kutlama)</span>
+          </button>
+          <button onclick="setState('fail')" id="btn-fail" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>💧</span> <span>Hata (Omuz Silkme / Destek)</span>
+          </button>
+          <button onclick="setState('tap')" id="btn-tap" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>🔔</span> <span>Camı Tıklatma / İpucu (Klasik Clippy)</span>
+          </button>
+          <button onclick="setState('think')" id="btn-think" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>🤔</span> <span>Eksiklik / Düşünme</span>
+          </button>
+          <button onclick="setState('idle')" id="btn-idle" class="state-btn px-4 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-[var(--border)] transition-all flex items-center gap-2">
+            <span>👋</span> <span>Selamlama / Boşta</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- The 5 Clippy-Inspired Arabic Letter Models Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+
+      <!-- MODEL 1: VAVİ ( و - En Çok Ataça Benzeyen Harf) -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border-2 border-[var(--accent)] shadow-md flex flex-col relative overflow-hidden">
+        <div class="absolute top-3 right-3 px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-[var(--accent)] text-white">
+          ⭐ 1 Numaralı Aday
+        </div>
+        <div class="mb-3">
+          <span class="text-xs font-bold text-amber-500 uppercase tracking-wider">Model 1 · Vav Harfi ( و )</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Vavi (Ataç Vav)</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Ataç (Clippy) formuna <strong>fiziksel olarak en çok benzeyen</strong> harftir! Üstteki yuvarlak ilmiği kafa, alttaki kıvrımlı kuyruğu yay gibi zıplayan gövdeyi oluşturur. Beyaz eldivenleriyle camı tıklatır.
+        </p>
+
+        <!-- Canvas -->
+        <div class="h-60 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m1-container" class="w-44 h-44 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(1)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Önizle
+        </button>
+      </div>
+
+      <!-- MODEL 2: ELİFİ ( ا - İlk ve En Asil Harf) -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-emerald-500 uppercase tracking-wider">Model 2 · Elif Harfi ( ا )</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Elifi (Esnek Elif & Hemze)</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Elif-Ba'nın ilk harfi! Dümdüz asil bir hat çizgisi gibi başlar ama tıpkı bir tel ataç gibi esner, eğilir, bükülür. Başının üstündeki sevimli <em>Hemze (ء)</em> şapka gibi hareket eder.
+        </p>
+
+        <div class="h-60 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m2-container" class="w-44 h-44 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(2)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Önizle
+        </button>
+      </div>
+
+      <!-- MODEL 3: AYNİ ( ع - Adı "Göz" Olan Bilge Harf) -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-sky-500 uppercase tracking-wider">Model 3 · Ayn Harfi ( ع )</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Ayni (Filozof Ayn)</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Arapçada "Ayn" kelimesi <strong>kelime anlamı olarak "Göz"</strong> demektir! Çift kıvrımlı tel gövdesi, üstteki kukuletası ve kocaman meraklı gözleriyle filozof bir ataç karakteridir.
+        </p>
+
+        <div class="h-60 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m3-container" class="w-44 h-44 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(3)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Önizle
+        </button>
+      </div>
+
+      <!-- MODEL 4: NUNİ ( ن - Hamak ve Zıpzıp Nokta) -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-purple-500 uppercase tracking-wider">Model 4 · Nun Harfi ( ن )</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Nuni & Nokta (İkili Takım)</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Geniş bir çanak/kayık şeklindeki Nun harfi ve üstünde trambolindeymiş gibi zıplayan canlı mini <em>Nokta</em> dostu. Başarıda taklalar atar, hatada noktayı kucağında teselli eder.
+        </p>
+
+        <div class="h-60 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m4-container" class="w-44 h-44 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(4)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Önizle
+        </button>
+      </div>
+
+      <!-- MODEL 5: LAMİ ( ل - Baston & Jimnastikçi Lam) -->
+      <div class="mascot-card p-5 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] shadow-sm hover:shadow-lg transition-all flex flex-col">
+        <div class="mb-3">
+          <span class="text-xs font-bold text-rose-500 uppercase tracking-wider">Model 5 · Lâm Harfi ( ل )</span>
+          <h3 class="text-xl font-black text-[var(--text)] mt-0.5">Lami (Dansçı Lâm)</h3>
+        </div>
+        <p class="text-xs text-[var(--muted)] mb-4">
+          Uzun sapı ve alt kancasıyla neşeli bir baston gibi yürüyen enerjik harf. Alttaki kancası ayak gibi adım atar, düşündüğünde kancasının üstünde perende atıp dengede durur.
+        </p>
+
+        <div class="h-60 rounded-xl bg-slate-900/10 dark:bg-black/30 flex items-center justify-center relative overflow-hidden mb-4 border border-[var(--border)]">
+          <div id="m5-container" class="w-44 h-44 relative flex items-center justify-center">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <button onclick="selectMascot(5)" class="w-full mt-auto py-2.5 rounded-xl text-xs font-bold bg-[var(--accent)] text-white hover:opacity-90 transition-opacity">
+          Bu Modeli Seç & Önizle
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Live In-Situ Simulation (Finish Screen Integration) -->
+    <div class="p-6 md:p-8 rounded-3xl bg-[var(--card-bg)] border-2 border-[var(--accent)] shadow-xl relative overflow-hidden">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-6">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-[var(--accent)]">Uygulama İçi Canlı Entegrasyon</span>
+          <h2 class="text-xl font-bold text-[var(--text)]">Bitiş ve Tebrik Ekranında Görünüm</h2>
+        </div>
+        <div class="text-xs text-[var(--muted)]">
+          Şu An Seçili: <strong id="preview-mascot-name" class="text-[var(--accent)]">Vavi (Model 1 · Vav)</strong>
+        </div>
+      </div>
+
+      <!-- Dialog Card Mockup -->
+      <div class="max-w-xl mx-auto p-6 md:p-8 rounded-2xl bg-[var(--card-sub)] border border-[var(--border)] text-center relative shadow-inner">
+        <!-- Mascot Position in Place of the old icon -->
+        <div class="w-32 h-32 mx-auto mb-3 flex items-center justify-center relative">
+          <div id="mockup-mascot-slot" class="w-full h-full flex items-center justify-center">
+            <!-- Selected Mascot SVG cloned here -->
+          </div>
+        </div>
+
+        <!-- Clippy Speech Bubble Tip -->
+        <div id="clippy-speech" class="inline-block px-4 py-2 rounded-xl bg-[var(--card-bg)] border border-[var(--border)] text-xs text-[var(--text)] mb-4 shadow-sm relative font-medium">
+          <span id="speech-text">"Harika bir turdu! Bütün harfleri doğru yakaladın, böyle devam et!"</span>
+          <div class="w-2.5 h-2.5 bg-[var(--card-bg)] border-b border-l border-[var(--border)] transform rotate-45 absolute -top-1.5 left-1/2 -translate-x-1/2"></div>
+        </div>
+
+        <!-- Star Rating -->
+        <div class="flex items-center justify-center gap-1.5 text-amber-400 text-2xl mb-2">
+          <span>★</span><span>★</span><span>★</span>
+        </div>
+
+        <h3 class="text-2xl font-black text-[var(--text)] mb-1">
+          Sen bir harf kâşifisin!
+        </h3>
+        <p class="text-sm text-[var(--muted)] mb-6 max-w-sm mx-auto">
+          20 adımı tamamladın, 19 tanesini ilk denemede buldun. Emeğine sağlık!
+        </p>
+
+        <!-- Buttons -->
+        <div class="flex items-center justify-center gap-3">
+          <button class="px-5 py-2.5 rounded-xl text-sm font-bold bg-[var(--green)] text-black shadow-md flex items-center gap-1.5">
+            <span>🔄</span> Bir tur daha
+          </button>
+          <button class="px-5 py-2.5 rounded-xl text-sm font-bold border border-[var(--border)] bg-[var(--card-bg)] text-[var(--text)]">
+            Etkinlikler
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentState = 'success'; // 'success' | 'fail' | 'tap' | 'think' | 'idle'
+    let currentSelectedMascot = 1;
+
+    // Speech bubble texts depending on state
+    const speechTexts = {
+      success: '"Harika bir turdu! Bütün harfleri doğru yakaladın, seninle gurur duyuyorum!"',
+      fail: '"Hiç önemli değil kâşif! Yanılmak öğrenmenin en iyi yoludur, gel bir kez daha deneyelim!"',
+      tap: '"Hey! Tık tık tık! Buradayım! Yardıma ihtiyacın olursa bana her zaman dokunabilirsin!"',
+      think: '"Hımm... Acaba bu ses hangi harfe aitti? Birlikte biraz düşünelim mi?"',
+      idle: '"Selam kâşif! Bugün yeni bir Elif-Ba macerasına hazır mısın?"'
+    };
+
+    // ==========================================
+    // MODEL 1: VAVİ ( و ) - The True Arabic Clippy
+    // ==========================================
+    function renderVavi(state) {
+      if (state === 'success') {
+        return `
+          <svg viewBox="0 0 160 160" width="140" height="140" class="anim-celebrate overflow-visible">
+            <!-- Confetti / Stars -->
+            <g class="anim-star">
+              <polygon points="20,20 25,30 35,25 30,35 40,40 30,45 35,55 25,50 20,60 15,50 5,55 10,45 0,40 10,35 5,25 15,30" fill="#facc15"/>
+              <polygon points="140,20 145,30 155,25 150,35 160,40 150,45 155,55 145,50 140,60 135,50 125,55 130,45 120,40 130,35 125,25 135,30" fill="#f59e0b"/>
+            </g>
+            <ellipse cx="80" cy="150" rx="38" ry="6" fill="#000000" opacity="0.25"/>
+            <!-- VAV BODY: Coiled spring leaping up -->
+            <!-- Curved tail of Waw -->
+            <path d="M 86,52 C 105,52 118,68 114,88 C 110,112 85,138 52,142 C 42,143 54,132 68,124 C 84,115 95,98 94,86 C 92,72 82,68 76,68 C 66,68 56,76 56,86 C 56,98 68,106 80,106" fill="none" stroke="#e78a4e" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 86,52 C 105,52 118,68 114,88 C 110,112 85,138 52,142 C 42,143 54,132 68,124 C 84,115 95,98 94,86 C 92,72 82,68 76,68 C 66,68 56,76 56,86 C 56,98 68,106 80,106" fill="none" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Waw Head Loop -->
+            <circle cx="78" cy="58" r="24" fill="#1d2021" stroke="#e78a4e" stroke-width="6"/>
+            <!-- Big Clippy Cartoon Eyes -->
+            <ellipse cx="71" cy="56" rx="8" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <ellipse cx="87" cy="56" rx="8" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <!-- Happy Curved Pupils -->
+            <path d="M 67,56 Q 71,50 75,56" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 83,56 Q 87,50 91,56" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            <!-- Clippy Curved Happy Eyebrows -->
+            <path d="M 65,42 Q 72,34 79,42" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 81,42 Q 88,34 95,42" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- Rosy Cheeks -->
+            <ellipse cx="63" cy="64" rx="4" ry="2.5" fill="#f43f5e" opacity="0.8"/>
+            <ellipse cx="93" cy="64" rx="4" ry="2.5" fill="#f43f5e" opacity="0.8"/>
+            <!-- White Gloved Hands Clapping / Raised in Victory -->
+            <g class="anim-wave">
+              <path d="M 52,58 Q 36,46 32,32" fill="none" stroke="#e78a4e" stroke-width="4" stroke-linecap="round"/>
+              <ellipse cx="30" cy="28" rx="8" ry="7" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            </g>
+            <g class="anim-wave">
+              <path d="M 104,58 Q 120,46 126,32" fill="none" stroke="#e78a4e" stroke-width="4" stroke-linecap="round"/>
+              <ellipse cx="128" cy="28" rx="8" ry="7" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            </g>
+          </svg>
+        `;
+      } else if (state === 'fail') {
+        return `
+          <svg viewBox="0 0 160 160" width="140" height="140" class="anim-sad overflow-visible">
+            <ellipse cx="80" cy="150" rx="34" ry="5" fill="#000000" opacity="0.25"/>
+            <!-- VAV BODY Slouched -->
+            <path d="M 86,64 C 102,64 112,78 108,96 C 104,116 82,138 48,144 C 40,145 52,134 64,128 C 78,118 88,104 88,94" fill="none" stroke="#e78a4e" stroke-width="12" stroke-linecap="round"/>
+            <circle cx="74" cy="70" r="22" fill="#1d2021" stroke="#e78a4e" stroke-width="5"/>
+            <!-- Sad Droopy Eyes -->
+            <ellipse cx="67" cy="69" rx="7.5" ry="10" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <ellipse cx="83" cy="69" rx="7.5" ry="10" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <!-- Looking down pupils -->
+            <circle cx="67" cy="74" r="3.5" fill="#1c1917"/>
+            <circle cx="83" cy="74" r="3.5" fill="#1c1917"/>
+            <!-- Sad Slanted Eyebrows -->
+            <path d="M 60,57 L 74,62" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 90,57 L 76,62" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            <!-- One arm scratching head, other shrugging -->
+            <path d="M 54,76 C 42,76 38,58 52,50" fill="none" stroke="#e78a4e" stroke-width="3.5" stroke-linecap="round"/>
+            <ellipse cx="54" cy="48" rx="6" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="1.8"/>
+            <path d="M 94,78 Q 112,82 120,74" fill="none" stroke="#e78a4e" stroke-width="3.5" stroke-linecap="round"/>
+            <ellipse cx="122" cy="72" rx="6" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="1.8"/>
+          </svg>
+        `;
+      } else if (state === 'tap') {
+        // THE ICONIC CLIPPY SCREEN TAP
+        return `
+          <svg viewBox="0 0 160 160" width="140" height="140" class="anim-tap overflow-visible">
+            <!-- Ripple wave on screen -->
+            <circle cx="36" cy="42" r="16" fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.6"/>
+            <circle cx="36" cy="42" r="26" fill="none" stroke="#38bdf8" stroke-width="1.2" opacity="0.3"/>
+            <ellipse cx="80" cy="150" rx="38" ry="6" fill="#000000" opacity="0.25"/>
+            <!-- VAV Leaning Forward with glove tapping screen glass -->
+            <path d="M 86,52 C 105,52 118,68 114,88 C 110,112 85,138 52,142 C 42,143 54,132 68,124 C 84,115 95,98 94,86 C 92,72 82,68 76,68" fill="none" stroke="#e78a4e" stroke-width="14" stroke-linecap="round"/>
+            <circle cx="78" cy="56" r="24" fill="#1d2021" stroke="#e78a4e" stroke-width="6"/>
+            <!-- Inquisitive Eyes Looking directly at user -->
+            <ellipse cx="71" cy="54" rx="8.5" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <ellipse cx="87" cy="54" rx="8.5" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <circle cx="72" cy="54" r="4" fill="#1c1917"/>
+            <circle cx="88" cy="54" r="4" fill="#1c1917"/>
+            <!-- One eyebrow raised high (Clippy classic!) -->
+            <path d="M 64,40 Q 71,32 78,38" fill="none" stroke="#1c1917" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M 82,42 Q 88,44 94,41" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            <!-- Arm extending out to tap the screen glass -->
+            <path d="M 56,64 C 42,60 36,48 38,44" fill="none" stroke="#e78a4e" stroke-width="4.5" stroke-linecap="round"/>
+            <!-- Pointing Glove hitting glass -->
+            <ellipse cx="36" cy="42" rx="9" ry="8" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <path d="M 33,40 L 26,38" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            <!-- "Tık!" Sound Text -->
+            <text x="24" y="26" font-size="12" font-weight="900" fill="#38bdf8" text-anchor="middle">TIK!</text>
+          </svg>
+        `;
+      } else if (state === 'think') {
+        return `
+          <svg viewBox="0 0 160 160" width="140" height="140" class="anim-idle overflow-visible">
+            <!-- Thought bubble / question mark -->
+            <g transform="translate(108, 16)">
+              <ellipse cx="18" cy="14" rx="14" ry="12" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+              <text x="18" y="20" font-size="16" font-weight="900" fill="#e78a4e" text-anchor="middle">?</text>
+            </g>
+            <ellipse cx="80" cy="150" rx="38" ry="6" fill="#000000" opacity="0.25"/>
+            <path d="M 86,52 C 105,52 118,68 114,88 C 110,112 85,138 52,142 C 42,143 54,132 68,124 C 84,115 95,98 94,86 C 92,72 82,68 76,68" fill="none" stroke="#e78a4e" stroke-width="14" stroke-linecap="round"/>
+            <circle cx="78" cy="56" r="24" fill="#1d2021" stroke="#e78a4e" stroke-width="6"/>
+            <!-- Looking up & right thinking eyes -->
+            <ellipse cx="71" cy="54" rx="8" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <ellipse cx="87" cy="54" rx="8" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <circle cx="74" cy="50" r="3.5" fill="#1c1917"/>
+            <circle cx="90" cy="50" r="3.5" fill="#1c1917"/>
+            <!-- Glove under chin -->
+            <path d="M 64,74 Q 68,82 76,78" fill="none" stroke="#e78a4e" stroke-width="4"/>
+            <ellipse cx="76" cy="78" rx="7" ry="7" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+          </svg>
+        `;
+      } else {
+        // IDLE / GREETING
+        return `
+          <svg viewBox="0 0 160 160" width="140" height="140" class="anim-idle overflow-visible">
+            <ellipse cx="80" cy="150" rx="38" ry="6" fill="#000000" opacity="0.25"/>
+            <path d="M 86,52 C 105,52 118,68 114,88 C 110,112 85,138 52,142 C 42,143 54,132 68,124 C 84,115 95,98 94,86 C 92,72 82,68 76,68" fill="none" stroke="#e78a4e" stroke-width="14" stroke-linecap="round"/>
+            <circle cx="78" cy="56" r="24" fill="#1d2021" stroke="#e78a4e" stroke-width="6"/>
+            <!-- Big Blinking Clippy Eyes -->
+            <g class="anim-blink">
+              <ellipse cx="71" cy="54" rx="8" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+              <circle cx="72" cy="54" r="3.5" fill="#1c1917"/>
+              <ellipse cx="87" cy="54" rx="8" ry="11" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+              <circle cx="88" cy="54" r="3.5" fill="#1c1917"/>
+            </g>
+            <g class="anim-brows">
+              <path d="M 65,40 Q 71,36 77,41" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+              <path d="M 81,41 Q 87,36 93,40" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            </g>
+            <!-- Friendly Waving Glove -->
+            <g class="anim-wave">
+              <path d="M 52,62 Q 36,52 30,38" fill="none" stroke="#e78a4e" stroke-width="4" stroke-linecap="round"/>
+              <ellipse cx="28" cy="34" rx="8" ry="7" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+              <path d="M 24,30 L 22,24" stroke="#1c1917" stroke-width="2" stroke-linecap="round"/>
+            </g>
+            <path d="M 102,64 Q 114,72 118,84" fill="none" stroke="#e78a4e" stroke-width="4" stroke-linecap="round"/>
+            <ellipse cx="120" cy="86" rx="6" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+          </svg>
+        `;
+      }
+    }
+
+    // ==========================================
+    // MODEL 2: ELİFİ ( ا ) - The Upright Flexible Lead
+    // ==========================================
+    function renderElifi(state) {
+      const bend = state === 'success' ? 'M 80,34 Q 96,80 80,144'
+        : state === 'fail' ? 'M 80,44 Q 60,90 80,144'
+        : state === 'think' ? 'M 80,38 C 105,45 100,75 80,95 L 80,144'
+        : 'M 80,34 Q 84,86 80,144';
+
+      return `
+        <svg viewBox="0 0 160 160" width="140" height="140" class="${state === 'success' ? 'anim-celebrate' : state === 'fail' ? 'anim-sad' : 'anim-idle'} overflow-visible">
+          <ellipse cx="80" cy="150" rx="28" ry="5" fill="#000000" opacity="0.25"/>
+          <!-- Little Floating Hemze (ء) Beret Hat on Top! -->
+          <g transform="translate(74, 14)">
+            <path d="M 4,14 C 4,6 16,6 16,10 C 16,14 8,14 14,18 L 4,18" fill="none" stroke="#e78a4e" stroke-width="3.5" stroke-linecap="round"/>
+          </g>
+          <!-- Elif Spine (Thick Calligraphic Line) -->
+          <path d="${bend}" fill="none" stroke="#22c55e" stroke-width="16" stroke-linecap="round"/>
+          <path d="${bend}" fill="none" stroke="#14654f" stroke-width="8" stroke-linecap="round"/>
+          <!-- Big Oval Cartoon Eyes on the upper stem -->
+          <g transform="translate(68, 52)">
+            <ellipse cx="5" cy="8" rx="6.5" ry="9" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <circle cx="6" cy="8" r="3" fill="#1c1917"/>
+            <ellipse cx="19" cy="8" rx="6.5" ry="9" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <circle cx="18" cy="8" r="3" fill="#1c1917"/>
+            <!-- Eyebrows -->
+            <path d="M 1, -1 Q 6,-5 11,-1" stroke="#1c1917" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 13, -1 Q 18,-5 23,-1" stroke="#1c1917" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </g>
+          <!-- Arms with white gloves -->
+          <g class="anim-wave">
+            <path d="M 72,78 Q 50,70 42,56" fill="none" stroke="#22c55e" stroke-width="4" stroke-linecap="round"/>
+            <ellipse cx="40" cy="52" rx="7" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="1.8"/>
+          </g>
+          <path d="M 88,78 Q 106,78 116,88" fill="none" stroke="#22c55e" stroke-width="4" stroke-linecap="round"/>
+          <ellipse cx="118" cy="90" rx="6" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="1.8"/>
+        </svg>
+      `;
+    }
+
+    // ==========================================
+    // MODEL 3: AYNİ ( ع ) - The Letter That Means "Eye"
+    // ==========================================
+    function renderAyni(state) {
+      return `
+        <svg viewBox="0 0 160 160" width="140" height="140" class="${state === 'success' ? 'anim-celebrate' : state === 'fail' ? 'anim-sad' : 'anim-idle'} overflow-visible">
+          <ellipse cx="80" cy="150" rx="36" ry="5" fill="#000000" opacity="0.25"/>
+          <!-- Ayn Upper Curve (Head) and Lower Big Belly -->
+          <path d="M 104,44 C 104,30 80,30 70,42 C 60,54 75,68 85,68 C 105,68 120,95 110,122 C 98,144 65,148 44,136" fill="none" stroke="#38bdf8" stroke-width="15" stroke-linecap="round"/>
+          <path d="M 104,44 C 104,30 80,30 70,42 C 60,54 75,68 85,68 C 105,68 120,95 110,122 C 98,144 65,148 44,136" fill="none" stroke="#0284c7" stroke-width="8" stroke-linecap="round"/>
+          <!-- Big Expressive Eyes right under the upper hood -->
+          <g transform="translate(68, 38)">
+            <ellipse cx="6" cy="10" rx="7.5" ry="10" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <circle cx="7" cy="10" r="3.5" fill="#1c1917"/>
+            <ellipse cx="22" cy="10" rx="7.5" ry="10" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <circle cx="21" cy="10" r="3.5" fill="#1c1917"/>
+            <path d="M 2,1 Q 8,-4 14,1" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 16,1 Q 22,-4 28,1" fill="none" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/>
+          </g>
+          <!-- Gloved Arms -->
+          <path d="M 68,68 Q 48,60 40,46" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" class="anim-wave"/>
+          <ellipse cx="38" cy="42" rx="7" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="1.8"/>
+          <path d="M 98,82 Q 116,84 122,96" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+          <ellipse cx="124" cy="98" rx="6" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="1.8"/>
+        </svg>
+      `;
+    }
+
+    // ==========================================
+    // MODEL 4: NUNİ ( ن ) - Boat & Trampoline Dot
+    // ==========================================
+    function renderNuni(state) {
+      return `
+        <svg viewBox="0 0 160 160" width="140" height="140" class="${state === 'success' ? 'anim-celebrate' : state === 'fail' ? 'anim-sad' : 'anim-idle'} overflow-visible">
+          <ellipse cx="80" cy="150" rx="42" ry="6" fill="#000000" opacity="0.25"/>
+          <!-- The Dot (Nokta) - An animated bouncy little companion! -->
+          <g class="${state === 'success' ? 'anim-dot' : ''}" transform="translate(80, 48)">
+            <circle cx="0" cy="0" r="13" fill="#a855f7" stroke="#7e22ce" stroke-width="3"/>
+            <!-- Dot's mini smiling face -->
+            <circle cx="-4" cy="-2" r="2" fill="#ffffff"/>
+            <circle cx="4" cy="-2" r="2" fill="#ffffff"/>
+            <path d="M -3,3 Q 0,6 3,3" stroke="#ffffff" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          </g>
+          <!-- NUN Crescent Body (The Cradle) -->
+          <path d="M 38,76 C 38,132 122,132 122,76" fill="none" stroke="#c084fc" stroke-width="16" stroke-linecap="round"/>
+          <path d="M 38,76 C 38,132 122,132 122,76" fill="none" stroke="#7e22ce" stroke-width="8" stroke-linecap="round"/>
+          <!-- Eyes on the belly curve of Nun -->
+          <ellipse cx="68" cy="98" rx="7" ry="9" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+          <circle cx="69" cy="98" r="3.2" fill="#1c1917"/>
+          <ellipse cx="92" cy="98" rx="7" ry="9" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+          <circle cx="91" cy="98" r="3.2" fill="#1c1917"/>
+          <!-- Hands holding the rims of the bowl -->
+          <ellipse cx="34" cy="74" rx="7" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="1.8"/>
+          <ellipse cx="126" cy="74" rx="7" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="1.8"/>
+        </svg>
+      `;
+    }
+
+    // ==========================================
+    // MODEL 5: LAMİ ( ل ) - Walking Cane & Gymnast
+    // ==========================================
+    function renderLami(state) {
+      return `
+        <svg viewBox="0 0 160 160" width="140" height="140" class="${state === 'success' ? 'anim-celebrate' : state === 'fail' ? 'anim-sad' : 'anim-idle'} overflow-visible">
+          <ellipse cx="75" cy="150" rx="32" ry="5" fill="#000000" opacity="0.25"/>
+          <!-- Lam Body: Straight Tall Spine into Rounded Hook Bottom -->
+          <path d="M 88,32 L 88,106 C 88,134 50,138 42,112 C 40,104 46,98 52,102" fill="none" stroke="#f43f5e" stroke-width="15" stroke-linecap="round"/>
+          <path d="M 88,32 L 88,106 C 88,134 50,138 42,112 C 40,104 46,98 52,102" fill="none" stroke="#be123c" stroke-width="8" stroke-linecap="round"/>
+          <!-- Eyes on the straight upper neck -->
+          <g transform="translate(74, 48)">
+            <ellipse cx="6" cy="8" rx="6.5" ry="9" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <circle cx="7" cy="8" r="3" fill="#1c1917"/>
+            <ellipse cx="19" cy="8" rx="6.5" ry="9" fill="#ffffff" stroke="#1c1917" stroke-width="2"/>
+            <circle cx="18" cy="8" r="3" fill="#1c1917"/>
+            <path d="M 1,-1 Q 6,-5 11,-1" stroke="#1c1917" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 13,-1 Q 18,-5 23,-1" stroke="#1c1917" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </g>
+          <!-- Gloved Hands -->
+          <path d="M 80,72 Q 60,62 50,48" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" class="anim-wave"/>
+          <ellipse cx="48" cy="44" rx="7" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="1.8"/>
+          <path d="M 96,72 Q 112,78 120,90" fill="none" stroke="#f43f5e" stroke-width="4" stroke-linecap="round"/>
+          <ellipse cx="122" cy="92" rx="6" ry="6" fill="#ffffff" stroke="#1c1917" stroke-width="1.8"/>
+        </svg>
+      `;
+    }
+
+    // Refresh all rendered containers
+    function updateAll() {
+      document.getElementById('m1-container').innerHTML = renderVavi(currentState);
+      document.getElementById('m2-container').innerHTML = renderElifi(currentState);
+      document.getElementById('m3-container').innerHTML = renderAyni(currentState);
+      document.getElementById('m4-container').innerHTML = renderNuni(currentState);
+      document.getElementById('m5-container').innerHTML = renderLami(currentState);
+
+      updatePreviewSlot();
+    }
+
+    function updatePreviewSlot() {
+      const slot = document.getElementById('mockup-mascot-slot');
+      if (currentSelectedMascot === 1) slot.innerHTML = renderVavi(currentState);
+      else if (currentSelectedMascot === 2) slot.innerHTML = renderElifi(currentState);
+      else if (currentSelectedMascot === 3) slot.innerHTML = renderAyni(currentState);
+      else if (currentSelectedMascot === 4) slot.innerHTML = renderNuni(currentState);
+      else if (currentSelectedMascot === 5) slot.innerHTML = renderLami(currentState);
+
+      const names = {
+        1: 'Vavi (Model 1 · Vav Harfi - En Güçlü Ataç Formu)',
+        2: 'Elifi (Model 2 · Elif Harfi & Hemze Beresi)',
+        3: 'Ayni (Model 3 · Ayn Harfi - Göz Karakteri)',
+        4: 'Nuni (Model 4 · Nun Harfi & Zıpzıp Nokta)',
+        5: 'Lami (Model 5 · Lâm Harfi & Dansçı Kanca)'
+      };
+      document.getElementById('preview-mascot-name').innerText = names[currentSelectedMascot];
+      document.getElementById('speech-text').innerText = speechTexts[currentState];
+    }
+
+    function setState(st) {
+      currentState = st;
+      ['success', 'fail', 'tap', 'think', 'idle'].forEach(s => {
+        const btn = document.getElementById(`btn-${s}`);
+        if (s === st) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+      updateAll();
+    }
+
+    function selectMascot(id) {
+      currentSelectedMascot = id;
+      updatePreviewSlot();
+      document.getElementById('mockup-mascot-slot').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function setTheme(mode) {
+      document.body.classList.remove('theme-dark', 'theme-sepia');
+      ['light', 'sepia', 'dark'].forEach(m => {
+        const b = document.getElementById(`theme-${m}-btn`);
+        b.classList.remove('bg-[var(--accent)]', 'text-white');
+      });
+      if (mode === 'dark') {
+        document.body.classList.add('theme-dark');
+        document.getElementById('theme-dark-btn').classList.add('bg-[var(--accent)]', 'text-white');
+      } else if (mode === 'sepia') {
+        document.body.classList.add('theme-sepia');
+        document.getElementById('theme-sepia-btn').classList.add('bg-[var(--accent)]', 'text-white');
+      } else {
+        document.getElementById('theme-light-btn').classList.add('bg-[var(--accent)]', 'text-white');
+      }
+    }
+
+    // Initialize
+    updateAll();
+  </script>
+</body>
+</html>

@@ -1,13 +1,17 @@
 import ThemePicker from '../common/ThemePicker';
 import { assetUrl } from '../../utils/urls';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { ChevronLeft, ChevronRight, PanelLeft, ZoomIn, ZoomOut, Bookmark, Maximize2, Minimize2, SlidersHorizontal, X, Columns2, File, Focus, Eye, Sun, Moon, Coffee, Volume2, BookOpen, CircleHelp, Sparkles, Gamepad2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PanelLeft, ZoomIn, ZoomOut, Bookmark, Maximize2, Minimize2, SlidersHorizontal, X, Columns2, File, Focus, Eye, Sun, Moon, Coffee, Volume2, VolumeX, BookOpen, CircleHelp, Sparkles, Gamepad2, Trophy } from 'lucide-react';
 import { ARABIC_LETTERS } from '../../data/curriculumData';
-import { playAudioFile, stopCurrentAudio, setGlobalPlaybackSpeed, subscribeAudio, getAudioSnapshot } from '../../utils/audioPlayer';
+import { playAudioFile, stopCurrentAudio, setGlobalPlaybackSpeed, subscribeAudio, getAudioSnapshot, sfx } from '../../utils/audioPlayer';
 import { READER_DEFAULTS } from '../../utils/readerTools';
 import { isQuickLetterAudio } from '../../utils/readerMedia';
 import ActivityDrawer from './ActivityDrawer';
+import ReaderDialog from './ReaderDialog';
 import ReaderWelcome from './ReaderWelcome';
+import Page14ActivityLaunchers, { PageBalloonLauncher } from './PageBalloonLauncher';
+import BalloonWorkshop from './BalloonWorkshop';
+import ElifbaMark from '../common/ElifbaMark';
 import { activitiesForPage, finishActivity } from '../../data/bookActivities';
 import PaperCurl from './PaperCurl';
 import ReaderGuide from './ReaderGuide';
@@ -54,12 +58,15 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   const [guide, setGuide] = useState(false), [zoom, setZoom] = useState(1), [pageWidth, setPageWidth] = useState(440), [wide, setWide] = useState(innerWidth >= 1000);
   const [compactStage, setCompactStage] = useState(innerWidth < 800);
   const [activitiesOpen,setActivitiesOpen]=useState(false);
+  const [activitiesSession, setActivitiesSession] = useState(null);
+  const [activitiesPage, setActivitiesPage] = useState(null);
+  const [balloonGameOpen, setBalloonGameOpen] = useState(false);
   const activitiesTrigger=useRef(null);
   const [shimmerActive, setShimmerActive] = useState(false);
   const shimmerTimer = useRef(null);
   const [turn, setTurn] = useState(null), [failed, setFailed] = useState({}), [imageVersion, setImageVersion] = useState(0);
   const [panel, setPanel] = useState(false), [tab, setTab] = useState('contents'), [settings, setSettings] = useState(false), [focus, setFocus] = useState(false), [fullscreen, setFullscreen] = useState(false);
-  const [draft, setDraft] = useState(String(currentPage)), [scrub, setScrub] = useState(null), [fullscreenError, setFullscreenError] = useState('');
+  const [draft, setDraft] = useState(String(currentPage)), [fullscreenError, setFullscreenError] = useState('');
   const viewportRef = useRef(null), pageRef = useRef(null), gesture = useRef(null), pointers = useRef(new Map()), pinch = useRef(null), settingsRef = useRef(null), settingsTrigger = useRef(null), panelTrigger = useRef(null);
   const zoomRef = useRef(1), zoomAnchor = useRef(null), turning = useRef(false);
   const audio = useSyncExternalStore(subscribeAudio, getAudioSnapshot);
@@ -68,8 +75,8 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   const visible = spread && currentPage < total ? [page, pagesData[currentPage]] : [page];
   const activityPages=visible.filter(p=>activitiesForPage(p.page_number).length).map(p=>p.page_number);
   const hasActivities=preferences.activitiesEnabled===true&&activityPages.length>0;
-  const closeActivities=()=>{stopCurrentAudio();setActivitiesOpen(false);};
-  useEffect(()=>{setActivitiesOpen(false);stopCurrentAudio();},[currentPage,preferences.activitiesEnabled,spread]);
+  const closeActivities=()=>{stopCurrentAudio();setActivitiesOpen(false);setActivitiesSession(null);setActivitiesPage(null);};
+  useEffect(()=>{setActivitiesOpen(false);setBalloonGameOpen(false);stopCurrentAudio();},[currentPage,preferences.activitiesEnabled,spread]);
   useEffect(() => {
     if (hasActivities) {
       setShimmerActive(true);
@@ -192,7 +199,14 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   };
   const playSpot = (h, p, i) => {
     if (h.type === 'goto_page') go(h.target_page);
-    else if (h.type === 'video') onOpenVideo({ file: h.video_path, caption: h.caption, pageNumber: p.page_number });
+    else if (h.type === 'video') {
+      const audios = (p.hotspots || []).filter(s => s.type === 'audio');
+      const nextVideo = (p.hotspots || []).filter(s => s.type === 'video' && s.bounds.y > h.bounds.y).sort((a,b)=>a.bounds.y-b.bounds.y)[0];
+      const relatedAudios = audios.filter(a => a.bounds.y >= h.bounds.y && (!nextVideo || a.bounds.y < nextVideo.bounds.y));
+      const audioTr = relatedAudios.find(a => a.audio_path?.includes('/turkish/'))?.audio_path;
+      const audioDe = relatedAudios.find(a => a.audio_path?.includes('/german/'))?.audio_path;
+      onOpenVideo({ file: h.video_path, caption: h.caption, pageNumber: p.page_number, audioTr, audioDe });
+    }
     else playAudioFile(h.audio_path, { label: titleFor(h, p, i), speed: preferences.speed, presentation: isQuickLetterAudio(h, p.page_number) ? 'quiet' : 'reader', anchor: { page: p.page_number, bounds: h.bounds } });
   };
   const pointerDown = e => {
@@ -239,7 +253,7 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
     }
     const g = gesture.current; if (!g || g.id !== e.pointerId || g.pinched) return;
     const dx = e.clientX - g.x, dy = e.clientY - g.y;
-    if (Math.hypot(dx, dy) > 8) {
+    if (Math.hypot(dx, dy) > 16) {
       g.moved = true;
       if (!e.currentTarget.hasPointerCapture?.(e.pointerId)) e.currentTarget.setPointerCapture?.(e.pointerId);
       if (zoomRef.current > 1) { viewportRef.current.scrollLeft = g.left - dx; viewportRef.current.scrollTop = g.top - dy; }
@@ -273,7 +287,31 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
               return (
                 <div className={`reader-sheet ${hasPageActivities ? 'has-page-activities' : ''}`} ref={index === 0 ? pageRef : undefined} key={`${p.page_number}-${currentPage}`}>
                   <img src={`${assetUrl(p.image)}${imageVersion ? `?v=${imageVersion}` : ''}`} alt={`${de ? 'Originalbuch, Seite' : 'Orijinal kitap, sayfa'} ${p.page_number}`} draggable="false" onError={() => setFailed(v => ({ ...v, [p.page_number]: true }))} onLoad={() => setFailed(v => ({ ...v, [p.page_number]: false }))} />
-                  {failed[p.page_number] ? <div className="image-error" role="alert"><p>{de ? 'Seite konnte nicht geladen werden.' : 'Sayfa yüklenemedi.'}</p><button className="button button-white" onClick={() => setImageVersion(v => v + 1)}>{de ? 'Erneut versuchen' : 'Tekrar dene'}</button></div> : p.hotspots.filter(h => ['audio', 'video', 'goto_page'].includes(h.type)).map((h, i) => <BookHotspot key={`${p.page_number}-${h.id}-${i}`} hotspot={h} pageImage={`${assetUrl(p.image)}${imageVersion ? `?v=${imageVersion}` : ''}`} label={titleFor(h, p, i)} audio={audio} disabled={Boolean(turn)} onActivate={() => playSpot(h, p, i)} />)}
+                  {failed[p.page_number] ? <div className="image-error" role="alert"><p>{de ? 'Seite konnte nicht geladen werden.' : 'Sayfa yüklenemedi.'}</p><button className="button button-white" onClick={() => setImageVersion(v => v + 1)}>{de ? 'Erneut versuchen' : 'Tekrar dene'}</button></div> : (
+                    <>
+                      {p.hotspots.filter(h => ['audio', 'video', 'goto_page'].includes(h.type)).map((h, i) => <BookHotspot key={`${p.page_number}-${h.id}-${i}`} hotspot={h} pageImage={`${assetUrl(p.image)}${imageVersion ? `?v=${imageVersion}` : ''}`} label={titleFor(h, p, i)} audio={audio} disabled={Boolean(turn)} onActivate={() => playSpot(h, p, i)} />)}
+                      {p.page_number === 14 && (
+                        <Page14ActivityLaunchers
+                          lang={lang}
+                          disabled={Boolean(turn)}
+                          onLaunchBalloon={() => {
+                            stopCurrentAudio();
+                            setPanel(false);
+                            setSettings(false);
+                            setBalloonGameOpen(true);
+                          }}
+                          onLaunchListen={() => {
+                            stopCurrentAudio();
+                            setPanel(false);
+                            setSettings(false);
+                            setActivitiesSession('listen');
+                            setActivitiesPage(14);
+                            setActivitiesOpen(true);
+                          }}
+                        />
+                      )}
+                    </>
+                  )}
                 </div>
               );
             })}
@@ -284,7 +322,6 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
       <button className="reader-edge reader-edge-prev reader-glass" onClick={() => go(currentPage - step)} disabled={currentPage === 6 || Boolean(turn)} aria-label={de ? 'Vorherige Seite' : 'Önceki sayfa'}><ChevronLeft size={23} /></button>
       <button className="reader-edge reader-edge-next reader-glass" onClick={() => go(currentPage + step)} disabled={currentPage + visible.length > total || Boolean(turn)} aria-label={de ? 'Nächste Seite' : 'Sonraki sayfa'}><ChevronRight size={23} /></button>
       <div className="reader-bottom">
-        <div className="reader-scrubber"><label htmlFor="reader-position">{de ? 'Buchposition' : 'Kitaptaki konum'} <span>{Math.round((currentPage - 5) / (total - 5) * 100)}%</span></label><input id="reader-position" type="range" min="6" max={total} value={scrub ?? currentPage} onChange={e => setScrub(Number(e.target.value))} onPointerUp={e => { go(Number(e.currentTarget.value)); setScrub(null); }} onKeyUp={e => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'].includes(e.key)) { go(Number(e.currentTarget.value)); setScrub(null); } }} onBlur={e => { if (scrub !== null) { go(Number(e.currentTarget.value)); setScrub(null); } }} aria-valuetext={`${de ? 'Seite' : 'Sayfa'} ${scrub ?? currentPage}`} />{scrub !== null && <div className="reader-scrub-preview"><img src={assetUrl(pagesData[scrub - 1].thumbnail)} alt="" /><span>{de ? 'Seite' : 'Sayfa'} {scrub}</span></div>}</div>
         <div className="reader-dock reader-glass" role="toolbar" aria-label={de ? 'Lesewerkzeuge' : 'Okuma araçları'}>
           <button ref={panelTrigger} className="reader-control reader-panel-trigger" onClick={togglePanel} aria-label={de ? 'Inhalt und Buchnavigation' : 'Dizin ve kitap gezinmesi'} aria-expanded={panel} aria-controls="reader-sidebar" data-tip={de ? 'Buchnavigation' : 'Dizin ve kitap gezinmesi'}><PanelLeft size={19} /><span>{de ? 'Inhalt' : 'Dizin'}</span></button>
           <span className="reader-dock-divider" />
@@ -335,6 +372,67 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
       {fullscreenError && <p className="reader-notice" role="status">{fullscreenError}<button onClick={() => setFullscreenError('')} aria-label={de ? 'Schließen' : 'Kapat'}><X size={15} /></button></p>}
     </div>
     {preferences.activitiesEnabled===null&&<ReaderWelcome lang={lang} onChoose={activitiesEnabled=>updatePreferences({activitiesEnabled})}/>}
-    {activitiesOpen&&hasActivities&&<ActivityDrawer pages={activityPages} lang={lang} speed={preferences.speed} progress={reader.activityProgress||{completed:[],attempts:[]}} effects={effects} onEffectsChange={onEffectsChange} onFinish={(p,id,result)=>onReaderChange({activityProgress:finishActivity(reader.activityProgress,p,id,result)})} onClose={closeActivities}/>}
+    {activitiesOpen&&hasActivities&&<ActivityDrawer pages={activityPages} initialSession={activitiesSession} initialPage={activitiesPage} lang={lang} speed={preferences.speed} progress={reader.activityProgress||{completed:[],attempts:[]}} effects={effects} onEffectsChange={onEffectsChange} onFinish={(p,id,result)=>onReaderChange({activityProgress:finishActivity(reader.activityProgress,p,id,result)})} onClose={closeActivities}/>}
+    {balloonGameOpen && (
+      <ReaderDialog
+        labelledBy="balloon-workshop-title"
+        onClose={() => {
+          stopCurrentAudio();
+          setBalloonGameOpen(false);
+        }}
+        className="activity-drawer-backdrop balloon-modal-backdrop"
+      >
+        <header className="activity-drawer-header">
+          <div className="activity-brand">
+            <ElifbaMark />
+            <div>
+              <p className="activity-eyebrow">{de ? 'KLEINE BUCHSTABEN-ENTDECKER' : 'KÜÇÜK HARF KÂŞİFLERİ'}</p>
+              <h2 id="balloon-workshop-title">{de ? 'Fliegende Ballons' : 'Uçan Balonlar'} · {de ? 'Seite 14' : 'Sayfa 14'}</h2>
+            </div>
+          </div>
+          <div className="activity-header-actions">
+            <button
+              className="activity-btn"
+              aria-label={effects ? (de ? 'Spielklänge ausschalten' : 'Etkinlik seslerini kapat') : (de ? 'Spielklänge einschalten' : 'Etkinlik seslerini aç')}
+              aria-pressed={effects}
+              onClick={() => {
+                sfx.enabled = !effects;
+                onEffectsChange?.(!effects);
+              }}
+            >
+              {effects ? <Volume2 size={19} /> : <VolumeX size={19} />}
+            </button>
+            <button
+              className="activity-btn"
+              onClick={() => {
+                stopCurrentAudio();
+                setBalloonGameOpen(false);
+              }}
+              aria-label={de ? 'Spiel schließen' : 'Oyunu kapat'}
+            >
+              <X size={19} />
+              <span className="activity-close-label">{de ? 'Schließen' : 'Kapat'}</span>
+            </button>
+          </div>
+        </header>
+        <div className="activity-drawer-body">
+          <BalloonWorkshop
+            key={`balloon-workshop-page-14`}
+            lang={lang}
+            speed={preferences.speed}
+            backLabel={de ? 'Zum Buch' : 'Kitaba Dön'}
+            onBack={() => {
+              stopCurrentAudio();
+              setBalloonGameOpen(false);
+            }}
+            onFinish={result => {
+              onReaderChange({
+                activityProgress: finishActivity(reader.activityProgress, 14, 'balloon', result)
+              });
+            }}
+          />
+        </div>
+      </ReaderDialog>
+    )}
   </section>;
 }

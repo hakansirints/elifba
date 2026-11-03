@@ -322,7 +322,11 @@ export default function AllLettersBoard({ lang = 'tr', speed = 1, onBack, onFini
       <div className="activity-workspace all-letters-workspace">
         {/* Compact prompt column */}
         <section className="activity-prompt all-letters-prompt">
-          <Buddy happy={stageComplete || Boolean(confettiCardId)} />
+          <Buddy
+            happy={stageComplete || Boolean(confettiCardId)}
+            sad={Boolean(wrongId)}
+            state={stageComplete || Boolean(confettiCardId) ? 'success' : wrongId ? 'fail' : 'idle'}
+          />
           <h3>
             {stageComplete
               ? (de ? 'Glückwunsch!' : 'Tebrikler!')

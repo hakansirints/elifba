@@ -4,6 +4,7 @@ import { AudioLines, Video } from 'lucide-react';
 
 export default function BookHotspot({ hotspot, pageImage, label, audio, disabled, onActivate }) {
   const media = ['audio', 'video'].includes(hotspot.type);
+  const isVideo = hotspot.type === 'video';
   const compact = hotspot.bounds.width < .2 && hotspot.bounds.height < .15;
   const active = media && audio.url === assetUrl(hotspot.type === 'video' ? hotspot.video_path : hotspot.audio_path) && audio.status !== 'idle';
 
@@ -41,9 +42,9 @@ export default function BookHotspot({ hotspot, pageImage, label, audio, disabled
           </span>
           <span className="hotspot-lift-ring" />
           {!compact && (
-            <span className="hotspot-lift-badge">
-              <AudioLines size={13} className={active && audio.status === 'playing' ? 'is-pulsing' : ''} />
-              <span>{active && audio.status === 'playing' ? 'Okunuyor...' : 'Dinle'}</span>
+            <span className={`hotspot-lift-badge ${isVideo ? 'hotspot-video-badge' : ''}`}>
+              {isVideo ? <Video size={13} /> : <AudioLines size={13} className={active && audio.status === 'playing' ? 'is-pulsing' : ''} />}
+              <span>{isVideo ? 'Videoyu İzle' : (active && audio.status === 'playing' ? 'Okunuyor...' : 'Dinle')}</span>
             </span>
           )}
         </span>

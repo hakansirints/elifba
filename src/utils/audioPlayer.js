@@ -29,23 +29,73 @@ class SoundFX {
     }
   }
 
-  // Pop sound for balloons
+  // Realistic balloon pop sound (rubber rupture snap + explosive decompression air burst + low thump)
   playPop() {
     if (!this.enabled) return;
     this.init();
     if (!this.ctx) return;
     try {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.12);
-      gain.gain.setValueAtTime(0.5, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.12);
+      const now = this.ctx.currentTime;
+
+      // 1. Air burst & rubber rupture: White noise passed through a resonant bandpass filter
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.08); // 80ms buffer
+      const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      const whiteNoise = this.ctx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1400, now);
+      filter.frequency.exponentialRampToValueAtTime(320, now + 0.07);
+      filter.Q.setValueAtTime(1.4, now);
+
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.9, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+
+      whiteNoise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(this.ctx.destination);
+
+      whiteNoise.start(now);
+      whiteNoise.stop(now + 0.08);
+
+      // 2. Air cavity decompression thump (low-end punch)
+      const thudOsc = this.ctx.createOscillator();
+      const thudGain = this.ctx.createGain();
+      thudOsc.type = 'triangle';
+      thudOsc.frequency.setValueAtTime(240, now);
+      thudOsc.frequency.exponentialRampToValueAtTime(45, now + 0.065);
+
+      thudGain.gain.setValueAtTime(0.75, now);
+      thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
+
+      thudOsc.connect(thudGain);
+      thudGain.connect(this.ctx.destination);
+
+      thudOsc.start(now);
+      thudOsc.stop(now + 0.07);
+
+      // 3. High sharp snap (membrane tearing instant)
+      const snapOsc = this.ctx.createOscillator();
+      const snapGain = this.ctx.createGain();
+      snapOsc.type = 'sine';
+      snapOsc.frequency.setValueAtTime(1800, now);
+      snapOsc.frequency.exponentialRampToValueAtTime(280, now + 0.025);
+
+      snapGain.gain.setValueAtTime(0.5, now);
+      snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+
+      snapOsc.connect(snapGain);
+      snapGain.connect(this.ctx.destination);
+
+      snapOsc.start(now);
+      snapOsc.stop(now + 0.03);
     } catch (e) {
       // ignore audio context errors
     }

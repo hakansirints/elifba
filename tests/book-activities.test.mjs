@@ -9,8 +9,15 @@ import { readStore, emptyStore } from '../src/utils/learningStore.js';
 import { evaluateDrawing } from '../src/utils/drawingEvaluation.js';
 
 test('Only pages 14–17 offer the appropriate pilot activities',()=>{
-  for(let page=6;page<=74;page++)assert.equal(activitiesForPage(page).length,[14,15,16,17].includes(page)?4:0);
-  assert.equal(activitiesForPage(14)[0].id,'recognize');
+  for(let page=6;page<=74;page++)assert.equal(activitiesForPage(page).length,page===14?6:[15,16,17].includes(page)?4:0);
+  assert.ok(activitiesForPage(14).some(a => a.id === 'balloon'));
+  for(let page=6;page<=74;page++) {
+    if (page !== 14) {
+      assert.equal(activitiesForPage(page).some(a => a.id === 'balloon'), false, `Page ${page} should not have balloon game`);
+    }
+  }
+  assert.ok(activitiesForPage(14).some(a => a.id === 'makhraj'));
+  assert.ok(activitiesForPage(14).some(a => a.id === 'recognize'));
   assert.equal(activitiesForPage(15)[0].id,'similar');
   assert.equal(activitiesForPage(16)[0].id,'grid');
   assert.equal(activitiesForPage(17)[0].id,'train');
@@ -51,7 +58,7 @@ test('Page 17 letter positions and games generate valid questions with four opti
   }
 });
 test('Rounds have six distinct targets and one correct option; similar choices share a shape group',()=>{
-  for(const page of [14,15,16])for(const mode of activitiesForPage(page).filter(a=>!['pairs','trace'].includes(a.id))){
+  for(const page of [14,15,16])for(const mode of activitiesForPage(page).filter(a=>!['pairs','trace','balloon','makhraj'].includes(a.id))){
     const qs=createQuestions(page,mode.id,()=>.4);
     assert.equal(qs.length,6);assert.equal(new Set(qs.map(q=>q.letter.id)).size,6);
     for(const q of qs){

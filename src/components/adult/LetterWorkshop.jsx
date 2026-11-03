@@ -349,7 +349,11 @@ export default function LetterWorkshop({ page, targetId, lang, speed, onFinish, 
 
       <div className="activity-workspace">
         <section className="activity-prompt">
-          <Buddy happy={right || isDrawingCorrect} />
+          <Buddy
+            happy={right || isDrawingCorrect}
+            sad={wrong || isDrawingWrong}
+            state={right || isDrawingCorrect ? 'success' : (wrong || isDrawingWrong) ? 'fail' : 'idle'}
+          />
           <h3 ref={heading} tabIndex={-1}>
             {tab === 'listen'
               ? (de ? 'Höre den Buchstaben.' : 'Harfin adını dinle.')
