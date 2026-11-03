@@ -294,6 +294,7 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
                       {p.page_number === 14 && (
                         <Page14ActivityLaunchers
                           lang={lang}
+                          pageWidth={pageWidth}
                           disabled={Boolean(turn)}
                           onLaunchBalloon={() => {
                             stopCurrentAudio();

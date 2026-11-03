@@ -1,8 +1,8 @@
 /* The rail follows the same zoom factor as its book page. */
 .page14-activity-launchers {
-  --launcher-scale: var(--reader-zoom, 1);
+  --launcher-scale: calc(var(--reader-zoom, 1) * .85);
   position: absolute;
-  left: calc(-72px * var(--reader-zoom, 1));
+  left: calc(-62.4px * var(--reader-zoom, 1));
   top: 50%;
   transform: translateY(-50%) scale(var(--launcher-scale));
   transform-origin: left center;
@@ -37,8 +37,8 @@
   display: grid;
   place-items: center;
   flex: none;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -53,7 +53,7 @@
 .page14-activity-button:is(:hover, :focus-visible, :active) .page14-glass-icon > svg { opacity: 1; }
 .page14-activity-balloon .page14-glass-icon { color: #943448; background: #f5e0da; }
 .page14-activity-listen .page14-glass-icon { color: #14654f; background: #d5e3c6; }
-.page14-activity-button + .page14-activity-button::before { content: ''; position: absolute; width: 40px; height: 1px; top: -9px; left: 4px; background: rgba(178, 157, 118, .7); }
+.page14-activity-button + .page14-activity-button::before { content: ''; position: absolute; width: 40px; height: 1px; top: -9px; left: 50%; transform: translateX(-50%); background: rgba(178, 157, 118, .7); }
 .page14-activity-button:disabled { opacity: .45; cursor: default; }
 .page14-activity-button:focus-visible { outline: 2px solid var(--site-ink); outline-offset: 4px; }
 .page14-activity-button:not(:disabled):hover { transform: translateX(3px); filter: brightness(1.05); }
@@ -84,16 +84,10 @@
 }
 @media (max-width: 599px) {
   .reader-desk.has-page14-launchers { width: max(100%, calc(var(--page-width) * var(--reader-zoom) + 32px)); padding-left: 16px; padding-right: 16px; }
-  .page14-activity-launchers { --launcher-scale: calc(var(--reader-zoom, 1) * .6875); left: calc(4px * var(--reader-zoom, 1)); }
-  .page14-activity-button { width: 64px; height: 64px; }
-  .page14-activity-button + .page14-activity-button::before { left: 12px; }
+  .page14-activity-launchers { --launcher-scale: calc(var(--reader-zoom, 1) * var(--page14-mobile-scale)); left: calc(var(--page14-mobile-inset) * var(--reader-zoom, 1)); }
+  .page14-activity-button { width: calc(44px / var(--page14-mobile-scale)); height: calc(44px / var(--page14-mobile-scale)); }
   /* Page navigation remains available in the bottom dock. */
   .reader-stage:has(.page14-activity-launchers) > .reader-edge { display: none; }
-}
-@media (max-width: 359px) {
-  .page14-activity-launchers { --launcher-scale: calc(var(--reader-zoom, 1) * .5625); left: calc(3px * var(--reader-zoom, 1)); }
-  .page14-activity-button { width: 78px; height: 78px; }
-  .page14-activity-button + .page14-activity-button::before { left: 19px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .page14-activity-button, .page14-activity-tooltip, .page14-glass-icon > svg { transition: none; }
