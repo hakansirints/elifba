@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { GripVertical, Play, Pause, X, RotateCcw, Video } from 'lucide-react';
+import { Play, Pause, X, RotateCcw, Video } from 'lucide-react';
 import { playAudioFile, stopCurrentAudio, toggleCurrentAudio, seekCurrentAudio, setGlobalPlaybackSpeed } from '../../utils/audioPlayer';
 import { clampPlayerPosition, placeReaderPlayer } from '../../utils/readerMedia';
 
@@ -7,14 +7,17 @@ const rectOf = el => { const r = el.getBoundingClientRect(); return { x: r.x, y:
 const clock = value => `${Math.floor((value || 0) / 60)}:${String(Math.floor((value || 0) % 60)).padStart(2, '0')}`;
 
 export default function ReaderMiniPlayer({ state, lang, onSpeedChange, theme, onOpenVideo }) {
-  const de = lang === 'de', player = useRef(null), drag = useRef(null), manual = useRef(false), point = useRef({ x: 16, y: 90 });
+  const de = lang === 'de', player = useRef(null), point = useRef({ x: 16, y: 90 });
   const [position, setPosition] = useState(point.current);
   const updatePosition = next => { point.current = next; setPosition(next); };
 
   useLayoutEffect(() => {
-    manual.current = false;
     const positionPlayer = () => {
       if (!player.current) return;
+      if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+        // Mobile layout is docked at bottom via CSS
+        return;
+      }
       const viewport = { width: innerWidth, height: innerHeight };
 
       const activeHotspot = document.querySelector('.book-hotspot.hotspot-active');
@@ -37,11 +40,6 @@ export default function ReaderMiniPlayer({ state, lang, onSpeedChange, theme, on
       const playerWidth = Math.min(Math.max(280, anchor ? anchor.width : 320), Math.min(480, viewport.width - 24));
       player.current.style.width = `${playerWidth}px`;
       const playerHeight = player.current.offsetHeight || 42;
-
-      if (manual.current) {
-        updatePosition(clampPlayerPosition(point.current, { width: playerWidth, height: playerHeight }, viewport));
-        return;
-      }
 
       if (anchor) {
         const gap = 8;
@@ -78,21 +76,6 @@ export default function ReaderMiniPlayer({ state, lang, onSpeedChange, theme, on
     return () => { observer.disconnect(); cancelAnimationFrame(frame); viewport?.removeEventListener('scroll', schedule); window.removeEventListener('resize', schedule); };
   }, [state.url, state.anchor]);
 
-  const moveBy = (dx, dy) => {
-    manual.current = true;
-    updatePosition(clampPlayerPosition({ x: point.current.x + dx, y: point.current.y + dy }, { width: player.current.offsetWidth, height: player.current.offsetHeight }, { width: innerWidth, height: innerHeight }));
-  };
-  const startDrag = e => {
-    if (e.button !== 0) return;
-    manual.current = true;
-    drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, origin: { ...point.current } };
-    e.currentTarget.setPointerCapture(e.pointerId);
-  };
-  const moveDrag = e => {
-    const d = drag.current; if (!d || d.id !== e.pointerId) return;
-    updatePosition(clampPlayerPosition({ x: d.origin.x + e.clientX - d.x, y: d.origin.y + e.clientY - d.y }, { width: player.current.offsetWidth, height: player.current.offsetHeight }, { width: innerWidth, height: innerHeight }));
-  };
-
   const retry = () => playAudioFile(state.url, { label: state.label, speed: state.speed, presentation: state.presentation || 'reader', anchor: state.anchor, video: state.video });
 
   return (
@@ -104,25 +87,12 @@ export default function ReaderMiniPlayer({ state, lang, onSpeedChange, theme, on
       style={{ left: position.x, top: position.y }}
     >
       <button
-        className="mini-drag-handle"
-        aria-label={de ? 'Player verschieben' : 'Oynatıcıyı taşı'}
-        onPointerDown={startDrag}
-        onPointerMove={moveDrag}
-        onPointerUp={() => { drag.current = null; }}
-        onPointerCancel={() => { drag.current = null; }}
-        onKeyDown={e => {
-          if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-            e.preventDefault();
-            e.stopPropagation();
-            const step = e.shiftKey ? 48 : 16;
-            moveBy(
-              e.key === 'ArrowRight' ? step : e.key === 'ArrowLeft' ? -step : 0,
-              e.key === 'ArrowDown' ? step : e.key === 'ArrowUp' ? -step : 0
-            );
-          }
-        }}
+        className="mini-glass-action mini-close-btn"
+        onClick={stopCurrentAudio}
+        aria-label={de ? 'Wiedergabe beenden' : 'Oynatmayı bitir'}
+        title={de ? 'Schließen' : 'Kapat'}
       >
-        <GripVertical size={14} />
+        <X size={15} />
       </button>
 
       <button
@@ -180,14 +150,6 @@ export default function ReaderMiniPlayer({ state, lang, onSpeedChange, theme, on
           <Video size={14} />
         </button>
       )}
-
-      <button
-        className="mini-glass-action mini-close-btn"
-        onClick={stopCurrentAudio}
-        aria-label={de ? 'Wiedergabe beenden' : 'Oynatmayı bitir'}
-      >
-        <X size={15} />
-      </button>
     </aside>
   );
 }
