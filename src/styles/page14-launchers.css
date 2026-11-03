@@ -1,8 +1,8 @@
 /* The rail follows the same zoom factor as its book page. */
 .page14-activity-launchers {
-  --launcher-scale: calc(var(--reader-zoom, 1) * .85);
+  --launcher-scale: calc(var(--reader-zoom, 1) * .85 * var(--launcher-size-factor, 1));
   position: absolute;
-  left: calc(-62.4px * var(--reader-zoom, 1));
+  left: calc((-54.4px * var(--launcher-size-factor, 1) - 8px) * var(--reader-zoom, 1));
   top: 50%;
   transform: translateY(-50%) scale(var(--launcher-scale));
   transform-origin: left center;
@@ -49,7 +49,7 @@
   transition: transform .18s ease, filter .18s ease;
 }
 .page14-glass-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; }
-.page14-glass-icon > svg { opacity: .74; transition: opacity .18s ease; }
+.page14-glass-icon > svg { opacity: .75; transition: opacity .18s ease; }
 .page14-activity-button:is(:hover, :focus-visible, :active) .page14-glass-icon > svg { opacity: 1; }
 .page14-activity-balloon .page14-glass-icon { color: #943448; background: #f5e0da; }
 .page14-activity-listen .page14-glass-icon { color: #14654f; background: #d5e3c6; }
@@ -84,7 +84,7 @@
 }
 @media (max-width: 599px) {
   .reader-desk.has-page14-launchers { width: max(100%, calc(var(--page-width) * var(--reader-zoom) + 32px)); padding-left: 16px; padding-right: 16px; }
-  .page14-activity-launchers { --launcher-scale: calc(var(--reader-zoom, 1) * var(--page14-mobile-scale)); left: calc(var(--page14-mobile-inset) * var(--reader-zoom, 1)); }
+  .page14-activity-launchers { --launcher-scale: calc(var(--reader-zoom, 1) * var(--page14-mobile-scale) * var(--launcher-size-factor, 1)); left: calc(var(--page14-mobile-inset) * var(--reader-zoom, 1)); }
   .page14-activity-button { width: calc(44px / var(--page14-mobile-scale)); height: calc(44px / var(--page14-mobile-scale)); }
   /* Page navigation remains available in the bottom dock. */
   .reader-stage:has(.page14-activity-launchers) > .reader-edge { display: none; }

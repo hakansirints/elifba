@@ -45,8 +45,9 @@ export default function Page14ActivityLaunchers({ lang = 'tr', pageWidth = 320, 
   // The source page's inner frame starts at x=148 in its 1281px artwork.
   const marginWidth = pageWidth * 148 / 1281;
   const railWidth = marginWidth * .78;
+  const sizeFactor = .75;
   return (
-    <div className="page14-activity-launchers" style={{ '--page14-mobile-scale': railWidth / 64, '--page14-mobile-inset': `${(marginWidth - railWidth) / 2}px` }} role="region" aria-label={de ? 'Seitenaktivitäten' : 'Sayfa etkinlikleri'}>
+    <div className="page14-activity-launchers" style={{ '--launcher-size-factor': sizeFactor, '--page14-mobile-scale': railWidth / 64, '--page14-mobile-inset': `${(marginWidth - railWidth * sizeFactor) / 2}px` }} role="region" aria-label={de ? 'Seitenaktivitäten' : 'Sayfa etkinlikleri'}>
       <div className="page14-controls-glass">
         <PageBalloonLauncher lang={lang} disabled={disabled} onLaunch={onLaunchBalloon} />
         <PageListenLauncher lang={lang} disabled={disabled} onLaunch={onLaunchListen} />
