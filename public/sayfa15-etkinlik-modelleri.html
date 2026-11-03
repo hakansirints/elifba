@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sayfa 15 Kuralları İçin 4 İnteraktif Etkinlik Modeli (5-12 Yaş)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: #090d16;
+      color: #f8fafc;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .arabic-font {
+      font-family: 'Scheherazade New', 'Amiri', serif;
+    }
+    .fun-font {
+      font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    /* Animated bounce */
+    @keyframes gentleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-bounce-gentle {
+      animation: gentleBounce 2.4s ease-in-out infinite;
+    }
+    /* Pulse glow */
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+      50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.5); }
+    }
+    .glow-box {
+      animation: pulseGlow 2.5s infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="glass-card sticky top-0 z-50 px-6 py-3.5 flex flex-wrap items-center justify-between border-b border-slate-800">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-white font-bold text-xl">
+        ⭐
+      </div>
+      <div>
+        <h1 class="text-sm sm:text-base font-bold text-white tracking-wide flex items-center gap-2">
+          Sayfa 15 Kuralları İçin 4 Etkinlik Modeli
+          <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 fun-font">5–12 Yaş</span>
+        </h1>
+        <p class="text-xs text-slate-400">Görseldeki 4 temel kuralı (Kalın-İnce, Peltek, Birleşmeyen 6 Harf, Lamelif) eğlenceli oyunlara dönüştüren modeller</p>
+      </div>
+    </div>
+
+    <!-- Model Switcher Buttons -->
+    <div class="flex items-center gap-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800 my-2 sm:my-0">
+      <button onclick="switchModel(1)" id="btn-m1" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all bg-emerald-500 text-white shadow-md">
+        1. Kalın & İnce Terazisi
+      </button>
+      <button onclick="switchModel(2)" id="btn-m2" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white">
+        2. Peltek Dedektifi
+      </button>
+      <button onclick="switchModel(3)" id="btn-m3" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white">
+        3. Küskün 6 Harf Treni
+      </button>
+      <button onclick="switchModel(4)" id="btn-m4" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white">
+        4. Lamelif Gizemli Sandığı
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- Left Column: Live Interactive Game Canvas (7 cols) -->
+    <div class="lg:col-span-7 flex flex-col gap-4">
+
+      <!-- The Active Model Stage -->
+      <div class="glass-card rounded-2xl border border-slate-700/80 p-5 sm:p-6 shadow-2xl relative min-h-[500px] flex flex-col justify-between overflow-hidden">
+        
+        <!-- ======================================================== -->
+        <!-- MODEL 1: KALIN & İNCE HARF TERAZİSİ (DEVLER VS PERİLER) -->
+        <!-- ======================================================== -->
+        <div id="stage-m1" class="flex flex-col h-full justify-between">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider fun-font">MODEL 1: 7 Kalın + Ra + İnce Harfler</span>
+              <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                🦁 Sesli Terazi: Devler ve İnciler
+              </h2>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1 rounded-full border border-slate-700 text-xs">
+              <span>Puan:</span>
+              <span id="m1-score" class="font-bold text-emerald-400 text-sm">0</span>
+              <span class="text-amber-400">⭐</span>
+            </div>
+          </div>
+
+          <!-- Letter in the Sky -->
+          <div class="py-6 flex flex-col items-center justify-center">
+            <div class="text-xs text-slate-400 mb-2 fun-font font-semibold">Bu harf Kalın mı yoksa İnce mi? Doğru sepete gönder!</div>
+            
+            <div id="m1-letter-card" class="relative group cursor-pointer w-28 h-28 rounded-2xl bg-gradient-to-b from-amber-100 to-amber-200 border-4 border-amber-400 flex flex-col items-center justify-center shadow-xl shadow-amber-500/20 transform transition-all duration-200 hover:scale-105" onclick="playAudioTone('letter')">
+              <span id="m1-letter-char" class="arabic-font text-5xl font-bold text-stone-900 drop-shadow">ص</span>
+              <span id="m1-letter-name" class="fun-font text-xs font-bold text-amber-900 mt-1">Sad</span>
+              <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-emerald-500 text-white text-[10px] flex items-center justify-center font-bold shadow">🔊</span>
+            </div>
+
+            <!-- Ra special condition badge if active -->
+            <div id="m1-ra-badge" class="hidden mt-3 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold fun-font animate-pulse">
+              🌿 Özel Harf: "Ra" (ر) harekeye bakar!
+            </div>
+          </div>
+
+          <!-- Two Sorting Baskets -->
+          <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-800/80">
+            <!-- Kalın Sepeti (Devler) -->
+            <button onclick="m1Answer('kalin')" class="p-4 rounded-xl bg-gradient-to-b from-rose-950/60 to-rose-900/80 border-2 border-rose-500/60 hover:border-rose-400 hover:scale-102 transition-all flex flex-col items-center text-center group shadow-lg shadow-rose-950/40">
+              <span class="text-3xl mb-1 group-hover:scale-110 transition-transform">🦁</span>
+              <span class="text-sm font-bold text-rose-200 fun-font">KALIN HARF (7 Tane)</span>
+              <span class="text-[11px] text-rose-300/80 mt-1">خ, ص, ض, ط, ظ, غ, ق</span>
+              <span class="mt-2 px-3 py-0.5 rounded-full bg-rose-500/30 text-rose-200 text-[10px] font-bold">Tok ve Güçlü Ses</span>
+            </button>
+
+            <!-- İnce Sepeti (İnciler) -->
+            <button onclick="m1Answer('ince')" class="p-4 rounded-xl bg-gradient-to-b from-emerald-950/60 to-emerald-900/80 border-2 border-emerald-500/60 hover:border-emerald-400 hover:scale-102 transition-all flex flex-col items-center text-center group shadow-lg shadow-emerald-950/40">
+              <span class="text-3xl mb-1 group-hover:scale-110 transition-transform">🕊️</span>
+              <span class="text-sm font-bold text-emerald-200 fun-font">İNCE HARF</span>
+              <span class="text-[11px] text-emerald-300/80 mt-1">ب, ت, ث, ج, د, ز...</span>
+              <span class="mt-2 px-3 py-0.5 rounded-full bg-emerald-500/30 text-emerald-200 text-[10px] font-bold">Zarif ve Berrak Ses</span>
+            </button>
+          </div>
+
+          <!-- Feedback line -->
+          <div id="m1-feedback" class="mt-3 text-center text-xs font-bold text-slate-300 h-5">
+            Harfe dokunarak sesini dinleyebilirsin!
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- MODEL 2: PELTEK DEDEKTİFİ & ÜÇÜZ KARDEŞLER (ث - ذ - ظ) -->
+        <!-- ======================================================== -->
+        <div id="stage-m2" class="hidden flex-col h-full justify-between">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="text-xs font-bold text-teal-400 uppercase tracking-wider fun-font">MODEL 2: 3 Peltek Harf (ث - ذ - ظ)</span>
+              <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                👅 Peltek Dedektifi: Dilini Çıkaran Üçüzler
+              </h2>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1 rounded-full border border-slate-700 text-xs">
+              <span>Kalan Peltek:</span>
+              <span id="m2-count" class="font-bold text-teal-400 text-sm">3 / 3</span>
+            </div>
+          </div>
+
+          <!-- Target Hint & Fun Rule -->
+          <div class="p-3 my-2 rounded-xl bg-teal-950/40 border border-teal-500/30 flex items-center gap-3">
+            <div class="text-3xl">👅</div>
+            <div class="text-xs text-teal-200 leading-relaxed">
+              <strong>Peltek Kuralı:</strong> Dilinin ucunu ön dişlerinin arasına hafifçe koy ve oku! Alfabede sadece <strong>3 tane</strong> peltek harf vardır: <span class="font-bold text-amber-300">ث - ذ - ظ</span>. Diğer keskin harfler çeldiricidir!
+            </div>
+          </div>
+
+          <!-- Floating Balloons / Grid of Letters to Detect -->
+          <div class="my-auto py-2">
+            <div class="text-center text-xs text-slate-400 mb-3">Aşağıdaki harflerden <strong>PELTEK</strong> olanları bul ve tıkla:</div>
+            <div class="grid grid-cols-3 gap-3 max-w-sm mx-auto">
+              
+              <!-- Letter Peltek 1: ث -->
+              <button onclick="m2Select('ث', true, this)" class="m2-btn p-3 rounded-xl bg-slate-800 hover:bg-teal-900/60 border border-slate-700 hover:border-teal-400 transition-all flex flex-col items-center">
+                <span class="arabic-font text-3xl font-bold text-teal-300">ث</span>
+                <span class="text-[11px] font-semibold text-slate-300 mt-1">Se (Peltek)</span>
+              </button>
+
+              <!-- Distractor: س (Keskin Sin) -->
+              <button onclick="m2Select('س', false, this)" class="m2-btn p-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all flex flex-col items-center">
+                <span class="arabic-font text-3xl font-bold text-stone-200">س</span>
+                <span class="text-[11px] font-semibold text-slate-400 mt-1">Sin (Keskin)</span>
+              </button>
+
+              <!-- Letter Peltek 2: ذ -->
+              <button onclick="m2Select('ذ', true, this)" class="m2-btn p-3 rounded-xl bg-slate-800 hover:bg-teal-900/60 border border-slate-700 hover:border-teal-400 transition-all flex flex-col items-center">
+                <span class="arabic-font text-3xl font-bold text-teal-300">ذ</span>
+                <span class="text-[11px] font-semibold text-slate-300 mt-1">Zel (Peltek)</span>
+              </button>
+
+              <!-- Distractor: ز (Keskin Ze) -->
+              <button onclick="m2Select('ز', false, this)" class="m2-btn p-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all flex flex-col items-center">
+                <span class="arabic-font text-3xl font-bold text-stone-200">ز</span>
+                <span class="text-[11px] font-semibold text-slate-400 mt-1">Ze (Keskin)</span>
+              </button>
+
+              <!-- Letter Peltek 3: ظ -->
+              <button onclick="m2Select('ظ', true, this)" class="m2-btn p-3 rounded-xl bg-slate-800 hover:bg-teal-900/60 border border-slate-700 hover:border-teal-400 transition-all flex flex-col items-center">
+                <span class="arabic-font text-3xl font-bold text-teal-300">ظ</span>
+                <span class="text-[11px] font-semibold text-slate-300 mt-1">Zı (Kalın-Peltek)</span>
+              </button>
+
+              <!-- Distractor: ص (Kalın Sad) -->
+              <button onclick="m2Select('ص', false, this)" class="m2-btn p-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all flex flex-col items-center">
+                <span class="arabic-font text-3xl font-bold text-stone-200">ص</span>
+                <span class="text-[11px] font-semibold text-slate-400 mt-1">Sad (Kalın)</span>
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Bottom Status -->
+          <div id="m2-status" class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 text-center text-xs font-bold text-teal-300">
+            Peltek üçüzleri yakalamak için kartlara dokun!
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- MODEL 3: KÜSKÜN / BENCİL 6 HARF TRENİ (ا د ذ ر ز و) -->
+        <!-- ======================================================== -->
+        <div id="stage-m3" class="hidden flex-col h-full justify-between">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider fun-font">MODEL 3: Kendinden Sonra Birleşmeyen 6 Harf</span>
+              <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                🚂 Dostluk Treni & El Vermeyen 6 Harf
+              </h2>
+            </div>
+            <div class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              Kural Oyunu
+            </div>
+          </div>
+
+          <!-- Train Visual & Story -->
+          <div class="my-auto py-2 flex flex-col items-center">
+            
+            <!-- Animated Train with Wagons -->
+            <div class="w-full flex items-center justify-center gap-2 py-4 overflow-x-auto">
+              <!-- Engine -->
+              <div class="w-16 h-16 rounded-xl bg-gradient-to-tr from-amber-600 to-orange-400 flex flex-col items-center justify-center shadow-lg border border-amber-300 flex-shrink-0">
+                <span class="text-2xl">🚂</span>
+                <span class="text-[9px] font-bold text-amber-950 uppercase fun-font">Lokomotif</span>
+              </div>
+              
+              <!-- Link -->
+              <div class="h-1 w-4 bg-amber-400"></div>
+
+              <!-- Wagon 1: Current Letter in Question -->
+              <div id="m3-wagon-target" class="w-20 h-20 rounded-xl bg-indigo-900/60 border-2 border-dashed border-indigo-400 flex flex-col items-center justify-center flex-shrink-0 relative">
+                <span id="m3-char" class="arabic-font text-4xl font-bold text-amber-300">د</span>
+                <span id="m3-char-name" class="text-[10px] text-indigo-200 fun-font font-bold">Dal</span>
+              </div>
+
+              <!-- Broken / Connected Arm Animation Area -->
+              <div id="m3-arm-link" class="flex flex-col items-center justify-center flex-shrink-0 w-12">
+                <span id="m3-hand-icon" class="text-xl">🤝?</span>
+                <div id="m3-link-line" class="h-1 w-full bg-slate-600"></div>
+              </div>
+
+              <!-- Wagon 2: Following Letter (Waiting for hand) -->
+              <div class="w-16 h-16 rounded-xl bg-slate-800 border border-slate-700 flex flex-col items-center justify-center flex-shrink-0 opacity-80">
+                <span class="arabic-font text-2xl font-bold text-slate-300">م</span>
+                <span class="text-[9px] text-slate-400 font-bold fun-font">Sonraki Harf</span>
+              </div>
+            </div>
+
+            <!-- Question prompt -->
+            <div class="text-center my-3 text-xs text-slate-300 font-medium">
+              Bu harf arkasından gelen <span class="font-bold text-amber-300">Mim (م)</span> harfine elini uzatıp <strong class="text-white">birleşir mi</strong>, yoksa <strong class="text-rose-400">küser mi (birleşmez)</strong>?
+            </div>
+
+            <!-- Interactive Decision Buttons -->
+            <div class="grid grid-cols-2 gap-4 w-full max-w-sm">
+              <button onclick="m3Answer(false)" class="p-3 rounded-xl bg-rose-950/60 hover:bg-rose-900/80 border border-rose-500/60 flex items-center justify-center gap-2 text-rose-200 font-bold text-xs fun-font transition-all hover:scale-102">
+                <span>🚫</span>
+                <span>Küser! El Vermez! (6 Harften Biri)</span>
+              </button>
+              <button onclick="m3Answer(true)" class="p-3 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/60 flex items-center justify-center gap-2 text-emerald-200 font-bold text-xs fun-font transition-all hover:scale-102">
+                <span>🤝</span>
+                <span>El Ele Tutuşur! (Birleşir)</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- 6 Letters Memory Ribbon at the Bottom -->
+          <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-semibold fun-font">Küskün 6 Harf:</span>
+            <div class="flex items-center gap-2 arabic-font text-base font-bold text-indigo-300">
+              <span>ا</span> • <span>د</span> • <span>ذ</span> • <span>ر</span> • <span>ز</span> • <span>و</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- MODEL 4: LAMELİF GİZEMLİ SANDIĞI (FÜZYON LABORATUVARI) -->
+        <!-- ======================================================== -->
+        <div id="stage-m4" class="hidden flex-col h-full justify-between">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <span class="text-xs font-bold text-purple-400 uppercase tracking-wider fun-font">MODEL 4: 28 Harf + Lamelif (لا = ل + ا)</span>
+              <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                ✨ Lamelif Gizemli Sandığı: Harf Birleştirici
+              </h2>
+            </div>
+            <div class="text-xs font-bold px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              Keşif & Kucaklaşma
+            </div>
+          </div>
+
+          <!-- Fusion Altar -->
+          <div class="my-auto py-4 flex flex-col items-center">
+            
+            <div class="text-xs text-slate-300 mb-4 text-center max-w-md">
+              <strong class="text-purple-300">"Lamelif (لا) tek başına bir harf midir?"</strong><br>
+              Aşağıdaki <span class="text-amber-300 font-bold">Lam (ل)</span> ve <span class="text-emerald-300 font-bold">Elif (ا)</span> parçalarını kucaklaştırarak gerçeği keşfet!
+            </div>
+
+            <!-- Fusion Chamber -->
+            <div class="flex items-center justify-center gap-6 my-3">
+              
+              <!-- Component 1: Lam -->
+              <div id="m4-lam" class="w-20 h-24 rounded-2xl bg-amber-500/20 border-2 border-amber-400 flex flex-col items-center justify-center shadow-lg transition-all duration-500">
+                <span class="arabic-font text-4xl font-bold text-amber-300">ل</span>
+                <span class="text-[11px] font-bold text-amber-200 fun-font mt-1">Lam (ل)</span>
+              </div>
+
+              <!-- Fusion Sparkle Operator -->
+              <div id="m4-plus" class="text-2xl text-purple-400 font-bold transition-all duration-300">
+                +
+              </div>
+
+              <!-- Component 2: Alif -->
+              <div id="m4-elif" class="w-20 h-24 rounded-2xl bg-emerald-500/20 border-2 border-emerald-400 flex flex-col items-center justify-center shadow-lg transition-all duration-500">
+                <span class="arabic-font text-4xl font-bold text-emerald-300">ا</span>
+                <span class="text-[11px] font-bold text-emerald-200 fun-font mt-1">Elif (ا)</span>
+              </div>
+
+            </div>
+
+            <!-- Fusion Result (Appears when fused) -->
+            <div id="m4-result" class="hidden my-2 flex flex-col items-center animate-bounce-gentle">
+              <div class="w-24 h-28 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-500 border-2 border-purple-300 flex flex-col items-center justify-center shadow-2xl shadow-purple-500/40">
+                <span class="arabic-font text-5xl font-bold text-white drop-shadow">لا</span>
+                <span class="text-xs font-bold text-purple-100 fun-font mt-1">Lamelif (لا)</span>
+              </div>
+              <div class="mt-2 text-xs font-bold text-emerald-300 bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/40">
+                🎉 Harika! لا iki harfin kucaklaşmasıdır, bağımsız harf değildir!
+              </div>
+            </div>
+
+            <!-- Fuse Button -->
+            <button id="m4-fuse-btn" onclick="m4Fuse()" class="mt-4 px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white font-bold text-xs fun-font shadow-lg shadow-purple-500/25 transition-all flex items-center gap-2">
+              <span>🔮</span>
+              <span>İki Harfi Kucaklaştır (Füzyon)!</span>
+            </button>
+
+          </div>
+
+          <!-- Bottom Fact Card -->
+          <div class="p-3 rounded-xl bg-purple-950/30 border border-purple-500/30 text-xs text-purple-200 flex items-center justify-between">
+            <span>Kur'an-ı Kerim alfabesinde toplam kaç bağımsız harf vardır?</span>
+            <span class="px-2.5 py-1 rounded-md bg-purple-500 text-purple-950 font-extrabold fun-font">Tam 28 Harf!</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Right Column: Pedagogical Details, Rationale & Controls (5 cols) -->
+    <div class="lg:col-span-5 flex flex-col gap-4">
+
+      <!-- Model Specs Card -->
+      <div class="glass-card rounded-2xl border border-slate-700/80 p-5 shadow-xl flex flex-col justify-between">
+        <div>
+          <!-- Model Header Badge -->
+          <div class="flex items-center justify-between mb-3">
+            <span id="detail-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 fun-font">
+              MODEL 1 İNCELEMESİ
+            </span>
+            <span id="detail-age" class="text-xs text-amber-400 font-semibold fun-font">
+              Hedef: 5–12 Yaş
+            </span>
+          </div>
+
+          <h3 id="detail-title" class="text-lg font-bold text-white mb-2 leading-snug">
+            Sesli Terazi: 7 Kalın + Değişken Ra + İnce Harfler
+          </h3>
+
+          <p id="detail-desc" class="text-xs text-slate-300 mb-4 leading-relaxed">
+            Metindeki "Kırmızı renkte olan 7 tanesi kalın, yeşil renkte olan Ra harfi harekeye göre kalın veya ince, diğerleri ince harflerdir" kuralını doğrudan çocukların dokunarak ve ses tonlarını duyarak ayırt ettiği bir terazi oyununa dönüştürür.
+          </p>
+
+          <!-- Pedagogy Pillars -->
+          <div class="space-y-3 mb-5">
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-[11px] font-bold text-amber-300 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                <span>🎯</span> <span>Pedagojik Amaç:</span>
+              </div>
+              <p id="detail-goal" class="text-xs text-slate-300 leading-normal">
+                5-8 yaş için renk ve ses eşleştirmesi; 9-12 yaş için harflerin sıfatlarını (İstila/İstifale) zihinde kalıcı kodlama.
+              </p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-[11px] font-bold text-emerald-300 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                <span>🎮</span> <span>Oyun Mekaniği:</span>
+              </div>
+              <p id="detail-mechanic" class="text-xs text-slate-300 leading-normal">
+                Sürükle-bırak veya tek tıkla sepete atma. Kalın harflerde tok aslan kükremesi/davul sesi, ince harflerde kuş cıvıltısı/zil tınısı.
+              </p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-[11px] font-bold text-teal-300 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                <span>📖</span> <span>Sayfa 15 Entegrasyonu:</span>
+              </div>
+              <p id="detail-integ" class="text-xs text-slate-300 leading-normal">
+                Sayfa 15'teki bilgi kartının hemen yanına iliştirilen kıvrımlı kurdele sekmesiyle açılan interaktif mini atölye.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rafi Mascot Preview Box -->
+        <div class="p-3 rounded-xl bg-gradient-to-r from-emerald-950/40 to-slate-900 border border-emerald-500/30 flex items-center gap-3">
+          <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center">
+            <!-- Mini Rafi Icon -->
+            <svg viewBox="0 0 160 160" class="w-12 h-12" fill="none">
+              <rect x="36" y="38" width="88" height="90" rx="20" fill="#14654f" stroke="#22c55e" stroke-width="3"/>
+              <path d="M 44,47 Q 80,53 116,47 L 116,117 Q 80,123 44,117 Z" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+              <ellipse cx="60" cy="78" rx="4" ry="6" fill="#1c1917"/>
+              <ellipse cx="100" cy="78" rx="4" ry="6" fill="#1c1917"/>
+              <ellipse cx="53" cy="85" rx="6" ry="4" fill="#f43f5e" opacity="0.6"/>
+              <ellipse cx="107" cy="85" rx="6" ry="4" fill="#f43f5e" opacity="0.6"/>
+              <path d="M 68,96 Q 80,108 92,96" stroke="#1c1917" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-emerald-300 fun-font">Rafi Maskot Tepkisi:</div>
+            <div class="text-[11px] text-slate-300 leading-tight">Doğru cevapta neşeyle zıplayıp yıldız saçar, yanlışta tatlı bir "Hadi bir daha dene!" pozu verir.</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Interactive JavaScript Engine for All 4 Models -->
+  <script>
+    let activeModel = 1;
+
+    // Model 1 State
+    const m1Letters = [
+      { char: 'ص', name: 'Sad', isKalin: true, audioFreq: 180 },
+      { char: 'ب', name: 'Be', isKalin: false, audioFreq: 520 },
+      { char: 'ط', name: 'Tı', isKalin: true, audioFreq: 190 },
+      { char: 'ت', name: 'Te', isKalin: false, audioFreq: 540 },
+      { char: 'غ', name: 'Gayn', isKalin: true, audioFreq: 210 },
+      { char: 'ر', name: 'Ra', isRa: true, isKalin: true, audioFreq: 300 }, // Ra special
+      { char: 'ق', name: 'Kaf', isKalin: true, audioFreq: 220 },
+      { char: 'ج', name: 'Cim', isKalin: false, audioFreq: 480 }
+    ];
+    let m1Index = 0;
+    let m1Score = 0;
+
+    // Model 2 State (Peltek)
+    let m2Remaining = 3;
+    const m2Found = new Set();
+
+    // Model 3 State (Birleşmeyen 6 Harf)
+    const m3Questions = [
+      { char: 'د', name: 'Dal', connectsAfter: false },
+      { char: 'ب', name: 'Be', connectsAfter: true },
+      { char: 'ر', name: 'Ra', connectsAfter: false },
+      { char: 'س', name: 'Sin', connectsAfter: true },
+      { char: 'و', name: 'Vav', connectsAfter: false },
+      { char: 'ك', name: 'Kef', connectsAfter: true }
+    ];
+    let m3Index = 0;
+
+    // Web Audio Synthesizer
+    function playAudioTone(type) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'letter' || type === 'deep') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(200, ctx.currentTime);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.32);
+        } else if (type === 'high' || type === 'ding') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(650, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.25, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.28);
+        } else if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+          osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2); // G5
+          gain.gain.setValueAtTime(0.25, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.42);
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, ctx.currentTime);
+          osc.frequency.setValueAtTime(140, ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.28);
+        }
+      } catch (e) {}
+    }
+
+    // Switch between 4 models
+    function switchModel(id) {
+      activeModel = id;
+      
+      // Update top button styles
+      for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`btn-m${i}`);
+        const stage = document.getElementById(`stage-m${i}`);
+        if (i === id) {
+          btn.className = 'px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all bg-emerald-500 text-white shadow-md';
+          stage.classList.remove('hidden');
+          stage.classList.add('flex');
+        } else {
+          btn.className = 'px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white';
+          stage.classList.add('hidden');
+          stage.classList.remove('flex');
+        }
+      }
+
+      // Update right panel details
+      updateDetails(id);
+    }
+
+    const modelDetails = {
+      1: {
+        badge: 'MODEL 1 İNCELEMESİ',
+        age: 'Hedef: 5–12 Yaş',
+        title: 'Sesli Terazi: 7 Kalın + Değişken Ra + İnce Harfler',
+        desc: 'Metindeki "Kırmızı renkte olan 7 tanesi kalın, yeşil renkte olan Ra harfi harekeye göre kalın veya ince, diğerleri ince harflerdir" kuralını doğrudan çocukların dokunarak ve ses tonlarını duyarak ayırt ettiği bir terazi oyununa dönüştürür.',
+        goal: '5-8 yaş için renk ve ses eşleştirmesi; 9-12 yaş için harflerin sıfatlarını (İstila/İstifale) zihinde kalıcı kodlama.',
+        mechanic: 'Sürükle-bırak veya tek tıkla sepete atma. Kalın harflerde tok aslan kükremesi/davul sesi, ince harflerde berrak kuş/zil tınısı.',
+        integ: 'Sayfa 15\'teki bilgi kartının hemen yanına iliştirilen kıvrımlı kurdele sekmesiyle açılan interaktif mini atölye.'
+      },
+      2: {
+        badge: 'MODEL 2 İNCELEMESİ',
+        age: 'Hedef: 5–12 Yaş',
+        title: 'Peltek Dedektifi: Dilini Çıkaran Üçüz Kardeşler (ث - ذ - ظ)',
+        desc: 'Metindeki "Yine Kur\'ân alfabesinde üç tane peltek harf vardır. Bunlar da ث - ذ - ظ harfleridir" kuralını hedef alır. Çocuklara peltek harfleri keskin harflerden (س, ز, ص) ayırt etmeyi öğretir.',
+        goal: 'Mahreç ve telaffuz farkındalığı oluşturmak; peltek harflerde dilin dişler arasına hafifçe çıktığını görselleştirerek öğretmek.',
+        mechanic: 'Balon patlatma veya kart avlama formatında ekrandan geçen harfler arasından sadece 3 peltek harfi yakalamak. Çeldiriciye basıldığında uyarı.',
+        integ: 'Sayfa 15\'teki peltek kuralı butonuna dokunulduğunda doğrudan açılan hedefli mini telaffuz oyunu.'
+      },
+      3: {
+        badge: 'MODEL 3 İNCELEMESİ',
+        age: 'Hedef: 6–12 Yaş',
+        title: 'Dostluk Treni: Kendinden Sonra El Vermeyen 6 Küskün Harf',
+        desc: 'Metindeki "Tüm harfler kendinden sonra gelen harfle birleşir. و - ز - ر - ذ - د - ا harfleri kendinden sonra gelen harflerle birleşmezler" kuralını eğlenceli bir tren dostluğu metaforuyla somutlaştırır.',
+        goal: 'Tecvid ve yazım kuralını (kendinden sonra birleşmeyen harfler) "el ele tutuşma" metaforuyla çocukların zihnine kalıcı olarak kazımak.',
+        mechanic: 'Lokomotife bağlanan vagonlarda harfler birbirine el uzatmak ister. Eğer harf bu 6 harften biriyse kollarını göğsünde kavuşturur ve arkasındakine el vermez.',
+        integ: 'Harf birleştirme sayfalarına (Sayfa 17-20) harika bir hazırlık istasyonu görevi görür.'
+      },
+      4: {
+        badge: 'MODEL 4 İNCELEMESİ',
+        age: 'Hedef: 5–10 Yaş',
+        title: 'Lamelif Gizemli Sandığı: 28 Harf ve Kucaklaşma (لا = ل + ا)',
+        desc: 'Metindeki "Kur\'an-ı Kerim alfabesi 28 harften oluşmaktadır. Lamelif (لا) kendi başına bir harf olmayıp Lam (ل) ve Elif (ا) harflerinin birleşmesinden oluşur" temel kuralını simyacı/birleştirici yapbozuyla öğretir.',
+        goal: 'Çocukların zihnindeki "Alfabede 28 harf mi var 29 harf mi?" kafa karışıklığını tamamen ortadan kaldırır.',
+        mechanic: 'Lam ve Elif harflerini parmakla birbirine doğru sürükleyip kucaklaştırma. Birleştiğinde ortaya لا çıkar ve sihirli konfetiler patlar.',
+        integ: 'Sayfa 15 başlığındaki Lamelif açıklamasının hemen üzerinde interaktif bir canlandırma olarak yer alır.'
+      }
+    };
+
+    function updateDetails(id) {
+      const d = modelDetails[id];
+      document.getElementById('detail-badge').innerText = d.badge;
+      document.getElementById('detail-age').innerText = d.age;
+      document.getElementById('detail-title').innerText = d.title;
+      document.getElementById('detail-desc').innerText = d.desc;
+      document.getElementById('detail-goal').innerText = d.goal;
+      document.getElementById('detail-mechanic').innerText = d.mechanic;
+      document.getElementById('detail-integ').innerText = d.integ;
+    }
+
+    // ============================================
+    // Model 1 Logic: Kalın & İnce
+    // ============================================
+    function m1Answer(chosen) {
+      const current = m1Letters[m1Index];
+      const isCorrect = (chosen === 'kalin' && current.isKalin) || (chosen === 'ince' && !current.isKalin);
+      
+      const feedback = document.getElementById('m1-feedback');
+      if (isCorrect) {
+        playAudioTone('correct');
+        m1Score += 10;
+        document.getElementById('m1-score').innerText = m1Score;
+        feedback.innerHTML = `<span class="text-emerald-400 font-bold">Harika! "${current.name}" harfi ${current.isKalin ? 'KALIN' : 'İNCE'} bir harftir. (+10 ⭐)</span>`;
+      } else {
+        playAudioTone('wrong');
+        feedback.innerHTML = `<span class="text-rose-400 font-bold">Dikkat! "${current.name}" harfi ${current.isKalin ? 'KALIN' : 'İNCE'} olmalıydı.</span>`;
+      }
+
+      // Next letter
+      m1Index = (m1Index + 1) % m1Letters.length;
+      const next = m1Letters[m1Index];
+      document.getElementById('m1-letter-char').innerText = next.char;
+      document.getElementById('m1-letter-name').innerText = next.name;
+
+      const raBadge = document.getElementById('m1-ra-badge');
+      if (next.isRa) {
+        raBadge.classList.remove('hidden');
+      } else {
+        raBadge.classList.add('hidden');
+      }
+    }
+
+    // ============================================
+    // Model 2 Logic: Peltek Dedektifi
+    // ============================================
+    function m2Select(char, isPeltek, btn) {
+      const status = document.getElementById('m2-status');
+      if (isPeltek) {
+        if (!m2Found.has(char)) {
+          playAudioTone('correct');
+          m2Found.add(char);
+          m2Remaining--;
+          document.getElementById('m2-count').innerText = `${3 - m2Remaining} / 3`;
+          btn.classList.add('bg-teal-600', 'border-teal-300', 'scale-105');
+          btn.innerHTML += `<span class="text-xs text-amber-300 font-bold">✓ Yakalandı!</span>`;
+          status.innerHTML = `<span class="text-emerald-400 font-bold">Aferin! "${char}" peltek bir harftir; dil dişlerin arasından çıkar!</span>`;
+
+          if (m2Remaining === 0) {
+            status.innerHTML = `<span class="text-amber-300 font-extrabold text-sm">🎉 TEBRİKLER! Tüm peltek üçüzleri (ث - ذ - ظ) buldun!</span>`;
+          }
+        }
+      } else {
+        playAudioTone('wrong');
+        status.innerHTML = `<span class="text-rose-400 font-bold">Aman dikkat! "${char}" peltek değildir, keskin seslidir!</span>`;
+      }
+    }
+
+    // ============================================
+    // Model 3 Logic: Küskün 6 Harf
+    // ============================================
+    function m3Answer(userSaidConnects) {
+      const current = m3Questions[m3Index];
+      const isCorrect = userSaidConnects === current.connectsAfter;
+
+      const arm = document.getElementById('m3-arm-link');
+      const hand = document.getElementById('m3-hand-icon');
+      const line = document.getElementById('m3-link-line');
+
+      if (isCorrect) {
+        playAudioTone('correct');
+        if (!current.connectsAfter) {
+          hand.innerText = '🚫';
+          line.className = 'h-1 w-full bg-rose-500';
+          alert(`Tebrikler! Doğru bildin: "${current.name}" kendinden sonraki harfle BİRLEŞMEZ (Küskün 6 harften biridir)!`);
+        } else {
+          hand.innerText = '🤝';
+          line.className = 'h-1 w-full bg-emerald-500';
+          alert(`Tebrikler! "${current.name}" harfi arkadaşına el uzatır ve birleşir!`);
+        }
+      } else {
+        playAudioTone('wrong');
+        alert(`Bir dahaki sefere! "${current.name}" harfi ${current.connectsAfter ? 'birleşir' : 'birleşmez'}.`);
+      }
+
+      // Next question
+      m3Index = (m3Index + 1) % m3Questions.length;
+      const next = m3Questions[m3Index];
+      document.getElementById('m3-char').innerText = next.char;
+      document.getElementById('m3-char-name').innerText = next.name;
+      hand.innerText = '🤝?';
+      line.className = 'h-1 w-full bg-slate-600';
+    }
+
+    // ============================================
+    // Model 4 Logic: Lamelif Füzyon
+    // ============================================
+    function m4Fuse() {
+      playAudioTone('correct');
+      const lam = document.getElementById('m4-lam');
+      const elif = document.getElementById('m4-elif');
+      const plus = document.getElementById('m4-plus');
+      const result = document.getElementById('m4-result');
+      const btn = document.getElementById('m4-fuse-btn');
+
+      lam.style.transform = 'translateX(40px) scale(0.8)';
+      elif.style.transform = 'translateX(-40px) scale(0.8)';
+      plus.style.opacity = '0';
+
+      setTimeout(() => {
+        lam.classList.add('hidden');
+        elif.classList.add('hidden');
+        plus.classList.add('hidden');
+        result.classList.remove('hidden');
+        btn.innerText = '🔄 Baştan Dene';
+        btn.onclick = m4Reset;
+      }, 500);
+    }
+
+    function m4Reset() {
+      const lam = document.getElementById('m4-lam');
+      const elif = document.getElementById('m4-elif');
+      const plus = document.getElementById('m4-plus');
+      const result = document.getElementById('m4-result');
+      const btn = document.getElementById('m4-fuse-btn');
+
+      lam.classList.remove('hidden');
+      elif.classList.remove('hidden');
+      plus.classList.remove('hidden');
+      lam.style.transform = 'none';
+      elif.style.transform = 'none';
+      plus.style.opacity = '1';
+      result.classList.add('hidden');
+      btn.innerHTML = '<span>🔮</span><span>İki Harfi Kucaklaştır (Füzyon)!</span>';
+      btn.onclick = m4Fuse;
+    }
+
+    // Init with Model 1
+    updateDetails(1);
+  </script>
+</body>
+</html>

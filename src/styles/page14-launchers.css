@@ -53,6 +53,8 @@
 .page14-activity-button:is(:hover, :focus-visible, :active) .page14-glass-icon > svg { opacity: 1; }
 .page14-activity-balloon .page14-glass-icon { color: #943448; background: #f5e0da; }
 .page14-activity-listen .page14-glass-icon { color: #14654f; background: #d5e3c6; }
+.page15-activity-quiz .page14-glass-icon { color: #6d28d9; background: #ede9fe; }
+:root[data-theme="dark"] .page15-activity-quiz .page14-glass-icon { color: #c4b5fd; background: rgba(109, 40, 217, .3); }
 .page14-activity-button + .page14-activity-button::before { content: ''; position: absolute; width: 40px; height: 1px; top: -9px; left: 50%; transform: translateX(-50%); background: rgba(178, 157, 118, .7); }
 .page14-activity-button:disabled { opacity: .45; cursor: default; }
 .page14-activity-button:focus-visible { outline: 2px solid var(--site-ink); outline-offset: 4px; }

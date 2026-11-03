@@ -9,8 +9,9 @@ import { isQuickLetterAudio } from '../../utils/readerMedia';
 import ActivityDrawer from './ActivityDrawer';
 import ReaderDialog from './ReaderDialog';
 import ReaderWelcome from './ReaderWelcome';
-import Page14ActivityLaunchers from './PageBalloonLauncher';
+import Page14ActivityLaunchers, { Page15ActivityLaunchers } from './PageBalloonLauncher';
 import BalloonWorkshop from './BalloonWorkshop';
+import Page15QuizWorkshop from './Page15QuizWorkshop';
 import ElifbaMark from '../common/ElifbaMark';
 import { activitiesForPage, finishActivity } from '../../data/bookActivities';
 import PaperCurl from './PaperCurl';
@@ -19,6 +20,7 @@ import ReaderSidebar from './ReaderSidebar';
 import BookHotspot from './BookHotspot';
 import '../../styles/reader.css';
 import '../../styles/book-activities.css';
+import '../../styles/page15-quiz.css';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const ASPECT = 561.26 / 788.03;
@@ -61,6 +63,7 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   const [activitiesSession, setActivitiesSession] = useState(null);
   const [activitiesPage, setActivitiesPage] = useState(null);
   const [balloonGameOpen, setBalloonGameOpen] = useState(false);
+  const [quiz15Open, setQuiz15Open] = useState(false);
   const activitiesTrigger=useRef(null);
   const [shimmerActive, setShimmerActive] = useState(false);
   const shimmerTimer = useRef(null);
@@ -73,11 +76,11 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   const floatingAudio = audio.status !== 'idle' && audio.presentation !== 'activity' && (audio.presentation !== 'quiet' || audio.status === 'error');
   const spread = preferences.spread && wide && currentPage < total, step = preferences.spread && wide ? 2 : 1;
   const visible = spread && currentPage < total ? [page, pagesData[currentPage]] : [page];
-  const hasPage14Launchers = visible.some(p => p.page_number === 14);
+  const hasPage14Launchers = visible.some(p => p.page_number === 14 || p.page_number === 15);
   const activityPages=visible.filter(p=>activitiesForPage(p.page_number).length).map(p=>p.page_number);
   const hasActivities=preferences.activitiesEnabled===true&&activityPages.length>0;
   const closeActivities=()=>{stopCurrentAudio();setActivitiesOpen(false);setActivitiesSession(null);setActivitiesPage(null);};
-  useEffect(()=>{setActivitiesOpen(false);setBalloonGameOpen(false);stopCurrentAudio();},[currentPage,preferences.activitiesEnabled,spread]);
+  useEffect(()=>{setActivitiesOpen(false);setBalloonGameOpen(false);setQuiz15Open(false);stopCurrentAudio();},[currentPage,preferences.activitiesEnabled,spread]);
   useEffect(() => {
     if (hasActivities) {
       setShimmerActive(true);
@@ -312,6 +315,19 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
                           }}
                         />
                       )}
+                      {p.page_number === 15 && (
+                        <Page15ActivityLaunchers
+                          lang={lang}
+                          pageWidth={pageWidth}
+                          disabled={Boolean(turn)}
+                          onLaunchQuiz={() => {
+                            stopCurrentAudio();
+                            setPanel(false);
+                            setSettings(false);
+                            setQuiz15Open(true);
+                          }}
+                        />
+                      )}
                     </>
                   )}
                 </div>
@@ -430,6 +446,67 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
             onFinish={result => {
               onReaderChange({
                 activityProgress: finishActivity(reader.activityProgress, 14, 'balloon', result)
+              });
+            }}
+          />
+        </div>
+      </ReaderDialog>
+    )}
+    {quiz15Open && (
+      <ReaderDialog
+        labelledBy="quiz-workshop-title"
+        onClose={() => {
+          stopCurrentAudio();
+          setQuiz15Open(false);
+        }}
+        className="activity-drawer-backdrop quiz-modal-backdrop"
+      >
+        <header className="activity-drawer-header">
+          <div className="activity-brand">
+            <ElifbaMark />
+            <div>
+              <p className="activity-eyebrow">{de ? 'KLEINE BUCHSTABEN-ENTDECKER' : 'KÜÇÜK HARF KÂŞİFLERİ'}</p>
+              <h2 id="quiz-workshop-title">{de ? 'Buchstaben-Quiz' : 'Harf Testi'} · {de ? 'Seite 15' : 'Sayfa 15'}</h2>
+            </div>
+          </div>
+          <div className="activity-header-actions">
+            <button
+              className="activity-btn"
+              aria-label={effects ? (de ? 'Spielklänge ausschalten' : 'Etkinlik seslerini kapat') : (de ? 'Spielklänge einschalten' : 'Etkinlik seslerini aç')}
+              aria-pressed={effects}
+              onClick={() => {
+                sfx.enabled = !effects;
+                onEffectsChange?.(!effects);
+              }}
+            >
+              {effects ? <Volume2 size={19} /> : <VolumeX size={19} />}
+            </button>
+            <button
+              className="activity-btn"
+              onClick={() => {
+                stopCurrentAudio();
+                setQuiz15Open(false);
+              }}
+              aria-label={de ? 'Quiz schließen' : 'Yarışmayı kapat'}
+            >
+              <X size={19} />
+              <span className="activity-close-label">{de ? 'Schließen' : 'Kapat'}</span>
+            </button>
+          </div>
+        </header>
+        <div className="activity-drawer-body">
+          <Page15QuizWorkshop
+            key="quiz-workshop-page-15"
+            lang={lang}
+            speed={preferences.speed}
+            backLabel={de ? 'Zum Buch' : 'Kitaba Dön'}
+            onBack={() => {
+              stopCurrentAudio();
+              setQuiz15Open(false);
+            }}
+            onFinish={result => {
+              onReaderChange({
+                activityProgress: finishActivity(reader.activityProgress, 15, 'quiz', result)
               });
             }}
           />
