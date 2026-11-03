@@ -124,13 +124,12 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
       setWide(innerWidth >= 1000);
       const count = preferences.spread && innerWidth >= 1000 ? 2 : 1;
       setCompactStage(viewport.clientWidth < 800);
-      const reserve = floatingAudio && viewport.clientWidth < 800 ? 150 : 0;
-      setPageWidth(Math.max(100, Math.min(900, (viewport.clientWidth - (viewport.clientWidth < 600 ? 32 : 128)) / count, (viewport.clientHeight - 206 - reserve - (hasActivities ? 64 : 0)) * ASPECT)));
+      setPageWidth(Math.max(100, Math.min(900, (viewport.clientWidth - (viewport.clientWidth < 600 ? 32 : 128)) / count, (viewport.clientHeight - 206 - (hasActivities ? 64 : 0)) * ASPECT)));
     };
     const observer = new ResizeObserver(resize); observer.observe(viewport); resize();
     window.addEventListener('resize', resize);
     return () => { observer.disconnect(); window.removeEventListener('resize', resize); };
-  }, [preferences.spread, floatingAudio, hasActivities]);
+  }, [preferences.spread, hasActivities]);
 
   const changeZoom = useCallback((next, x, y) => {
     if (turning.current) return;
