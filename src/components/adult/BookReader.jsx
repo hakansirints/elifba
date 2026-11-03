@@ -9,7 +9,7 @@ import { isQuickLetterAudio } from '../../utils/readerMedia';
 import ActivityDrawer from './ActivityDrawer';
 import ReaderDialog from './ReaderDialog';
 import ReaderWelcome from './ReaderWelcome';
-import Page14ActivityLaunchers, { PageBalloonLauncher } from './PageBalloonLauncher';
+import Page14ActivityLaunchers from './PageBalloonLauncher';
 import BalloonWorkshop from './BalloonWorkshop';
 import ElifbaMark from '../common/ElifbaMark';
 import { activitiesForPage, finishActivity } from '../../data/bookActivities';
@@ -73,6 +73,7 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
   const floatingAudio = audio.status !== 'idle' && audio.presentation !== 'activity' && (audio.presentation !== 'quiet' || audio.status === 'error');
   const spread = preferences.spread && wide && currentPage < total, step = preferences.spread && wide ? 2 : 1;
   const visible = spread && currentPage < total ? [page, pagesData[currentPage]] : [page];
+  const hasPage14Launchers = visible.some(p => p.page_number === 14);
   const activityPages=visible.filter(p=>activitiesForPage(p.page_number).length).map(p=>p.page_number);
   const hasActivities=preferences.activitiesEnabled===true&&activityPages.length>0;
   const closeActivities=()=>{stopCurrentAudio();setActivitiesOpen(false);setActivitiesSession(null);setActivitiesPage(null);};
@@ -124,12 +125,13 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
       setWide(innerWidth >= 1000);
       const count = preferences.spread && innerWidth >= 1000 ? 2 : 1;
       setCompactStage(viewport.clientWidth < 800);
-      setPageWidth(Math.max(100, Math.min(900, (viewport.clientWidth - (viewport.clientWidth < 600 ? 32 : 128)) / count, (viewport.clientHeight - 206 - (hasActivities ? 64 : 0)) * ASPECT)));
+      const sideSpace = viewport.clientWidth < 600 ? 32 : (hasPage14Launchers ? 160 : 128);
+      setPageWidth(Math.max(100, Math.min(900, (viewport.clientWidth - sideSpace) / count, (viewport.clientHeight - 206 - (hasActivities ? 64 : 0)) * ASPECT)));
     };
     const observer = new ResizeObserver(resize); observer.observe(viewport); resize();
     window.addEventListener('resize', resize);
     return () => { observer.disconnect(); window.removeEventListener('resize', resize); };
-  }, [preferences.spread, hasActivities]);
+  }, [preferences.spread, hasActivities, hasPage14Launchers]);
 
   const changeZoom = useCallback((next, x, y) => {
     if (turning.current) return;
@@ -279,7 +281,7 @@ export default function BookReader({ pagesData, currentPage = 6, onPageChange, o
       <button className="reader-home reader-glass" onClick={togglePanel} aria-label={de?'Buchinhalt öffnen':'Kitap dizinini aç'}><BookOpen size={17}/><span>Elif-Ba</span></button>
       <div className="reader-top-tools"><button className="reader-guide-trigger reader-glass" onClick={()=>setGuide(true)} aria-label={de?'E-Book-Anleitung':'e-Kitap kullanım kılavuzu'}><CircleHelp size={18}/></button><ThemePicker theme={preferences.theme} onChange={theme=>updatePreferences({theme})} lang={lang}/><button className="reader-focus-toggle reader-glass" onClick={() => { setFocus(v => !v); setPanel(false); setSettings(false); }} aria-pressed={focus} aria-label={focus ? (de ? 'Steuerung anzeigen' : 'Kontrolleri göster') : (de ? 'Fokusmodus' : 'Odak modu')}><Focus size={17} /><span>{focus ? (de ? 'Steuerung anzeigen' : 'Kontrolleri göster') : (de ? 'Fokus' : 'Odak')}</span></button></div>
       <div className="reader-viewport" ref={viewportRef} aria-describedby="reader-help">
-        <div className="reader-desk" onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={e => pointerUp(e, false)} onPointerCancel={e => pointerUp(e, true)} onClickCapture={e => { if (gesture.current?.moved) { e.preventDefault(); e.stopPropagation(); } }} style={{ '--page-width': `${pageWidth}px`, '--reader-zoom': zoom, '--page-height': `${pageWidth / ASPECT}px`, '--page-count': visible.length }}>
+        <div className={`reader-desk ${hasPage14Launchers ? 'has-page14-launchers' : ''}`} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={e => pointerUp(e, false)} onPointerCancel={e => pointerUp(e, true)} onClickCapture={e => { if (gesture.current?.moved) { e.preventDefault(); e.stopPropagation(); } }} style={{ '--page-width': `${pageWidth}px`, '--reader-zoom': zoom, '--page-height': `${pageWidth / ASPECT}px`, '--page-count': visible.length }}>
           <div className={`reader-book ${spread ? 'reader-spread' : ''} ${turn ? 'is-turning' : ''}`} onDragStart={e => e.preventDefault()} style={{ '--page-brightness': preferences.brightness }}>
             {visible.map((p, index) => {
               const hasPageActivities = activitiesForPage(p.page_number).length > 0;

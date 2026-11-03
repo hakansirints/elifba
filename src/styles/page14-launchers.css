@@ -1,0 +1,100 @@
+/* The rail follows the same zoom factor as its book page. */
+.page14-activity-launchers {
+  --launcher-scale: var(--reader-zoom, 1);
+  position: absolute;
+  left: calc(-72px * var(--reader-zoom, 1));
+  top: 50%;
+  transform: translateY(-50%) scale(var(--launcher-scale));
+  transform-origin: left center;
+  z-index: 25;
+  width: 64px;
+  pointer-events: none;
+  cursor: default;
+}
+.page14-controls-glass {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  box-sizing: border-box;
+  width: 64px;
+  padding: 14px 7px;
+  gap: 16px;
+  border: 1px solid rgba(173, 148, 103, .7);
+  border-radius: 31px;
+  background: rgba(255, 251, 237, .65);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .7), 0 7px 20px rgba(39, 36, 25, .16);
+  -webkit-backdrop-filter: blur(18px) saturate(115%);
+  backdrop-filter: blur(18px) saturate(115%);
+}
+:root[data-theme="dark"] .page14-controls-glass {
+  background: rgba(181, 164, 130, .25);
+  border-color: rgba(222, 195, 147, .8);
+  box-shadow: inset 0 1px 2px rgba(255, 244, 213, .4), 0 7px 20px rgba(0, 0, 0, .27);
+}
+.page14-activity-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .18s ease, filter .18s ease;
+}
+.page14-glass-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; }
+.page14-glass-icon > svg { opacity: .62; transition: opacity .18s ease; }
+.page14-activity-button:is(:hover, :focus-visible, :active) .page14-glass-icon > svg { opacity: 1; }
+.page14-activity-balloon .page14-glass-icon { color: #943448; background: #f5e0da; }
+.page14-activity-listen .page14-glass-icon { color: #14654f; background: #d5e3c6; }
+.page14-activity-button + .page14-activity-button::before { content: ''; position: absolute; width: 40px; height: 1px; top: -9px; left: 4px; background: rgba(178, 157, 118, .7); }
+.page14-activity-button:disabled { opacity: .45; cursor: default; }
+.page14-activity-button:focus-visible { outline: 2px solid var(--site-ink); outline-offset: 4px; }
+.page14-activity-button:not(:disabled):hover { transform: translateX(3px); filter: brightness(1.05); }
+.page14-activity-button:not(:disabled):active { transform: translateX(1px) scale(.96); }
+.page14-activity-tooltip {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: var(--site-ink);
+  color: var(--site-bg);
+  box-shadow: 0 4px 14px var(--site-shadow);
+  font: 600 11px/1.4 'Plus Jakarta Sans', sans-serif;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .15s ease;
+  z-index: 2;
+}
+.page14-activity-button:is(:hover, :focus-visible) .page14-activity-tooltip { opacity: 1; visibility: visible; }
+.reader-desk.has-page14-launchers {
+  width: max(100%, calc((var(--page-width) * var(--page-count) + 160px) * var(--reader-zoom)));
+  padding-left: calc(80px * var(--reader-zoom));
+  padding-right: calc(80px * var(--reader-zoom));
+}
+@media (max-width: 599px) {
+  .reader-desk.has-page14-launchers { width: max(100%, calc(var(--page-width) * var(--reader-zoom) + 32px)); padding-left: 16px; padding-right: 16px; }
+  .page14-activity-launchers { --launcher-scale: calc(var(--reader-zoom, 1) * .6875); left: calc(4px * var(--reader-zoom, 1)); }
+  .page14-activity-button { width: 64px; height: 64px; }
+  .page14-activity-button + .page14-activity-button::before { left: 12px; }
+  /* Page navigation remains available in the bottom dock. */
+  .reader-stage:has(.page14-activity-launchers) > .reader-edge { display: none; }
+}
+@media (max-width: 359px) {
+  .page14-activity-launchers { --launcher-scale: calc(var(--reader-zoom, 1) * .5625); left: calc(3px * var(--reader-zoom, 1)); }
+  .page14-activity-button { width: 78px; height: 78px; }
+  .page14-activity-button + .page14-activity-button::before { left: 19px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page14-activity-button, .page14-activity-tooltip, .page14-glass-icon > svg { transition: none; }
+}

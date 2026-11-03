@@ -1,6 +1,7 @@
 node_modules/
 dist/
 docs/
+/design-qa.md
 data/original_config/
 data/media_inventory.json
 data/page_texts.json
